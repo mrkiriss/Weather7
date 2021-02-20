@@ -1,4 +1,4 @@
-package com.example.weather7;
+package com.example.weather7.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,8 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.lang.reflect.Type;
-import java.util.List;
 
 public class WeatherDownloader extends Thread{
     private String url_coord="https://api.openweathermap.org/data/2.5/weather?q=";
@@ -41,7 +38,7 @@ public class WeatherDownloader extends Thread{
     private String lat="";
     private String timezone="";
 
-    private ArrayList<Weather> result = new ArrayList<>();
+    private ArrayList<WeatherOnDay> result = new ArrayList<>();
 
     public WeatherDownloader (String city_name){
         url_coord=url_coord+city_name+weather_api+metric;
@@ -103,7 +100,7 @@ public class WeatherDownloader extends Thread{
             wind_speed=current_weather.getString("wind_speed");
             icon = downloadUrlIcon(current_weather.getJSONArray("weather").getJSONObject(0).getString("icon"));
 
-            result.add(new Weather(date,temp.clone(),wind_speed,icon));
+            result.add(new WeatherOnDay(date,temp.clone(),wind_speed,icon));
              // week
             for (int j=0; j<week_weather.length();j++){
                 JSONObject i = week_weather.getJSONObject(j);
@@ -122,7 +119,7 @@ public class WeatherDownloader extends Thread{
                 humidity=i.getString("humidity");
                 clouds=i.getString("clouds");
 
-                result.add(new Weather(date,temp.clone(),wind_speed,icon,pressure, humidity, clouds));
+                result.add(new WeatherOnDay(date,temp.clone(),wind_speed,icon,pressure, humidity, clouds));
             }
         } catch (MalformedURLException e){
             System.out.println("Ошибка программы при работе с url");
@@ -180,7 +177,7 @@ public class WeatherDownloader extends Thread{
         return str.toString();
     }
 
-    public synchronized ArrayList<Weather> getWeather() {
+    public synchronized ArrayList<WeatherOnDay> getWeather() {
         return this.result;
     }
 }

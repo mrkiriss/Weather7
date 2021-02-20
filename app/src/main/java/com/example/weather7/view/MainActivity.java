@@ -1,10 +1,10 @@
-package com.example.weather7;
+package com.example.weather7.view;
 
 import android.os.Bundle;
-import android.view.View;
 
+import com.example.weather7.R;
+import com.example.weather7.model.City;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;

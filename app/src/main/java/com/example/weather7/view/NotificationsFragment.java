@@ -1,4 +1,4 @@
-package com.example.weather7.ui.notifications;
+package com.example.weather7.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weather7.R;
+import com.example.weather7.viewmodel.NotificationsViewModel;
 
 public class NotificationsFragment extends Fragment {
 
