@@ -1,6 +1,7 @@
 package com.example.weather7;
 
 
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -18,11 +19,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
 
     private List<WeatherOnDay> days;
 
-    public DayAdapter(){
-        this.days= Collections.emptyList();
-    }
-
-    public void setDays(List<WeatherOnDay> days){
+    public DayAdapter(List<WeatherOnDay> days){
         this.days=days;
     }
 

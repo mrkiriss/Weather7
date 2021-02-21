@@ -19,8 +19,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class WeatherDownloader extends Thread{
     private String url_coord="https://api.openweathermap.org/data/2.5/weather?q=";
@@ -38,7 +40,7 @@ public class WeatherDownloader extends Thread{
     private String lat="";
     private String timezone="";
 
-    private ArrayList<WeatherOnDay> result = new ArrayList<>();
+    private ArrayList<WeatherOnDay> result= new ArrayList<>();
 
     public WeatherDownloader (String city_name){
         url_coord=url_coord+city_name+weather_api+metric;
@@ -165,6 +167,7 @@ public class WeatherDownloader extends Thread{
         try {
             URL url = new URL(surl);
             bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            bmp = Bitmap.createScaledBitmap(bmp, 160, 160, false);
         }catch (MalformedURLException e) {
             System.out.println("Ошибка программы при работе с url");
         }catch (IOException e) {
@@ -180,4 +183,5 @@ public class WeatherDownloader extends Thread{
     public synchronized ArrayList<WeatherOnDay> getWeather() {
         return this.result;
     }
+    public synchronized String getCoordinate(){return lat+lon;}
 }

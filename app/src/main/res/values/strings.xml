@@ -6,4 +6,11 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="button_find">Поиск</string>
+
+    <string name="wind_speed">Скорость ветра: </string>
+    <string name="pressure">Давление: </string>
+    <string name="humidity">Влажность: </string>
+    <string name="clouds">Облачность: </string>
+    <string name="temp_day">Температура днём</string>
+    <string name="temp_night">Температура ночью </string>
 </resources>

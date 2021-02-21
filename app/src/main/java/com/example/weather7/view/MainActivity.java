@@ -3,10 +3,13 @@ package com.example.weather7.view;
 import android.os.Bundle;
 
 import com.example.weather7.R;
+import com.example.weather7.databinding.MainActivityBinding;
 import com.example.weather7.model.City;
+import com.example.weather7.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -14,12 +17,16 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MainActivityViewModel mainViewModel;
+    private MainActivityBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
+        binding.setViewModel(new MainActivityViewModel());
+
+        BottomNavigationView navView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
