@@ -14,7 +14,6 @@ import com.example.weather7.model.WeatherOnDay;
 
 public class ItemDayViewModel  extends BaseObservable {
     private WeatherOnDay day;
-    private Context context;
 
     private String date;
     private Bitmap icon;
@@ -58,14 +57,14 @@ public class ItemDayViewModel  extends BaseObservable {
         return "Облачность: "+clouds+"%";
     }
 
-    public ItemDayViewModel(Context context, WeatherOnDay day){
-        this.context=context;
+    public ItemDayViewModel( WeatherOnDay day){
         this.day=day;
 
         // значения для шапки
         this.date=day.getDate();
         this.icon=day.getIcon();
         this.tempDayNight=day.getDayNightTemp();
+        // значения для таблицы
         this.tempDay=day.getDayTemp();
         this.tempNight=day.getNightTemp();
         this.wind_speed=day.getWind_speed();

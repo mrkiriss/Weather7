@@ -9,26 +9,29 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.City;
+import com.example.weather7.model.WeatherDownloader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CitiesViewModel extends ViewModel {
 
-    ArrayList<City> cities;
+    private MutableLiveData<ArrayList<City>> mutable_cities;
+    private ArrayList<City> cities = new ArrayList<>();
 
-    private FragmentCitiesPostman post;
+    public CitiesViewModel() {
+        mutable_cities = new MutableLiveData<>();
+        // получение списка городов из базы данных
 
-    public CitiesViewModel(FragmentCitiesPostman post) {
-        this.post=post;
-        cities = new ArrayList<>();
     }
 
     public void onClickFind(String city_name){
         try {
-            City city = new City(city_name);
+            City city = new City(WeatherDownloader.MODE_ALL, city_name);
+            // получаем актуальное состояние списка
+            if (mutable_cities.getValue()!=null) cities=mutable_cities.getValue();
             cities.add(0, city);
-            post.onCitiesChanged(cities);
+            mutable_cities.setValue(cities);
         }catch (InterruptedException | IndexOutOfBoundsException e){
             // !+++! реализовать вывод ошибки для пользователя
             Log.println(Log.ASSERT, "download error", "Ошибка получения погодных данных для города "+city_name);
@@ -36,7 +39,5 @@ public class CitiesViewModel extends ViewModel {
 
     }
 
-    public interface FragmentCitiesPostman{
-        void onCitiesChanged(List<City> cities);
-    }
+    public MutableLiveData<ArrayList<City>> getMutableCities(){return mutable_cities;}
 }

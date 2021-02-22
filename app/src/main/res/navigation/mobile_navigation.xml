@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.weather7.view.HomeFragment"
+        android:name="com.example.weather7.view.FragmentHome"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_cities" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.weather7.view.FragmentCities"
-        android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_cities"
+        android:name="com.example.weather7.view.FragmentCities"
+        android:label="@string/title_cities"
+        tools:layout="@layout/fragment_cities" />
+
+    <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.weather7.view.NotificationsFragment"
+        android:name="com.example.weather7.view.FragmentNotifications"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

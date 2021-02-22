@@ -52,7 +52,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
 
         void bindDay(WeatherOnDay day){
             if (binding.getViewModel()==null){
-                binding.setViewModel(new ItemDayViewModel(itemView.getContext(), day));
+                binding.setViewModel(new ItemDayViewModel(day));
             }else{
                 binding.getViewModel().setDay(day);
             }

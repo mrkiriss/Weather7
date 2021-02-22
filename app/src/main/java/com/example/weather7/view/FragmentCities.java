@@ -1,6 +1,7 @@
 package com.example.weather7.view;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,14 @@ import com.example.weather7.CityAdapter;
 import com.example.weather7.R;
 import com.example.weather7.databinding.FragmentCitiesBinding;
 import com.example.weather7.model.City;
+import com.example.weather7.model.ListCities;
 import com.example.weather7.viewmodel.CitiesViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentCities extends Fragment implements CitiesViewModel.FragmentCitiesPostman{
+public class FragmentCities extends Fragment{
 
     private CitiesViewModel citiesViewModel;
     private FragmentCitiesBinding binding;
@@ -33,15 +36,27 @@ public class FragmentCities extends Fragment implements CitiesViewModel.Fragment
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cities, container, false);
-        citiesViewModel = new CitiesViewModel(this);
+        citiesViewModel = new CitiesViewModel();
         binding.setViewModel(citiesViewModel);
         setupRecyclerView(binding.citiesRecyclerView);
+
+        if (savedInstanceState != null)
+        {
+            ListCities listCities =  (ListCities) savedInstanceState.getSerializable("mutableCities");
+            citiesViewModel.getMutableCities().setValue(listCities.getList());
+        }
+
+        citiesViewModel.getMutableCities().observe(getViewLifecycleOwner(), new Observer<ArrayList<City>>() {
+            @Override
+            public void onChanged(ArrayList<City> cities) {
+                onCitiesChanged(cities);
+            }
+        });
 
         return binding.getRoot();
     }
 
-    @Override
-    public void onCitiesChanged(List<City> cities) {
+    private void onCitiesChanged(ArrayList<City> cities) {
         CityAdapter adapter =
                 (CityAdapter) binding.citiesRecyclerView.getAdapter();
         adapter.setCities(cities);
@@ -54,12 +69,8 @@ public class FragmentCities extends Fragment implements CitiesViewModel.Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        if (outState == null)
-            outState = new Bundle();
-        outState.putSerializable();
-        super.onSaveInstanceState(outState);
+    public interface onCitiesFragmentListener{
+        // получает данные о городах для создания адаптера
+        ArrayList<City> getCitiesData();
     }
 }

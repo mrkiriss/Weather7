@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.weather7.R;
 import com.example.weather7.viewmodel.HomeViewModel;
 
-public class HomeFragment extends Fragment {
+public class FragmentHome extends Fragment {
 
     private HomeViewModel homeViewModel;
 

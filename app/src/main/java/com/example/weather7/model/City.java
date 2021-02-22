@@ -2,12 +2,15 @@ package com.example.weather7.model;
 
 import android.graphics.Bitmap;
 
+import androidx.room.Entity;
+
 import com.example.weather7.DayAdapter;
 
 import java.util.ArrayList;
 
+@Entity
 public class City{
-    private String name;
+    private String name="";
     private String lat;
     private String lon;
     private String current_temp;
@@ -15,16 +18,27 @@ public class City{
     private String current_date;
     DayAdapter days;
 
-    public City(String name) throws InterruptedException {
-        this.name=name;
+    public City(int download_mode, String data) throws InterruptedException {
 
-        WeatherDownloader downloader = new WeatherDownloader(name);
+        WeatherDownloader downloader = new WeatherDownloader(download_mode, data);
         downloader.start();
         downloader.join();
-        // создание адаптера дней
         createHeaderAndAdapter(downloader.getWeather());
+        String[] coord=new String[2];
+
+        switch (download_mode){
+            case WeatherDownloader.MODE_ALL:
+                this.name=data;
+                coord= downloader.getCoordinate();
+                break;
+            case WeatherDownloader.MODE_ONLY_WEATHER:
+                this.name=downloader.getCity_name();
+                coord= data.split(" ");
+                break;
+        }
+
+        // создание адаптера дней
         // заполнение координат города
-        String[] coord= downloader.getCoordinate().split(" ");
         lat=coord[0];
         lon=coord[1];
     }

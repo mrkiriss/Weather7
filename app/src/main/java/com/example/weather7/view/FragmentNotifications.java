@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.weather7.R;
 import com.example.weather7.viewmodel.NotificationsViewModel;
 
-public class NotificationsFragment extends Fragment {
+public class FragmentNotifications extends Fragment {
 
     private NotificationsViewModel notificationsViewModel;
 

@@ -19,7 +19,6 @@ import java.util.Observable;
 public class ItemCityViewModel extends BaseObservable {
 
     private City city;
-    private Context context;
     private ObservableField<String> name_city;
     private ObservableField<String> date;
     private ObservableField<Bitmap> icon;
@@ -48,8 +47,7 @@ public class ItemCityViewModel extends BaseObservable {
         iv.setImageBitmap(bitmap);
     }
 
-    public ItemCityViewModel(Context context, City city){
-        this.context=context;
+    public ItemCityViewModel(City city){
 
         // значения для шапки
         this.city=city;

@@ -58,7 +58,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
         void bindCity(City city){
             if (binding.getViewModel()==null){
-                binding.setViewModel(new ItemCityViewModel(itemView.getContext(), city));
+                binding.setViewModel(new ItemCityViewModel(city));
             }else{
                 binding.getViewModel().setCity(city);
             }

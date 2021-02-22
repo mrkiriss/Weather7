@@ -14,6 +14,7 @@ public class WeatherOnDay {
     private String pressure;
     private String humidity;
     private String clouds;
+    private String description;
 
     public String getDate() {
         return date;
@@ -30,6 +31,9 @@ public class WeatherOnDay {
     public String getClouds() {
         return clouds;
     }
+    public String getDescription() {
+        return description;
+    }
     public Bitmap getIcon() {
         return icon;
     }
@@ -40,9 +44,8 @@ public class WeatherOnDay {
     public  String getDayTemp(){return temp[0]+"/"+temp[2]+"°C";}
     public  String getNightTemp(){return temp[1]+"/"+temp[3]+"°C";}
 
-    // погода на день недели
     public WeatherOnDay(String date, String[] temp, String wind_speed, Bitmap icon,
-                        String pressure, String humidity, String clouds){
+                        String pressure, String humidity, String clouds, String description){
         this.date=date;
         this.temp=temp;
         this.wind_speed=wind_speed;
@@ -50,13 +53,6 @@ public class WeatherOnDay {
         this.pressure=pressure;
         this.humidity=humidity;
         this.clouds=clouds;
+        this.description=description;
     }
-    // погода нынешняя
-    public WeatherOnDay(String date, String[] temp, String wind_speed, Bitmap icon){
-        this.date=date;
-        this.temp=temp;
-        this.wind_speed=wind_speed;
-        this.icon=icon;
-    }
-
 }
