@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import com.example.weather7.R;
 import com.example.weather7.databinding.MainActivityBinding;
 import com.example.weather7.model.City;
+import com.example.weather7.viewmodel.CitiesViewModel;
 import com.example.weather7.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -15,6 +16,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCities.on
 
     private MainActivityViewModel mainViewModel;
     private MainActivityBinding binding;
+
+    private MutableLiveData<ArrayList<City>> mutable_cities = new MutableLiveData<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -44,10 +48,19 @@ public class MainActivity extends AppCompatActivity implements FragmentCities.on
     }
 
     @Override
-    public ArrayList<City> getCitiesData() {
+    public void requestUpdateCities(CitiesViewModel citiesViewModel) {
         ArrayList<City> result = new ArrayList<>();
-        // написать функци загрузки городов из базы данных
 
-        return result;
+        //
+        if (mutable_cities.getValue()==null){
+            // написать функци загрузки городов из базы данных
+
+            // запоминание ссылки на объект livedata
+            mutable_cities=citiesViewModel.getMutableCities();
+            // внести данные
+
+        }else{
+            citiesViewModel.getMutableCities().setValue(mutable_cities.getValue());
+        }
     }
 }

@@ -8,7 +8,7 @@ import com.example.weather7.DayAdapter;
 
 import java.util.ArrayList;
 
-@Entity
+//@Entity
 public class City{
     private String name="";
     private String lat;

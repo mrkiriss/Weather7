@@ -1,7 +1,10 @@
 package com.example.weather7.view;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,18 @@ public class FragmentCities extends Fragment{
     private CitiesViewModel citiesViewModel;
     private FragmentCitiesBinding binding;
 
+    private onCitiesFragmentListener post;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            post = (onCitiesFragmentListener) context;
+        }catch(Exception e){
+            Log.println(Log.ASSERT, "frCities/onAttach", context.toString());
+        }
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -40,10 +55,8 @@ public class FragmentCities extends Fragment{
         binding.setViewModel(citiesViewModel);
         setupRecyclerView(binding.citiesRecyclerView);
 
-        if (savedInstanceState != null)
-        {
-            ListCities listCities =  (ListCities) savedInstanceState.getSerializable("mutableCities");
-            citiesViewModel.getMutableCities().setValue(listCities.getList());
+        if (citiesViewModel.getMutableCities().getValue()==null){
+            post.requestUpdateCities(citiesViewModel);
         }
 
         citiesViewModel.getMutableCities().observe(getViewLifecycleOwner(), new Observer<ArrayList<City>>() {
@@ -71,6 +84,6 @@ public class FragmentCities extends Fragment{
 
     public interface onCitiesFragmentListener{
         // получает данные о городах для создания адаптера
-        ArrayList<City> getCitiesData();
+        void requestUpdateCities(CitiesViewModel citiesViewModel);
     }
 }

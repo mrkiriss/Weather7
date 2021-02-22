@@ -21,7 +21,6 @@ public class CitiesViewModel extends ViewModel {
 
     public CitiesViewModel() {
         mutable_cities = new MutableLiveData<>();
-        // получение списка городов из базы данных
 
     }
 
