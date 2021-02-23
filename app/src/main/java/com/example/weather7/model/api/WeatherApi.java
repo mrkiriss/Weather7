@@ -1,8 +1,10 @@
-package com.example.weather7.model;
+package com.example.weather7.model.api;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.example.weather7.model.WeatherOnDay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class WeatherDownloader extends Thread{
+public class WeatherApi extends Thread{
     private final String url_for_coord="https://api.openweathermap.org/data/2.5/weather?q=";
     private final String url_for_weather="https://api.openweathermap.org/data/2.5/onecall?";
     private final String weather_api="&appid=1f81e7b2d7680c7aca83de0721ae05f2";
@@ -39,7 +41,7 @@ public class WeatherDownloader extends Thread{
     private String data;
 
 
-    public WeatherDownloader (int mode, String data){
+    public WeatherApi(int mode, String data){
         this.mode=mode;
         this.data=data;
     }
@@ -105,7 +107,6 @@ public class WeatherDownloader extends Thread{
         }
         return content;
     }
-
     private String[] parseCoord(String content) {
         String[] coord=new String[2];
         try{
@@ -117,14 +118,12 @@ public class WeatherDownloader extends Thread{
         }
         return coord;
     }
-
     private String[] getCoordinateByName(String city_name){
         String coord_request = this.url_for_coord+city_name+weather_api+metric;
         String content = downloadContentByUrl(coord_request);
         String[] coord = parseCoord(content);
         return coord;
     }
-
     private LinkedList<WeatherOnDay> parseWeather(String content){
         LinkedList<WeatherOnDay> result = new LinkedList<>();
         String date;
@@ -175,7 +174,6 @@ public class WeatherDownloader extends Thread{
         }
         return result;
     }
-
     private LinkedList<WeatherOnDay> getWeatherByCoordinate(String lat, String lon){
         String weather_request= url_for_weather+this.lat+lat+this.lon+lon+metric+weather_api+exclude;
         String content = downloadContentByUrl(weather_request);

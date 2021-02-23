@@ -1,4 +1,4 @@
-package com.example.weather7.model;
+package com.example.weather7.model.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -6,6 +6,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.example.weather7.model.City;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,8 +18,14 @@ public interface CityDao {
     @Query("SELECT name FROM City")
     List<String> getNames();
 
+    @Query("SELECT name, upload_time, lat, lon FROM City")
+    List<City.DeficientCity> getDeficientCities();
+
     @Query("SELECT * FROM city")
     List<City> getCities();
+
+    @Query("SELECT * FROM City WHERE name = :name")
+    City getCityByName(String name);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(City city);
@@ -27,6 +35,9 @@ public interface CityDao {
 
     @Update
     void update(City city);
+
+    @Update
+    void update(LinkedList<City> cities);
 
     @Delete
     void delete(City city);

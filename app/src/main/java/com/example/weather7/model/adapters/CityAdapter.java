@@ -1,15 +1,14 @@
-package com.example.weather7;
+package com.example.weather7.model.adapters;
 
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weather7.R;
 import com.example.weather7.databinding.ItemCityBinding;
 import com.example.weather7.model.City;
 import com.example.weather7.viewmodel.ItemCityViewModel;

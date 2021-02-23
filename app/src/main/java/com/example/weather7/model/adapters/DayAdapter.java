@@ -1,21 +1,18 @@
-package com.example.weather7;
+package com.example.weather7.model.adapters;
 
 
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weather7.R;
 import com.example.weather7.databinding.ItemDayBinding;
 import com.example.weather7.model.WeatherOnDay;
 import com.example.weather7.viewmodel.ItemDayViewModel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
 
