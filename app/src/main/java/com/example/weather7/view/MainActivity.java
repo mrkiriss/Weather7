@@ -16,20 +16,23 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity implements FragmentCities.onCitiesFragmentListener {
 
     private MainActivityViewModel mainViewModel;
     private MainActivityBinding binding;
 
-    private MutableLiveData<ArrayList<City>> mutable_cities = new MutableLiveData<>();
+    private LinkedList<City> main_cities = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -37,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCities.on
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
         binding.setViewModel(new MainActivityViewModel());
         BottomNavigationView navView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_cities, R.id.navigation_notifications)
                 .build();
@@ -48,19 +51,16 @@ public class MainActivity extends AppCompatActivity implements FragmentCities.on
     }
 
     @Override
-    public void requestUpdateCities(CitiesViewModel citiesViewModel) {
-        ArrayList<City> result = new ArrayList<>();
-
-        //
-        if (mutable_cities.getValue()==null){
-            // написать функци загрузки городов из базы данных
-
-            // запоминание ссылки на объект livedata
-            mutable_cities=citiesViewModel.getMutableCities();
-            // внести данные
-
-        }else{
-            citiesViewModel.getMutableCities().setValue(mutable_cities.getValue());
-        }
+    public LinkedList<City> getLastCities() {
+        return main_cities;
+    }
+    @Override
+    public void bindActuallyCities(MutableLiveData<LinkedList<City>> live_cities) {
+        live_cities.observe(this, new Observer<LinkedList<City>>() {
+            @Override
+            public void onChanged(LinkedList<City> cities) {
+                main_cities = cities;
+            }
+        });
     }
 }

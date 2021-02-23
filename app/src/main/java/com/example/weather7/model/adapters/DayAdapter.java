@@ -12,15 +12,18 @@ import com.example.weather7.databinding.ItemDayBinding;
 import com.example.weather7.model.WeatherOnDay;
 import com.example.weather7.viewmodel.ItemDayViewModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
 
-    private List<WeatherOnDay> days;
+    private LinkedList<WeatherOnDay> days;
 
-    public DayAdapter(List<WeatherOnDay> days){
+    public DayAdapter(LinkedList<WeatherOnDay> days){
         this.days=days;
+        System.out.println(days);
     }
 
     @Override
@@ -41,6 +44,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
     public int getItemCount() {
         return days.size();
     }
+    public LinkedList<WeatherOnDay> getDays(){return days;}
 
     public static class DayViewHolder extends RecyclerView.ViewHolder{
         ItemDayBinding binding;

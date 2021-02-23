@@ -2,36 +2,53 @@ package com.example.weather7.model;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import com.example.weather7.DayAdapter;
+import com.example.weather7.model.adapters.DayAdapter;
+import com.example.weather7.model.api.WeatherApi;
+import com.example.weather7.model.database.Converters;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-//@Entity
+@Entity
 public class City{
-    private String name="";
+    @PrimaryKey
+    @NonNull
+    private String name;
     private String lat;
     private String lon;
     private String current_temp;
+    @TypeConverters({Converters.BitmapConverter.class})
     private Bitmap current_icon;
-    private String current_date;
-    DayAdapter days;
+    private String current_description;
+    @TypeConverters({Converters.DayAdapterConverter.class})
+    private DayAdapter days;
 
-    public City(int download_mode, String data) throws InterruptedException {
+    private long upload_time;
 
-        WeatherDownloader downloader = new WeatherDownloader(download_mode, data);
+    @Ignore
+    public City(int download_mode, String data) {
+
+        WeatherApi downloader = new WeatherApi(download_mode, data);
         downloader.start();
-        downloader.join();
+        try {
+            downloader.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         createHeaderAndAdapter(downloader.getWeather());
         String[] coord=new String[2];
 
         switch (download_mode){
-            case WeatherDownloader.MODE_ALL:
+            case WeatherApi.MODE_ALL:
                 this.name=data;
                 coord= downloader.getCoordinate();
                 break;
-            case WeatherDownloader.MODE_ONLY_WEATHER:
+            case WeatherApi.MODE_ONLY_WEATHER:
                 this.name=downloader.getCity_name();
                 coord= data.split(" ");
                 break;
@@ -42,8 +59,9 @@ public class City{
         lat=coord[0];
         lon=coord[1];
     }
+    public City(){};
 
-    private void createHeaderAndAdapter(ArrayList<WeatherOnDay> days){
+    private void createHeaderAndAdapter(LinkedList<WeatherOnDay> days){
         // заполнений полей для шапки адаптера
         enterCurrentData(days.get(0));
         days.remove(0);
@@ -52,14 +70,33 @@ public class City{
 
     }
     private void enterCurrentData(WeatherOnDay current_day){
-        current_date=current_day.getDate();
         current_icon=current_day.getIcon();
         current_temp=current_day.getTemp()[0]+"/"+current_day.getTemp()[2]+"°C";
+        current_description=current_day.getDescription();
     }
 
     public String getName(){return name;}
     public String getCurrent_temp(){return current_temp;}
-    public String getCurrent_date(){return current_date;}
+    public String getLat(){return lat;}
+    public String getLon(){return lon;}
     public Bitmap getCurrent_icon(){return current_icon;}
     public DayAdapter getDays(){return days;}
+    public String getCurrent_description(){return current_description;}
+    public long getUpload_time(){return upload_time;}
+
+    public void setName(String name){this.name= name;}
+    public void setCurrent_temp(String current_temp){this.current_temp= current_temp;}
+    public void setLat(String lat){this.lat= lat;}
+    public void setLon(String lon){this.lon= lon;}
+    public void setCurrent_icon(Bitmap current_icon){this.current_icon= current_icon;}
+    public void setDays(DayAdapter days){ this.days=days;}
+    public void setCurrent_description(String current_description){this.current_description= current_description;}
+    public void setUpload_time(long upload_time){this.upload_time=upload_time;}
+
+    public static class DeficientCity{
+        public String name;
+        public long upload_time;
+        public String lat;
+        public String lon;
+    }
 }

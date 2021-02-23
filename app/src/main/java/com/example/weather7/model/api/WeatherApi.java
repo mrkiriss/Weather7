@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,16 +11,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 
 public class WeatherDownloader extends Thread{
     private final String url_for_coord="https://api.openweathermap.org/data/2.5/weather?q=";
@@ -38,7 +32,7 @@ public class WeatherDownloader extends Thread{
     public final static int MODE_ONLY_WEATHER = 0;
 
     private String[] coordinate = null;
-    private ArrayList<WeatherOnDay> weather = null;
+    private LinkedList<WeatherOnDay> weather = null;
     private String city_name="";
 
     private int mode;
@@ -131,8 +125,8 @@ public class WeatherDownloader extends Thread{
         return coord;
     }
 
-    private ArrayList<WeatherOnDay> parseWeather(String content){
-        ArrayList<WeatherOnDay> result = new ArrayList<>();
+    private LinkedList<WeatherOnDay> parseWeather(String content){
+        LinkedList<WeatherOnDay> result = new LinkedList<>();
         String date;
         String[] temp = new String[4]; //{day, night, feels_like_day, feels_like_night}
         String description;
@@ -182,7 +176,7 @@ public class WeatherDownloader extends Thread{
         return result;
     }
 
-    private ArrayList<WeatherOnDay> getWeatherByCoordinate(String lat, String lon){
+    private LinkedList<WeatherOnDay> getWeatherByCoordinate(String lat, String lon){
         String weather_request= url_for_weather+this.lat+lat+this.lon+lon+metric+weather_api+exclude;
         String content = downloadContentByUrl(weather_request);
 
@@ -190,7 +184,7 @@ public class WeatherDownloader extends Thread{
     }
 
     public synchronized String[] getCoordinate(){return coordinate;}
-    public synchronized ArrayList<WeatherOnDay> getWeather(){return weather;}
+    public synchronized LinkedList<WeatherOnDay> getWeather(){return weather;}
     public synchronized String getCity_name(){return city_name;}
 
 }
