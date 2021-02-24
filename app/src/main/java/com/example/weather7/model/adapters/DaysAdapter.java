@@ -14,11 +14,11 @@ import com.example.weather7.viewmodel.ItemDayViewModel;
 
 import java.util.LinkedList;
 
-public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
+public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder> {
 
     private LinkedList<WeatherOnDay> days;
 
-    public DayAdapter(LinkedList<WeatherOnDay> days){
+    public DaysAdapter(LinkedList<WeatherOnDay> days){
         this.days=days;
         System.out.println(days);
     }

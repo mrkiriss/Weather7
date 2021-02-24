@@ -26,41 +26,48 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="70dp"
                 android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@color/background"
+                android:layout_weight="8"
                 android:elevation="2dp"
                 android:orientation="horizontal"
-                android:padding="5dp"
-                android:weightSum="16">
+                android:weightSum="8">
 
-                <TextView
-                    android:id="@+id/textView2"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="6"
-                    android:gravity="top|left"
-                    android:text="@{ViewModel.date}"
-                    android:textSize="24sp" />
+                    android:orientation="vertical"
+                    android:paddingLeft="5dp"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="bottom"
+                        android:text="@{ViewModel.date_tempDayNight}"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal|left"
+                        android:text="@{ViewModel.description}"
+                        android:textSize="18sp" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="fill_horizontal|fill_vertical"
-                    android:layout_weight="5"
+                    android:layout_gravity="left"
+                    android:layout_weight="2"
                     android:scaleType="fitEnd"
-                    android:srcCompact="@{ViewModel.icon}" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5"
-                    android:gravity="center"
-                    android:text="@{ViewModel.tempDayNight}"
-                    android:textSize="30sp" />
+                    android:src="@{ViewModel.icon}" />
 
             </LinearLayout>
 

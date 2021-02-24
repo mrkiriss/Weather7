@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +18,13 @@ import com.example.weather7.viewmodel.ItemCityViewModel;
 import java.util.Collections;
 import java.util.List;
 
-public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder> {
+public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
 
     private List<City> cities;
 
-    public CityAdapter(){
+    public static MutableLiveData<String> request = new MutableLiveData<>();
+
+    public CitiesAdapter(){
         this.cities= Collections.emptyList();
     }
 
@@ -57,14 +61,16 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
         void bindCity(City city){
             if (binding.getViewModel()==null){
-                binding.setViewModel(new ItemCityViewModel(city));
+                binding.setViewModel(new ItemCityViewModel(city, request));
             }else{
                 binding.getViewModel().setCity(city);
             }
+
             binding.daysRecycleView.setAdapter(city.getDays());
             binding.daysRecycleView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+
         }
 
-
     }
+
 }

@@ -6,7 +6,7 @@ import android.util.Base64;
 
 import androidx.room.TypeConverter;
 
-import com.example.weather7.model.adapters.DayAdapter;
+import com.example.weather7.model.adapters.DaysAdapter;
 import com.example.weather7.model.WeatherOnDay;
 
 import org.json.JSONException;
@@ -18,31 +18,6 @@ import java.util.LinkedList;
 public class Converters {
 
     public static class BitmapConverter {
-
-        /*@TypeConverter
-        public static Bitmap bytesToBitmap(byte[] data) {
-            if (data == null) {
-                return null;
-            }
-            return BitmapFactory.decodeByteArray(data, 0, data.length);
-        }
-
-        @TypeConverter
-        public static String bitmapToBytes(Bitmap bitmap) {
-            if (bitmap == null) {
-                return null;
-            }
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-            bitmap.recycle();
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return byteArray;
-        }*/
 
         @TypeConverter
         public static String bitmapToString(Bitmap bitmap){
@@ -67,29 +42,31 @@ public class Converters {
 
     public static class DayAdapterConverter{
         @TypeConverter
-        public static DayAdapter stringToDayAdapter(String data){
+        public static DaysAdapter stringToDayAdapter(String data){
             try {
 
                 JSONObject obj = new JSONObject(data);
 
                 LinkedList<WeatherOnDay> days= new LinkedList<>();
                 JSONObject day;
+                String day_data;
 
                 System.out.println(data);
                 for (int i=0;i<obj.length();i++){
-                    day=obj.getJSONObject(String.valueOf(i));
+                    day_data=obj.getString(String.valueOf(i));
+                    day=new JSONObject(day_data);
                     days.add(WeatherOnDay.jsonToWeatherOnDay(day));
                 }
 
-                return new DayAdapter(days);
+                return new DaysAdapter(days);
             } catch (JSONException e) {
                 e.printStackTrace();
-                return new DayAdapter(new LinkedList<>());
+                return new DaysAdapter(new LinkedList<>());
             }
         }
 
         @TypeConverter
-        public static String dayAdapterToJsonString(DayAdapter adapter) {
+        public static String dayAdapterToJsonString(DaysAdapter adapter) {
             JSONObject obj = new JSONObject();
 
             LinkedList<WeatherOnDay> days =adapter.getDays();

@@ -1,9 +1,6 @@
 package com.example.weather7.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.City;
@@ -32,6 +29,10 @@ public class CitiesViewModel extends ViewModel {
 
     public void onClickFind(String city_name){
         rep.downloadCityFromApi(WeatherApi.MODE_ALL, city_name);
+    }
+
+    public void processRequest(String request){
+        rep.processRequest(request);
     }
 
     public LiveData<LinkedList<City>> getCities(){return cities;}

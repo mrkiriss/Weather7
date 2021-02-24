@@ -43,7 +43,7 @@ public class WeatherOnDay {
     public String[] getTemp() {
         return temp;
     }
-    public String getDayNightTemp(){return temp[0]+"/"+temp[1]+"°C";}
+    public String getDateAndDayNightTemp(){return date+": "+temp[0]+"/"+temp[1]+"°C";}
     public  String getDayTemp(){return temp[0]+"/"+temp[2]+"°C";}
     public  String getNightTemp(){return temp[1]+"/"+temp[3]+"°C";}
 

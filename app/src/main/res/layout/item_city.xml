@@ -8,7 +8,6 @@
             name="ViewModel"
             type="com.example.weather7.viewmodel.ItemCityViewModel" />
     </data>
-
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -20,27 +19,28 @@
         android:paddingTop="6dp"
         android:paddingRight="12dp"
         android:paddingBottom="6dp"
-        card_view:cardCornerRadius="2dp">
+        card_view:cardCornerRadius="2dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="12">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_margin="8dp"
-                android:layout_weight="8"
-                android:background="@color/background"
+                android:layout_weight="3"
                 android:elevation="2dp"
                 android:orientation="horizontal"
                 android:weightSum="8">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="6"
+                    android:layout_weight="5"
                     android:orientation="vertical"
                     android:paddingLeft="5dp"
                     android:weightSum="3">
@@ -66,22 +66,37 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="left"
                     android:layout_weight="2"
                     android:scaleType="fitEnd"
                     android:src="@{ViewModel.icon}" />
 
+                <ImageView
+                    android:id="@+id/button_rubbish"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="@{()->ViewModel.markWillBeDelete()}"
+                    card_view:srcCompat="@drawable/ic_rubbish" />
+
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="@{ViewModel.expandable? View.VISIBLE : View.GONE }"
-                android:weightSum="3">
+                android:visibility="@{ViewModel.expandable? View.VISIBLE : View.GONE }">
 
                 <ImageButton
                     android:id="@+id/imageButton"
@@ -98,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
+                    android:onClick="@{()->ViewModel.postFavoriteRequest()}"
                     card_view:srcCompat="@drawable/ic_star" />
 
                 <ImageButton
@@ -115,7 +131,6 @@
                 android:id="@+id/daysRecycleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
                 android:visibility="@{ViewModel.expandable? View.VISIBLE : View.GONE }" />
 
         </LinearLayout>

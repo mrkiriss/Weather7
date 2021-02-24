@@ -17,20 +17,22 @@ public class ItemDayViewModel  extends BaseObservable {
 
     private String date;
     private Bitmap icon;
-    private String tempDayNight;
+    private String date_tempDayNight;
     private String tempDay;
     private String tempNight;
     private String wind_speed;
     private String pressure;
     private String humidity;
     private String clouds;
+    private String description;
+
     public ObservableBoolean expandable;
 
     public String getDate() {
         return date;
     }
-    public String getTempDayNight() {
-        return tempDayNight;
+    public String getDate_tempDayNight() {
+        return date_tempDayNight;
     }
     public String getTempDay() {
         return tempDay;
@@ -56,6 +58,7 @@ public class ItemDayViewModel  extends BaseObservable {
     public String getClouds() {
         return "Облачность: "+clouds+"%";
     }
+    public String getDescription(){return description;}
 
     public ItemDayViewModel( WeatherOnDay day){
         this.day=day;
@@ -63,7 +66,8 @@ public class ItemDayViewModel  extends BaseObservable {
         // значения для шапки
         this.date=day.getDate();
         this.icon=day.getIcon();
-        this.tempDayNight=day.getDayNightTemp();
+        this.date_tempDayNight=day.getDateAndDayNightTemp();
+        this.description=day.getDescription();
         // значения для таблицы
         this.tempDay=day.getDayTemp();
         this.tempNight=day.getNightTemp();

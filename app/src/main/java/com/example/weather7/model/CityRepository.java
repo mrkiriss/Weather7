@@ -1,6 +1,8 @@
 package com.example.weather7.model;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.room.Room;
@@ -9,11 +11,15 @@ import com.example.weather7.model.api.WeatherApi;
 import com.example.weather7.model.database.AppDatabase;
 import com.example.weather7.model.database.CityDao;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class CityRepository {
+
+    public static final String REQUEST_DELETE="delete";
+    public static final String REQUEST_FAVORITE="favorite";
 
     private CityDao dao;
     private MutableLiveData<Boolean> connection = new MutableLiveData<>(); // состояние интернет соединения для выброса уведомления
@@ -24,8 +30,6 @@ public class CityRepository {
         this.dao= db.getCityDao();
     }
 
-    // вызывается в конструкторе viewModel
-    // должен положить в cities список городов (из базы или обновлённый из сети - зависит от наличия подключения)
     public void downloadCities(){
         checkConnection();
         this.loading.setValue(true);
@@ -67,6 +71,7 @@ public class CityRepository {
             }else{
                 city = new City(WeatherApi.MODE_ONLY_WEATHER, c.lat+" "+c.lon);
             }
+            city.setName(c.name);
             result.add(city);
         }
         this.cities.postValue(result);
@@ -79,12 +84,20 @@ public class CityRepository {
     }
 
     public void downloadCityFromApi(int mode, String data){
-        checkConnection();
+        if(!checkConnection()) return;
         loading.setValue(true);
 
-        if(connection.getValue()){
-            City city= new City(mode, data);
+        // проверка на дубликаты по имени
+        if (mode==WeatherApi.MODE_ALL && dao.getNames().contains(data)){
+            LinkedList<City> actually_cities= removeCityFromList(data);
+            this.cities.postValue(actually_cities);
 
+        }
+
+            if(connection.getValue()){
+            City city= new City(mode, data);
+            if (!city.isCity()) return;
+            
             LinkedList<City> deprecated_cities = cities.getValue();
             if (deprecated_cities==null) deprecated_cities=new LinkedList<>();
             deprecated_cities.add(city);
@@ -99,12 +112,64 @@ public class CityRepository {
         loading.setValue(false);
     }
 
+    public void processRequest(String request){
+        String[] data = request.split(" ");
+        Runnable task=null;
 
-    private void checkConnection(){
-        Boolean connection = false;
-        // какая-то реализация
-        //
+        switch (data[0]){
+            case REQUEST_DELETE:
+                task = new Runnable() {
+                    @Override
+                    public void run() {
+                        deleteCity(data[1]);
+                    }
+                };
+                break;
+            case REQUEST_FAVORITE:
+                task = new Runnable() {
+                    @Override
+                    public void run() {
+                        changeFavorite(data[1]);
+                    }
+                };
+                break;
+        }
+        Thread thr = new Thread(task);
+        thr.start();
+    }
+    private void deleteCity(String name){
+        // удаляем из пользовательского интерфейса
+        LinkedList<City> actually_cities = removeCityFromList(name);
+        this.cities.postValue(actually_cities);
+
+        // удаляем из базы
+        dao.deleteByName(name);
+
+    }
+    private LinkedList<City> removeCityFromList(String name){
+        LinkedList<City> cities = this.cities.getValue();
+        City city_for_delete=new City();
+        if (cities==null) return new LinkedList<>();
+        for (City c: cities){
+            if (c.getName().equals(name)){
+                cities.remove(c);
+                break;
+            }
+        }
+        return cities;
+    }
+    private void deleteCityFromDatabase(String name){
+
+    }
+    private void changeFavorite(String name){
+
+    }
+
+
+    private boolean checkConnection(){
+        Boolean connection = ConnectionManager.isOnline();
         this.connection.setValue(connection);
+        return connection;
     }
     private boolean isRelevant(long upload_time){
         Date date = new Date();

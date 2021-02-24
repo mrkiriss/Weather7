@@ -27,6 +27,9 @@ public interface CityDao {
     @Query("SELECT * FROM City WHERE name = :name")
     City getCityByName(String name);
 
+    @Query("DELETE FROM city WHERE name = :name")
+    void deleteByName(String name);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(City city);
 
@@ -41,4 +44,5 @@ public interface CityDao {
 
     @Delete
     void delete(City city);
+
 }

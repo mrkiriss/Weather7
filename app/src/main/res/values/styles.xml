@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="button">
-        <item name="android:backgroundTint">@color/orange</item>
-        <item name="android:textColor">@color/white_orange</item>
-        <item name="android:textSize">18sp</item>
-    </style>
+
 </resources>

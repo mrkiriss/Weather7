@@ -1,6 +1,7 @@
 package com.example.weather7.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -8,7 +9,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.example.weather7.model.adapters.DayAdapter;
+import com.example.weather7.model.adapters.DaysAdapter;
 import com.example.weather7.model.api.WeatherApi;
 import com.example.weather7.model.database.Converters;
 
@@ -26,7 +27,7 @@ public class City{
     private Bitmap current_icon;
     private String current_description;
     @TypeConverters({Converters.DayAdapterConverter.class})
-    private DayAdapter days;
+    private DaysAdapter days;
 
     private long upload_time;
 
@@ -61,12 +62,16 @@ public class City{
     }
     public City(){};
 
-    private void createHeaderAndAdapter(LinkedList<WeatherOnDay> days){
+    private void createHeaderAndAdapter (LinkedList<WeatherOnDay> days){
+        if (days==null || days.size()==0){
+            Log.println(Log.WARN, "createHeaderAndAdapter", "empty citys data");
+            return;
+        }
         // заполнений полей для шапки адаптера
         enterCurrentData(days.get(0));
         days.remove(0);
         // создание адаптера дней
-        this.days=new DayAdapter(days);
+        this.days=new DaysAdapter(days);
 
     }
     private void enterCurrentData(WeatherOnDay current_day){
@@ -80,7 +85,7 @@ public class City{
     public String getLat(){return lat;}
     public String getLon(){return lon;}
     public Bitmap getCurrent_icon(){return current_icon;}
-    public DayAdapter getDays(){return days;}
+    public DaysAdapter getDays(){return days;}
     public String getCurrent_description(){return current_description;}
     public long getUpload_time(){return upload_time;}
 
@@ -89,10 +94,13 @@ public class City{
     public void setLat(String lat){this.lat= lat;}
     public void setLon(String lon){this.lon= lon;}
     public void setCurrent_icon(Bitmap current_icon){this.current_icon= current_icon;}
-    public void setDays(DayAdapter days){ this.days=days;}
+    public void setDays(DaysAdapter days){ this.days=days;}
     public void setCurrent_description(String current_description){this.current_description= current_description;}
     public void setUpload_time(long upload_time){this.upload_time=upload_time;}
 
+    public boolean isCity(){
+        return (current_description==null? false: true);
+    }
     public static class DeficientCity{
         public String name;
         public long upload_time;

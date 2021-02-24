@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import com.example.weather7.R;
 import com.example.weather7.databinding.MainActivityBinding;
 import com.example.weather7.model.City;
+import com.example.weather7.model.ConnectionManager;
 import com.example.weather7.viewmodel.CitiesViewModel;
 import com.example.weather7.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,7 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity implements FragmentCities.onCitiesFragmentListener {
+public class MainActivity extends AppCompatActivity {
 
     private MainActivityViewModel mainViewModel;
     private MainActivityBinding binding;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCities.on
         binding.setViewModel(new MainActivityViewModel());
         BottomNavigationView navView = binding.navView;
 
+        ConnectionManager.setContext(this);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_cities, R.id.navigation_notifications)
@@ -48,19 +50,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCities.on
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-    }
 
-    @Override
-    public LinkedList<City> getLastCities() {
-        return main_cities;
-    }
-    @Override
-    public void bindActuallyCities(MutableLiveData<LinkedList<City>> live_cities) {
-        live_cities.observe(this, new Observer<LinkedList<City>>() {
-            @Override
-            public void onChanged(LinkedList<City> cities) {
-                main_cities = cities;
-            }
-        });
     }
 }

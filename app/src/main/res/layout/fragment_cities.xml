@@ -7,6 +7,7 @@
             name="ViewModel"
             type="com.example.weather7.viewmodel.CitiesViewModel" />
     </data>
+
     <LinearLayout
         android:id="@+id/coord"
         android:layout_width="match_parent"
@@ -17,24 +18,40 @@
         <LinearLayout
             android:id="@+id/linear"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="6">
 
             <AutoCompleteTextView
                 android:id="@+id/autoCompleteTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="15" />
+                android:layout_weight="4" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_find"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:onClick="@{() -> ViewModel.onClickFind(autoCompleteTextView.getText().toString())}"
-                android:text="@string/button_find" />
+                android:layout_weight="1"
+                android:onClick="@{()->ViewModel.onClickFind(autoCompleteTextView.getText().toString())}"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_search_location" />
+
+            <ImageButton
+                android:id="@+id/imageButton5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_refresh" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/citiesRecyclerView"
