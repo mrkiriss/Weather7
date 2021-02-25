@@ -1,4 +1,4 @@
-package com.example.weather7.model.api;
+package com.example.weather7.repository;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

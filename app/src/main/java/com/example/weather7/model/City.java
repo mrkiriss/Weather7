@@ -9,9 +9,9 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.example.weather7.model.adapters.DaysAdapter;
-import com.example.weather7.model.api.WeatherApi;
-import com.example.weather7.model.database.Converters;
+import com.example.weather7.view.adapters.DaysAdapter;
+import com.example.weather7.repository.api.WeatherApi;
+import com.example.weather7.repository.database.Converters;
 
 import java.util.LinkedList;
 
@@ -60,6 +60,18 @@ public class City{
         lat=coord[0];
         lon=coord[1];
     }
+    // создаёт только данные для шапки
+    @Ignore
+    public City(String name, String lat, String lon, String current_temp, String current_description, Bitmap current_icon){
+        this.name=name;
+        this.lat=lat;
+        this.lon=lon;
+        this.current_temp=current_temp;
+        this.current_description=current_description;
+        this.current_icon=current_icon;
+    };
+
+    
     public City(){};
 
     private void createHeaderAndAdapter (LinkedList<WeatherOnDay> days){
@@ -80,6 +92,10 @@ public class City{
         current_description=current_day.getDescription();
     }
 
+    public boolean isCity(){
+        return (current_description==null? false: true);
+    }
+
     public String getName(){return name;}
     public String getCurrent_temp(){return current_temp;}
     public String getLat(){return lat;}
@@ -98,9 +114,6 @@ public class City{
     public void setCurrent_description(String current_description){this.current_description= current_description;}
     public void setUpload_time(long upload_time){this.upload_time=upload_time;}
 
-    public boolean isCity(){
-        return (current_description==null? false: true);
-    }
     public static class DeficientCity{
         public String name;
         public long upload_time;

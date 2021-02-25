@@ -1,4 +1,4 @@
-package com.example.weather7.model;
+package com.example.weather7.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,11 +10,6 @@ import android.widget.CheckBox;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 public class ConnectionManager {

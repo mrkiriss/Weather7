@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.City;
-import com.example.weather7.model.CityRepository;
-import com.example.weather7.model.api.WeatherApi;
+import com.example.weather7.repository.CityRepository;
+import com.example.weather7.repository.api.WeatherApi;
 
 import java.util.LinkedList;
 

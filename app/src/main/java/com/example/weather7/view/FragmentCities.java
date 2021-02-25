@@ -1,37 +1,28 @@
 package com.example.weather7.view;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Database;
 import androidx.room.Room;
 
-import com.example.weather7.model.CityRepository;
-import com.example.weather7.model.ConnectionManager;
-import com.example.weather7.model.adapters.CitiesAdapter;
+import com.example.weather7.repository.CityRepository;
+import com.example.weather7.utils.ConnectionManager;
+import com.example.weather7.view.adapters.CitiesAdapter;
 import com.example.weather7.R;
 import com.example.weather7.databinding.FragmentCitiesBinding;
 import com.example.weather7.model.City;
-import com.example.weather7.model.database.AppDatabase;
+import com.example.weather7.repository.database.AppDatabase;
 import com.example.weather7.viewmodel.CitiesViewModel;
 
 import java.util.LinkedList;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class FragmentCities extends Fragment{
 
@@ -94,7 +85,7 @@ public class FragmentCities extends Fragment{
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        CitiesAdapter.request.observe(getViewLifecycleOwner(), new Observer<String>() {
+        adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 citiesViewModel.processRequest(s);
@@ -102,11 +93,6 @@ public class FragmentCities extends Fragment{
         });
     }
 
-    public interface onCitiesFragmentListener{
-        // получает данные о городах для создания адаптера
-        LinkedList<City> getLastCities();
-        void bindActuallyCities(MutableLiveData<LinkedList<City>> live_cities);
-    }
 
     @Override
     public void onDestroyView() {

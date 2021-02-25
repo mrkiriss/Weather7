@@ -1,4 +1,4 @@
-package com.example.weather7.model.database;
+package com.example.weather7.repository.database;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,7 +6,7 @@ import android.util.Base64;
 
 import androidx.room.TypeConverter;
 
-import com.example.weather7.model.adapters.DaysAdapter;
+import com.example.weather7.view.adapters.DaysAdapter;
 import com.example.weather7.model.WeatherOnDay;
 
 import org.json.JSONException;

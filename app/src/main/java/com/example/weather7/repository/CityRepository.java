@@ -1,17 +1,14 @@
-package com.example.weather7.model;
+package com.example.weather7.repository;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Room;
 
-import com.example.weather7.model.api.WeatherApi;
-import com.example.weather7.model.database.AppDatabase;
-import com.example.weather7.model.database.CityDao;
+import com.example.weather7.model.City;
+import com.example.weather7.repository.api.WeatherApi;
+import com.example.weather7.repository.database.AppDatabase;
+import com.example.weather7.repository.database.CityDao;
+import com.example.weather7.utils.ConnectionManager;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -94,7 +91,7 @@ public class CityRepository {
 
         }
 
-            if(connection.getValue()){
+        if(connection.getValue()){
             City city= new City(mode, data);
             if (!city.isCity()) return;
             
