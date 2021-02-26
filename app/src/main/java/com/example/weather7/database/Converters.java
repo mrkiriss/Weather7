@@ -1,4 +1,4 @@
-package com.example.weather7.repository.database;
+package com.example.weather7.database;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,19 +49,19 @@ public class Converters {
 
                 LinkedList<WeatherOnDay> days= new LinkedList<>();
                 JSONObject day;
+                String city_name=obj.getString("city_name");
                 String day_data;
 
-                System.out.println(data);
                 for (int i=0;i<obj.length();i++){
                     day_data=obj.getString(String.valueOf(i));
                     day=new JSONObject(day_data);
                     days.add(WeatherOnDay.jsonToWeatherOnDay(day));
                 }
 
-                return new DaysAdapter(days);
+                return new DaysAdapter(days, city_name);
             } catch (JSONException e) {
                 e.printStackTrace();
-                return new DaysAdapter(new LinkedList<>());
+                return new DaysAdapter(new LinkedList<>(), "");
             }
         }
 
@@ -69,12 +69,21 @@ public class Converters {
         public static String dayAdapterToJsonString(DaysAdapter adapter) {
             JSONObject obj = new JSONObject();
 
-            LinkedList<WeatherOnDay> days =adapter.getDays();
+            try {
+                if (adapter==null) return "";
+                obj.put("city_name", adapter.getCity_name());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "";
+            }
+
+            LinkedList<WeatherOnDay> days =adapter.getContent();
             for (int i=0;i<days.size();i++){
                 try {
                     obj.put(String.valueOf(i), days.get(i).toJsonString());
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    return "";
                 }
             }
             return obj.toString();

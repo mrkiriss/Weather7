@@ -17,10 +17,11 @@ import java.util.LinkedList;
 public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder> {
 
     private LinkedList<WeatherOnDay> days;
+    private String city_name;
 
-    public DaysAdapter(LinkedList<WeatherOnDay> days){
+    public DaysAdapter(LinkedList<WeatherOnDay> days, String city_name){
         this.days=days;
-        System.out.println(days);
+        this.city_name=city_name;
     }
 
     @Override
@@ -41,9 +42,11 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
     public int getItemCount() {
         return days.size();
     }
-    public LinkedList<WeatherOnDay> getDays(){return days;}
+    public LinkedList<WeatherOnDay> getContent(){return days;}
+    public void setContent(LinkedList<WeatherOnDay> content){this.days=content;}
+    public String getCity_name(){return city_name;}
 
-    public static class DayViewHolder extends RecyclerView.ViewHolder{
+    public class DayViewHolder extends RecyclerView.ViewHolder{
         ItemDayBinding binding;
 
         public DayViewHolder(ItemDayBinding binding) {

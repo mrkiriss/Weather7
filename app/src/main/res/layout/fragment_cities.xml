@@ -47,12 +47,6 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/citiesRecyclerView"
             android:layout_width="match_parent"

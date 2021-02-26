@@ -1,4 +1,4 @@
-package com.example.weather7.repository.database;
+package com.example.weather7.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -17,9 +17,6 @@ public interface CityDao {
 
     @Query("SELECT name FROM City")
     List<String> getNames();
-
-    @Query("SELECT name, upload_time, lat, lon FROM City")
-    List<City.DeficientCity> getDeficientCities();
 
     @Query("SELECT * FROM city")
     List<City> getCities();

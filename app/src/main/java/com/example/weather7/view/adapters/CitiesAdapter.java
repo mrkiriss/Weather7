@@ -12,23 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemCityBinding;
 import com.example.weather7.model.City;
+import com.example.weather7.model.RepositoryRequest;
 import com.example.weather7.viewmodel.ItemCityViewModel;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedList;
 
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
 
-    private List<City> cities;
+    private LinkedList<City> cities;
 
-    private MutableLiveData<String> request = new MutableLiveData<>();
+    private MutableLiveData<RepositoryRequest> request = new MutableLiveData<>();
 
     public CitiesAdapter(){
-        this.cities= Collections.emptyList();
-    }
-
-    public void setCities(List<City> cities){
-        this.cities=cities;
+        this.cities= new LinkedList<>();
     }
 
     @Override
@@ -49,7 +45,30 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
     public int getItemCount() {
         return cities.size();
     }
-    public MutableLiveData<String> getRequest(){return request;}
+
+    public MutableLiveData<RepositoryRequest> getRequest(){return request;}
+    public void setCities(LinkedList<City> cities){
+        this.cities=cities;
+    }
+    public int addCity(City city){
+        this.cities.add(city);
+        return cities.size()-1;
+    }
+    public int deleteCity(City city){
+        int index = this.cities.indexOf(city);
+        this.cities.remove(city);
+        return index;
+    }
+    public void setDaysAdapterInCity(DaysAdapter adapter){
+        String city_name=adapter.getCity_name();
+        // ищем экземпляр города по названию в адаптере
+        for (City city: cities){
+            if (city.getName().equals(city_name)){
+                city.getDaysAdapter().setContent(adapter.getContent());
+                city.getDaysAdapter().notifyDataSetChanged();
+            }
+        }
+    }
 
     public class CityViewHolder extends RecyclerView.ViewHolder{
         ItemCityBinding binding;
@@ -66,9 +85,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
                 binding.getViewModel().setCity(city);
             }
 
-            binding.cardView.setTag(city.getName());
-
-            binding.daysRecycleView.setAdapter(city.getDays());
+            binding.daysRecycleView.setAdapter(city.getDaysAdapter());
             binding.daysRecycleView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
 
         }

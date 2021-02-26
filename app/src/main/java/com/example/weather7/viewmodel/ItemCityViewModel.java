@@ -9,6 +9,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.weather7.model.City;
+import com.example.weather7.model.RepositoryRequest;
 import com.example.weather7.repository.CityRepository;
 
 public class ItemCityViewModel extends BaseObservable {
@@ -20,7 +21,7 @@ public class ItemCityViewModel extends BaseObservable {
     private String description;
     public ObservableBoolean expandable;
 
-    private MutableLiveData<String> request;
+    private MutableLiveData<RepositoryRequest> request;
 
 
     public String getName_city_and_temp() {
@@ -39,7 +40,7 @@ public class ItemCityViewModel extends BaseObservable {
         iv.setImageBitmap(bitmap);
     }
 
-    public ItemCityViewModel(City city, MutableLiveData<String> request){
+    public ItemCityViewModel(City city, MutableLiveData<RepositoryRequest> request){
 
         // значения для шапки
         this.city=city;
@@ -70,7 +71,7 @@ public class ItemCityViewModel extends BaseObservable {
     }
 
     public void markWillBeDelete(){
-        request.setValue(CityRepository.REQUEST_DELETE+" "+name);
+        request.setValue(new RepositoryRequest(CityRepository.REQUEST_DELETE, city));
     }
     public void postFavoriteRequest(){
 

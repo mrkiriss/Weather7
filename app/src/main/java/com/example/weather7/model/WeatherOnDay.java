@@ -3,7 +3,7 @@ package com.example.weather7.model;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.example.weather7.repository.database.Converters;
+import com.example.weather7.database.Converters;
 
 import org.json.JSONException;
 import org.json.JSONObject;
