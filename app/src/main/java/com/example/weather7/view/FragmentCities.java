@@ -1,9 +1,13 @@
 package com.example.weather7.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,7 +19,6 @@ import androidx.room.Room;
 
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.model.RepositoryRequest;
-import com.example.weather7.model.WeatherOnDay;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.adapters.CitiesAdapter;
@@ -43,11 +46,13 @@ public class FragmentCities extends Fragment{
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cities, container, false);
 
         // создание экземпляра ДБ
-        db =Room.databaseBuilder(getContext(),
-                AppDatabase.class, "database")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build();
+        if (db==null) {
+            db = Room.databaseBuilder(getContext(),
+                    AppDatabase.class, "database")
+                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    .build();
+        }
         // создание экземпляра Погодного api
         api = new WeatherApi();
         // создание ViewModel
@@ -86,7 +91,6 @@ public class FragmentCities extends Fragment{
                 setDaysAdapterInCity(adapter);
             }
         });
-
         // подписываемся на обновления состояния сети
         citiesViewModel.getConnection().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -99,7 +103,14 @@ public class FragmentCities extends Fragment{
         citiesViewModel.getError_content().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String content) {
-
+                Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+            }
+        });
+        // подписываемся на вызов Intent-ов
+        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), new Observer<Intent>() {
+            @Override
+            public void onChanged(Intent intent) {
+                startActivity(intent);
             }
         });
 
@@ -108,17 +119,13 @@ public class FragmentCities extends Fragment{
 
     private void onCityAdd(City city){
         // добавляем город
-        int position = cities_adapter.addCity(city);
-        cities_adapter.notifyItemInserted(position);
+            int position = cities_adapter.addCity(city);
+            cities_adapter.notifyItemChanged(position);
     }
     private void onCityDelete(City city){
         // добавляем город
         int position = cities_adapter.deleteCity(city);
         cities_adapter.notifyItemRemoved(position);
-    }
-
-    private void setContentToDaysAdapter(LinkedList<WeatherOnDay> content, String city_name){
-        //cities_adapter.
     }
 
     private void setDaysAdapterInCity(DaysAdapter adapter){
@@ -129,6 +136,7 @@ public class FragmentCities extends Fragment{
         cities_adapter.setCities(cities);
         cities_adapter.notifyDataSetChanged();
     }
+
 
     private void setupCitiesRecyclerView(RecyclerView recyclerView) {
         CitiesAdapter adapter = new CitiesAdapter();
@@ -144,12 +152,8 @@ public class FragmentCities extends Fragment{
         });
     }
 
-    // слаушетли на запросы добавления города и добавления дней в город по названию (исп. тэг)
-
-
     @Override
     public void onDestroyView() {
-        db.close();
         api=null;
         super.onDestroyView();
     }

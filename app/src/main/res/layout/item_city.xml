@@ -107,6 +107,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
+                    android:onClick="@{()->ViewModel.openCityInMap()}"
                     card_view:srcCompat="@drawable/ic_map" />
 
             </LinearLayout>

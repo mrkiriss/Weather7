@@ -24,14 +24,14 @@ public interface CityDao {
     @Query("SELECT * FROM City WHERE name = :name")
     City getCityByName(String name);
 
+    @Query("SELECT upload_time FROM City WHERE name = :name")
+    long getUpload_time(String name);
+
     @Query("DELETE FROM city WHERE name = :name")
     void deleteByName(String name);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(City city);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(LinkedList<City> cities);
 
     @Update
     void update(City city);

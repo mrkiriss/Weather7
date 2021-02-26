@@ -70,6 +70,9 @@ public class ItemCityViewModel extends BaseObservable {
         }
     }
 
+    public void openCityInMap(){
+        request.setValue(new RepositoryRequest(CityRepository.REQUEST_OPEN_CITY_IN_MAP, city));
+    }
     public void markWillBeDelete(){
         request.setValue(new RepositoryRequest(CityRepository.REQUEST_DELETE, city));
     }
