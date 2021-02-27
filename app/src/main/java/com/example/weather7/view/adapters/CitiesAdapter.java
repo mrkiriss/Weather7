@@ -52,12 +52,17 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
     }
     public int addCity(City city){
         this.cities.add(city);
-        return cities.size()-1;
+        return this.cities.size()-1;
     }
-    public int deleteCity(City city){
-        int index = this.cities.indexOf(city);
-        this.cities.remove(city);
-        return index;
+    public int deleteCity(City this_city){
+        for (int i=0;i<cities.size();i++){
+            City city = cities.get(i);
+            if (city.getName().equals(this_city.getName())){
+                cities.remove(city);
+                return i;
+            }
+        }
+        return -1;
     }
     public void setDaysAdapterInCity(DaysAdapter adapter){
         String city_name=adapter.getCity_name();
@@ -79,11 +84,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         }
 
         void bindCity(City city){
-            if (binding.getViewModel()==null){
-                binding.setViewModel(new ItemCityViewModel(city, request));
-            }else{
-                binding.getViewModel().setCity(city);
-            }
+            binding.setViewModel(new ItemCityViewModel(city, request));
 
             binding.daysRecycleView.setAdapter(city.getDaysAdapter());
             binding.daysRecycleView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));

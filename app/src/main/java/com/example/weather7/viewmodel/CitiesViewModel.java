@@ -24,7 +24,7 @@ public class CitiesViewModel extends ViewModel {
     private LiveData<City> addCityHeadRequest;
     private LiveData<City> deleteCityRequest;
     private LiveData<DaysAdapter> addDaysInCityRequest;
-    public LiveData<Intent> startIntent;
+    private LiveData<Intent> startIntent;
 
     private LiveData<String> error_content;
 
@@ -50,6 +50,8 @@ public class CitiesViewModel extends ViewModel {
     }
 
     public void refreshCities(){
+        System.out.println("--------------------------------------------------------------");
+        rep.clear();
         rep.firstFillingCities();
     }
 

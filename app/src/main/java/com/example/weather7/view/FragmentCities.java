@@ -46,13 +46,12 @@ public class FragmentCities extends Fragment{
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cities, container, false);
 
         // создание экземпляра ДБ
-        if (db==null) {
-            db = Room.databaseBuilder(getContext(),
-                    AppDatabase.class, "database")
-                    .allowMainThreadQueries()
-                    .fallbackToDestructiveMigration()
-                    .build();
-        }
+        db = Room.databaseBuilder(getContext(),
+                AppDatabase.class, "database")
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build();
+
         // создание экземпляра Погодного api
         api = new WeatherApi();
         // создание ViewModel
@@ -74,6 +73,7 @@ public class FragmentCities extends Fragment{
         citiesViewModel.getAddCityHeadRequest().observe(getViewLifecycleOwner(), new Observer<City>() {
             @Override
             public void onChanged(City city) {
+                System.out.println("+++++++++++++++ "+city.getName());
                 onCityAdd(city);
             }
         });
@@ -118,14 +118,12 @@ public class FragmentCities extends Fragment{
     }
 
     private void onCityAdd(City city){
-        // добавляем город
-            int position = cities_adapter.addCity(city);
-            cities_adapter.notifyItemChanged(position);
+        int index = cities_adapter.addCity(city);
+        cities_adapter.notifyItemChanged(index);
     }
     private void onCityDelete(City city){
-        // добавляем город
-        int position = cities_adapter.deleteCity(city);
-        cities_adapter.notifyItemRemoved(position);
+        int index = cities_adapter.deleteCity(city);
+        cities_adapter.notifyItemRemoved(index);
     }
 
     private void setDaysAdapterInCity(DaysAdapter adapter){
