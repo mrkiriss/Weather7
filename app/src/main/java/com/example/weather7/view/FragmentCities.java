@@ -113,6 +113,13 @@ public class FragmentCities extends Fragment{
                 startActivity(intent);
             }
         });
+        // подписываемся на вызов фрагмента
+        citiesViewModel.getOpenRainMap().observe(getViewLifecycleOwner(), new Observer<FragmentRainMap>() {
+            @Override
+            public void onChanged(FragmentRainMap fragment) {
+                showFragment(fragment);
+            }
+        });
 
         return binding.getRoot();
     }
@@ -127,6 +134,7 @@ public class FragmentCities extends Fragment{
     }
 
     private void setDaysAdapterInCity(DaysAdapter adapter){
+        System.out.println("Дни пришли для "+adapter.getCity_name());
         cities_adapter.setDaysAdapterInCity(adapter);
     }
 
@@ -135,19 +143,22 @@ public class FragmentCities extends Fragment{
         cities_adapter.notifyDataSetChanged();
     }
 
-
     private void setupCitiesRecyclerView(RecyclerView recyclerView) {
         CitiesAdapter adapter = new CitiesAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // подписываемся на обновление запроса от ОПРЕДЕЛЁННОГО ГОРОДА(по имени)
+        // подписываемся на обновление запроса от ОПРЕДЕЛЁННОГО ГОРОДА
         adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<RepositoryRequest>() {
             @Override
             public void onChanged(RepositoryRequest req) {
                 citiesViewModel.processRequest(req);
             }
         });
+    }
+
+    private void showFragment(FragmentRainMap fragment){
+
     }
 
     @Override

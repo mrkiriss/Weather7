@@ -9,8 +9,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.City;
 import com.example.weather7.model.RepositoryRequest;
+import com.example.weather7.model.WeatherMap;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.api.WeatherApi;
+import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.adapters.DaysAdapter;
 
 import java.util.LinkedList;
@@ -25,6 +27,7 @@ public class CitiesViewModel extends ViewModel {
     private LiveData<City> deleteCityRequest;
     private LiveData<DaysAdapter> addDaysInCityRequest;
     private LiveData<Intent> startIntent;
+    private LiveData<FragmentRainMap> openRainMap;
 
     private LiveData<String> error_content;
 
@@ -38,6 +41,7 @@ public class CitiesViewModel extends ViewModel {
         this.error_content=rep.getError_content();
         this.deleteCityRequest=rep.getDeleteCityRequest();
         this.startIntent=rep.getStartIntent();
+        this.openRainMap=rep.getOpenRainMap();
 
         // обновляем список городов
         rep.firstFillingCities();
@@ -50,8 +54,6 @@ public class CitiesViewModel extends ViewModel {
     }
 
     public void refreshCities(){
-        System.out.println("--------------------------------------------------------------");
-        rep.clear();
         rep.firstFillingCities();
     }
 
@@ -67,4 +69,5 @@ public class CitiesViewModel extends ViewModel {
     public  LiveData<String> getError_content(){return error_content;}
     public ObservableField<String> getEmpty_text(){return empty_text;}
     public LiveData<Intent> getStartIntent(){return startIntent;}
+    public LiveData<FragmentRainMap> getOpenRainMap(){return  openRainMap;}
 }

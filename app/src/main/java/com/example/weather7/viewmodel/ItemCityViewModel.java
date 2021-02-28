@@ -76,6 +76,9 @@ public class ItemCityViewModel extends BaseObservable {
     public void markWillBeDelete(){
         request.setValue(new RepositoryRequest(CityRepository.REQUEST_DELETE, city));
     }
+    public void openRainMap(){
+        request.setValue(new RepositoryRequest(CityRepository.REQUEST_OPEN_RAIN_MAP, city));
+    }
     public void postFavoriteRequest(){
 
     }

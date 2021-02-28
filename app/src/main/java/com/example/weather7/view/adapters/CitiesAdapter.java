@@ -20,7 +20,6 @@ import java.util.LinkedList;
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
 
     private LinkedList<City> cities;
-
     private MutableLiveData<RepositoryRequest> request = new MutableLiveData<>();
 
     public CitiesAdapter(){

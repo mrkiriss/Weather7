@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Ignore;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemDayBinding;
@@ -18,13 +19,11 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
 
     private LinkedList<WeatherOnDay> days;
     private String city_name;
-
     public DaysAdapter(LinkedList<WeatherOnDay> days, String city_name){
         this.days=days;
         this.city_name=city_name;
     }
 
-    @Override
     public DayViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         ItemDayBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
@@ -42,6 +41,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
     public int getItemCount() {
         return days.size();
     }
+
     public LinkedList<WeatherOnDay> getContent(){return days;}
     public void setContent(LinkedList<WeatherOnDay> content){this.days=content;}
     public String getCity_name(){return city_name;}

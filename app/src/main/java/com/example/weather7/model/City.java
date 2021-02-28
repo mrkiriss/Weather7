@@ -3,6 +3,7 @@ package com.example.weather7.model;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -24,6 +25,7 @@ public class City{
     @TypeConverters({Converters.BitmapConverter.class})
     private Bitmap current_icon;
     private String current_description;
+    @ColumnInfo(name="days_adapter")
     @TypeConverters({Converters.DayAdapterConverter.class})
     private DaysAdapter daysAdapter;
 

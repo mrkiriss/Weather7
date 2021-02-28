@@ -45,6 +45,8 @@ public class Converters {
         public static DaysAdapter stringToDayAdapter(String data){
             try {
 
+                System.out.println(data);
+
                 JSONObject obj = new JSONObject(data);
 
                 LinkedList<WeatherOnDay> days= new LinkedList<>();
@@ -52,7 +54,7 @@ public class Converters {
                 String city_name=obj.getString("city_name");
                 String day_data;
 
-                for (int i=0;i<obj.length();i++){
+                for (int i=0;i<obj.length()-1;i++){
                     day_data=obj.getString(String.valueOf(i));
                     day=new JSONObject(day_data);
                     days.add(WeatherOnDay.jsonToWeatherOnDay(day));
@@ -70,7 +72,7 @@ public class Converters {
             JSONObject obj = new JSONObject();
 
             try {
-                if (adapter==null) return "";
+                if (adapter==null) return "------";
                 obj.put("city_name", adapter.getCity_name());
             } catch (JSONException e) {
                 e.printStackTrace();
