@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View" />
         <variable
             name="ViewModel"
-            type="com.example.weather7.viewmodel.CitiesViewModel" />
+            type="com.example.weather7.viewmodel.cities.CitiesViewModel" />
     </data>
 
     <LinearLayout
@@ -22,12 +23,27 @@
             android:orientation="horizontal"
             android:weightSum="6">
 
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteTextView"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:text="@{ViewModel.empty_text}"/>
+                android:layout_weight="4">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:imeOptions="flagNoExtractUi|actionSearch"
+                    android:inputType="textCapSentences"
+                    android:text="@={ViewModel.text_city}" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="16dp" />
+            </FrameLayout>
 
             <ImageButton
                 android:id="@+id/button_find"
@@ -43,11 +59,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:scaleType="fitCenter"
                 android:onClick="@{()->ViewModel.refreshCities()}"
+                android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_refresh" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBarCities"
+            style="@android:style/Widget.ProgressBar.Inverse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{ViewModel.progress_visible? View.VISIBLE:View.GONE}"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/citiesRecyclerView"

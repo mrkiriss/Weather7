@@ -6,12 +6,11 @@ import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Ignore;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemDayBinding;
 import com.example.weather7.model.WeatherOnDay;
-import com.example.weather7.viewmodel.ItemDayViewModel;
+import com.example.weather7.viewmodel.cities.items.ItemDayViewModel;
 
 import java.util.LinkedList;
 

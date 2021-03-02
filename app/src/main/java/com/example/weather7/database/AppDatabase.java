@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.weather7.model.City;
 
-@Database(entities = {City.class}, version = 5, exportSchema=  false)
+@Database(entities = {City.class}, version = 6, exportSchema=  false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CityDao getCityDao();
 }

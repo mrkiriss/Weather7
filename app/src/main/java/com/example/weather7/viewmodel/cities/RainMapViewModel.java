@@ -1,4 +1,4 @@
-package com.example.weather7.viewmodel;
+package com.example.weather7.viewmodel.cities;
 
 import androidx.lifecycle.ViewModel;
 

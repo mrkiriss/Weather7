@@ -13,7 +13,9 @@ import com.example.weather7.R;
 import com.example.weather7.databinding.ItemCityBinding;
 import com.example.weather7.model.City;
 import com.example.weather7.model.RepositoryRequest;
-import com.example.weather7.viewmodel.ItemCityViewModel;
+import com.example.weather7.viewmodel.cities.items.ItemCityViewModel;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 
@@ -26,6 +28,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         this.cities= new LinkedList<>();
     }
 
+    @NotNull
     @Override
     public CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         ItemCityBinding binding = DataBindingUtil.inflate(

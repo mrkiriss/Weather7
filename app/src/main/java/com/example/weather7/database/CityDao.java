@@ -8,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.weather7.model.City;
-import com.example.weather7.view.adapters.DaysAdapter;
 
 import java.util.LinkedList;
 import java.util.List;

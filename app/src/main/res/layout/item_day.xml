@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="ViewModel"
-            type="com.example.weather7.viewmodel.ItemDayViewModel" />
+            type="com.example.weather7.viewmodel.cities.items.ItemDayViewModel" />
     </data>
 
     <androidx.cardview.widget.CardView

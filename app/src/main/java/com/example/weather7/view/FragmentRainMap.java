@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.weather7.R;
-import com.example.weather7.viewmodel.RainMapViewModel;
+import com.example.weather7.viewmodel.cities.RainMapViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

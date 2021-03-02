@@ -1,17 +1,16 @@
-package com.example.weather7.viewmodel;
+package com.example.weather7.viewmodel.cities;
 
 import android.content.Intent;
 
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.City;
 import com.example.weather7.model.RepositoryRequest;
-import com.example.weather7.model.WeatherMap;
 import com.example.weather7.repository.CityRepository;
-import com.example.weather7.api.WeatherApi;
 import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.adapters.DaysAdapter;
 
@@ -19,7 +18,10 @@ import java.util.LinkedList;
 
 public class CitiesViewModel extends ViewModel {
 
-    private ObservableField<String> empty_text= new ObservableField<>("");
+    private ObservableField<String> text_city = new ObservableField<>();
+    private ObservableBoolean progress_visible=new ObservableBoolean();
+
+    private LiveData<Boolean> cities_loading;
     private CityRepository rep;
     private LiveData<Boolean> connection;
     private LiveData<LinkedList<City>> cities;
@@ -28,8 +30,8 @@ public class CitiesViewModel extends ViewModel {
     private LiveData<DaysAdapter> addDaysInCityRequest;
     private LiveData<Intent> startIntent;
     private LiveData<FragmentRainMap> openRainMap;
-
     private LiveData<String> error_content;
+
 
     public CitiesViewModel(CityRepository rep) {
         this.rep = rep;
@@ -42,7 +44,17 @@ public class CitiesViewModel extends ViewModel {
         this.deleteCityRequest=rep.getDeleteCityRequest();
         this.startIntent=rep.getStartIntent();
         this.openRainMap=rep.getOpenRainMap();
+        this.cities_loading= rep.getCities_loading();
 
+        // состояние загрузки
+        progress_visible.set(false);
+        // реагирование на ввод пользователя
+        text_city.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                //rep.getNamesOfCities(text_city.get());
+            }
+        });
         // обновляем список городов
         rep.firstFillingCities();
 
@@ -50,7 +62,7 @@ public class CitiesViewModel extends ViewModel {
 
     public void onClickFind(String city_name){
         rep.runAddingSingleCityFromAPI(city_name);
-        empty_text.notifyChange();
+        text_city.set("");
     }
 
     public void refreshCities(){
@@ -67,7 +79,10 @@ public class CitiesViewModel extends ViewModel {
     public  LiveData<City> getDeleteCityRequest(){return deleteCityRequest;}
     public  LiveData<DaysAdapter> getAddDaysInCityRequest(){return addDaysInCityRequest;}
     public  LiveData<String> getError_content(){return error_content;}
-    public ObservableField<String> getEmpty_text(){return empty_text;}
+    public ObservableField<String> getText_city(){return text_city;}
     public LiveData<Intent> getStartIntent(){return startIntent;}
     public LiveData<FragmentRainMap> getOpenRainMap(){return  openRainMap;}
+    public LiveData<Boolean> getCities_loading(){return cities_loading;}
+    public ObservableBoolean getProgress_visible(){return progress_visible;}
+    public void setProgress_visible(Boolean visible){this.progress_visible.set(visible);}
 }

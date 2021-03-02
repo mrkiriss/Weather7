@@ -1,12 +1,10 @@
 package com.example.weather7.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.example.weather7.api.CitiesApi;
+import com.example.weather7.api.RainMapApi;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.model.RepositoryRequest;
 import com.example.weather7.repository.CityRepository;
@@ -27,7 +27,7 @@ import com.example.weather7.databinding.FragmentCitiesBinding;
 import com.example.weather7.model.City;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.view.adapters.DaysAdapter;
-import com.example.weather7.viewmodel.CitiesViewModel;
+import com.example.weather7.viewmodel.cities.CitiesViewModel;
 
 import java.util.LinkedList;
 
@@ -52,10 +52,14 @@ public class FragmentCities extends Fragment{
                 .fallbackToDestructiveMigration()
                 .build();
 
+        // создание экземпляра api дождя
+        RainMapApi rain_api = new RainMapApi(getContext());
         // создание экземпляра Погодного api
-        api = new WeatherApi();
+        api = new WeatherApi(getContext());
+        // создание экземпляра api названий городов для поиска
+        CitiesApi citiesApi=new CitiesApi();
         // создание ViewModel
-        citiesViewModel = new CitiesViewModel(new CityRepository(db, api));
+        citiesViewModel = new CitiesViewModel(new CityRepository(db, api, rain_api, citiesApi));
         binding.setViewModel(citiesViewModel);
 
         setupCitiesRecyclerView(binding.citiesRecyclerView);
@@ -118,6 +122,13 @@ public class FragmentCities extends Fragment{
             @Override
             public void onChanged(FragmentRainMap fragment) {
                 showFragment(fragment);
+            }
+        });
+        // подписываемся на обновление состояние загрузки
+        citiesViewModel.getCities_loading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean visible) {
+                citiesViewModel.setProgress_visible(visible);
             }
         });
 

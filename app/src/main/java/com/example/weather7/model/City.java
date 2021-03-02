@@ -19,6 +19,7 @@ public class City{
     @PrimaryKey
     @NonNull
     private String name;
+    private String timezone;
     private String lat;
     private String lon;
     private String current_temp;
@@ -33,7 +34,7 @@ public class City{
 
     // создаёт только данные для шапки
     @Ignore
-    public City(String name, String lat, String lon, String current_temp, String current_description, Bitmap current_icon){
+    public City(String name, String timezone, String lat, String lon, String current_temp, String current_description, Bitmap current_icon){
         this.name=name;
         this.lat=lat;
         this.lon=lon;
@@ -41,6 +42,7 @@ public class City{
         this.current_description=current_description;
         this.current_icon=current_icon;
         this.daysAdapter=new DaysAdapter(new LinkedList<>(), name);
+        this.timezone=timezone;
     };
 
     public City(){};
@@ -57,6 +59,7 @@ public class City{
     public DaysAdapter getDaysAdapter(){return daysAdapter;}
     public String getCurrent_description(){return current_description;}
     public long getUpload_time(){return upload_time;}
+    public String getTimezone(){return timezone;}
 
     public void setName(String name){this.name= name;}
     public void setCurrent_temp(String current_temp){this.current_temp= current_temp;}
@@ -66,5 +69,6 @@ public class City{
     public void setDaysAdapter(DaysAdapter daysAdapter){ this.daysAdapter=daysAdapter;}
     public void setCurrent_description(String current_description){this.current_description= current_description;}
     public void setUpload_time(long upload_time){this.upload_time=upload_time;}
+    public void setTimezone(String timezone){this.timezone=timezone;}
 
 }

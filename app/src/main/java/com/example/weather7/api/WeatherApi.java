@@ -1,7 +1,10 @@
 package com.example.weather7.api;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 
 import com.example.weather7.model.City;
 import com.example.weather7.model.WeatherOnDay;
@@ -19,6 +22,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 public class WeatherApi{
     private final String url_for_head="https://api.openweathermap.org/data/2.5/weather?q=";
@@ -29,6 +33,12 @@ public class WeatherApi{
     private final String lon="&lon=";
     private final String lat="&lat=";
     private final String lang = "&lang=ru";
+
+    private final Context context;
+
+    public WeatherApi(Context context) {
+        this.context=context;
+    }
 
     public City startCityHeadDownload(String name) throws IOException, JSONException {
         String head_url_request = this.url_for_head+name+weather_api+metric+lang;
@@ -42,28 +52,19 @@ public class WeatherApi{
         return parseDays(name, content);
     }
 
-    private String convertUnixTimeToFormatString(String stime, String time_zone){
+    protected String convertUnixTimeToFormatString(String stime, String time_zone){
         // перевод секунд в миллисекунды
         long time = Long.valueOf(stime);
         Date date = new java.util.Date(time*1000L);
         // формат даты
         SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM-dd");
-        // give a timezone reference for formatting (see comment at the bottom)
+
         sdf.setTimeZone(java.util.TimeZone.getTimeZone(time_zone));
         String result = sdf.format(date);
         return result;
     }
-    private Bitmap downloadUrlIcon(String id) throws IOException {
-        String surl = "https://openweathermap.org/img/wn/"+id+"@2x.png";
-        Bitmap bmp = null;
 
-        URL url = new URL(surl); //java.net.MalformedURLException
-        bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream()); //java.io.IOException
-        bmp = Bitmap.createScaledBitmap(bmp, 160, 160, false);
-
-        return bmp;
-    }
-    private String downloadContentByUrl(String url_request) throws IOException {
+    protected String downloadContentByUrl(String url_request) throws IOException {
         String content = "";
 
         URL url = new URL(url_request);
@@ -78,20 +79,51 @@ public class WeatherApi{
 
         return content;
     }
+    private Bitmap downloadUrlIcon(String id) throws IOException {
+        String surl = "https://openweathermap.org/img/wn/"+id+"@2x.png";
+        Bitmap bmp = null;
+
+        URL url = new URL(surl); //java.net.MalformedURLException
+        bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream()); //java.io.IOException
+        bmp = Bitmap.createScaledBitmap(bmp, 160, 160, false);
+
+        return bmp;
+    }
     private String toStr(Object object) {return String.valueOf(object);}
     private City parseCityHead(String name, String content) throws JSONException, IOException {
         JSONObject obj = new JSONObject(content);
 
-        String lat = obj.getJSONObject("coord").getString("lat");
-        String lon = obj.getJSONObject("coord").getString("lon");
+        String[] coordinates = getCoordinate(name);
+        String lat;
+        String lon;
+        if (coordinates[0]==null || coordinates[1]==null) {
+            lat = obj.getJSONObject("coord").getString("lat");
+            lon = obj.getJSONObject("coord").getString("lon");
+        }else{
+            lat=coordinates[0];
+            lon=coordinates[1];
+        }
         String description = obj.getJSONArray("weather").getJSONObject(0).getString("description");
         String icon_id = obj.getJSONArray("weather").getJSONObject(0).getString("icon");
         Bitmap icon = downloadUrlIcon(icon_id);
         String temp = toStr(Math.round(obj.getJSONObject("main").getDouble("temp")));
         String feels_like = toStr(Math.round(obj.getJSONObject("main").getDouble("feels_like")));
         String result_temp=temp+"/"+feels_like+"°C";
+        String timezone = obj.getString("timezone");
 
-        return new City(name, lat, lon, result_temp, description, icon);
+        return new City(name, timezone, lat, lon, result_temp, description, icon);
+    }
+    private String[] getCoordinate(String location) throws IOException {
+        String[] coordinates = new String[2];
+
+        Geocoder geo = new Geocoder(context);
+        List<Address> adr = null;
+        adr = geo.getFromLocationName(location, 1);
+        if (adr.size()>0){
+            coordinates[0]=String.valueOf(adr.get(0).getLatitude());
+            coordinates[1]=String.valueOf(adr.get(0).getLongitude());
+        }
+        return coordinates;
     }
     private DaysAdapter parseDays(String name, String content) throws JSONException, IOException {
         LinkedList<WeatherOnDay> result = new LinkedList<>();
@@ -132,4 +164,5 @@ public class WeatherApi{
 
         return new DaysAdapter(result, name);
     }
+
 }
