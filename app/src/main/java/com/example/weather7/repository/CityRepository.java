@@ -15,6 +15,7 @@ import com.example.weather7.model.City;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
+import com.example.weather7.model.DelayMessage;
 import com.example.weather7.model.RepositoryRequest;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.FragmentRainMap;
@@ -25,6 +26,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -40,12 +43,12 @@ public class CityRepository {
     private CitiesApi api_cities;
 
     private MutableLiveData<LinkedList<City>> cities = new MutableLiveData<>();
-    private MutableLiveData<City> addCityHeadRequest = new MutableLiveData<>();
+    private  MutableLiveData<City> addCityHeadRequest = new MutableLiveData<>();
     private MutableLiveData<City> deleteCityRequest = new MutableLiveData<>();
     private MutableLiveData<DaysAdapter> addDaysInCityRequest = new MutableLiveData<>();
     private MutableLiveData<Intent> startIntent = new MutableLiveData<>();
     private MutableLiveData<FragmentRainMap> openRainMap = new MutableLiveData<>();
-    private MutableLiveData<LinkedList<AutoEnteredCity>> auto_cities = new MutableLiveData<>();
+    private MutableLiveData<List<AutoEnteredCity>> auto_cities = new MutableLiveData<>();
 
     private static int firs_filling_status=0;
     private LinkedList<String> current_cities_names = new LinkedList<>();
@@ -54,6 +57,9 @@ public class CityRepository {
     private MutableLiveData<Boolean> names_cities_loading=new MutableLiveData<>();
     private MutableLiveData<Boolean> connection = new MutableLiveData<>();
     private MutableLiveData<String> error_content = new MutableLiveData<>();
+
+    private final int MIN_INPUT_WORD_LENGTH_FOR_AUTO=4;
+    private DelayMessage delayMessage;
 
     public CityRepository(AppDatabase db, WeatherApi api, RainMapApi api_rain, CitiesApi api_cities){
         this.dao= db.getCityDao();
@@ -97,108 +103,91 @@ public class CityRepository {
         }
     }
 
-
     public void respondToInput(String part_of_name){
-        names_cities_loading.postValue(true);
+        if (part_of_name.length()<MIN_INPUT_WORD_LENGTH_FOR_AUTO) return;
 
-    }
-
-    private void getNamesOfCities(String part_of_name){
-        try {
-            LinkedList result = new LinkedList();
-            result.addAll(api_cities.downloadCities(part_of_name));
-            auto_cities.postValue(result);
-        } catch (IOException | JSONException e) {
-            error_content.postValue("Не удалось найти схожие названия городов");
-            e.printStackTrace();
+        if (delayMessage==null){
+            delayMessage=new DelayMessage();
+            //names_cities_loading=delayMessage.getNames_cities_loading();
         }
-        names_cities_loading.postValue(false);
+
+        Runnable task = () -> {
+            names_cities_loading.postValue(true);
+            try {
+                System.out.println(part_of_name);
+                List<AutoEnteredCity> result = api_cities.downloadCities(part_of_name);
+                if (result.size()==0){
+                    throw new IOException();
+                }
+                auto_cities.postValue(result);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            names_cities_loading.postValue(false);
+        };
+
+        delayMessage.processMessage(task);
     }
 
     // api
     public void runAddingSingleCityFromAPI(String city_name){
         checkConnection();
         // в одном потоке и шапка, и дни, Чтобы дни не смогли прийти раньше шапки
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                // добавляем поток в индикатор
-                firs_filling_status++;
-                checkLoading();
+        Runnable task = () -> {
+            // добавляем поток в индикатор
+            firs_filling_status++;
+            checkLoading();
 
-                // форматируем название города
-                String name="";
-                if (city_name.length()>1) {
-                    name = city_name.substring(0, 1).toUpperCase() + city_name.substring(1).toLowerCase();
-                }else{
-                    name = city_name.toUpperCase();
-                }
+            // форматируем название города
+            String name="";
+            if (city_name.length()>1) {
+                name = city_name.substring(0, 1).toUpperCase() + city_name.substring(1).toLowerCase();
+            }else{
+                name = city_name.toUpperCase();
+            }
 
-                // получаем город
-                City city = downloadSingleCityFromAPI(name);
-                if (city==null){
-                    firs_filling_status--;
-                    checkLoading();
-                    return;
-                }
-
-                try {
-                    api_rain.downloadMasksOfRain(city.getLat(), city.getLon(), city.getTimezone());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                // проверяем на дубликат города
-                if (current_cities_names.contains(name)) {
-                    // удаляем старый объект города из интерфейса
-                    deleteCityRequest.postValue(city);
-                    // удаляем из списка нынешних городов на экране
-                    current_cities_names.remove(name);
-                }
-                // отправляем шапку
-                synchronized (addCityHeadRequest){
-                    addCityHeadRequest.postValue(city);
-                    // постепенная загрузка, без наложения
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                // добавляем в список нынешних городов на экране
-                current_cities_names.add(name);
-                // получаем дни
-                DaysAdapter days = downloadSingleDaysAdapterFromAPI(name, city.getLat(), city.getLon());;
-                if (days==null){
-                    firs_filling_status--;
-                    checkLoading();
-                    return;
-                }
-
-                // отправляем дни
-                synchronized (addDaysInCityRequest){
-                    addDaysInCityRequest.postValue(days);
-                    // постепенная загрузка, без наложения
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // удаляем поток из индикатора
+            // получаем город
+            City city = downloadSingleCityFromAPI(name);
+            if (city==null){
                 firs_filling_status--;
                 checkLoading();
-                // запрос на вставку/обновление базы данных
-                insertOrUpdateCityInBase(city);
+                return;
             }
+
+            // проверяем на дубликат города
+            if (current_cities_names.contains(name)) {
+                // удаляем старый объект города из интерфейса
+                deleteCityRequest.postValue(city);
+                // удаляем из списка нынешних городов на экране
+                current_cities_names.remove(name);
+            }
+            // отправляем шапку
+            setAddCityHeadRequest(city);
+
+            // добавляем в список нынешних городов на экране
+            current_cities_names.add(name);
+            // получаем дни
+            DaysAdapter days = downloadSingleDaysAdapterFromAPI(name, city.getLat(), city.getLon());;
+            if (days==null){
+                firs_filling_status--;
+                checkLoading();
+                return;
+            }
+
+            // отправляем дни
+            setAddDaysInCityRequest(days);
+
+            // удаляем поток из индикатора
+            firs_filling_status--;
+            checkLoading();
+            // запрос на вставку/обновление базы данных
+            insertOrUpdateCityInBase(city);
         };
 
         Thread thr = new Thread(task);
         thr.start();
     }
+
     private City downloadSingleCityFromAPI(String name){
         City city = null;
         try {
@@ -249,15 +238,8 @@ public class CityRepository {
             }
 
             // отправляем шапку
-            synchronized (addCityHeadRequest){
-                addCityHeadRequest.postValue(city);
-                // постепенная загрузка, без наложения
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            setAddCityHeadRequest(city);
+
             // добавляем в список нынешних городов на экране
             current_cities_names.add(name);
 
@@ -271,16 +253,7 @@ public class CityRepository {
             }
 
             // отправляем дни
-            // отправляем дни
-            synchronized (addDaysInCityRequest){
-                addDaysInCityRequest.postValue(days);
-                // постепенная загрузка, без наложения
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            setAddDaysInCityRequest(days);
 
             // удаляем поток из индикатора
             firs_filling_status--;
@@ -330,6 +303,25 @@ public class CityRepository {
         current_cities_names.clear();
     }
 
+    private synchronized void setAddCityHeadRequest(City city){
+        addCityHeadRequest.postValue(city);
+        // постепенная загрузка, без наложения
+        try {
+            Thread.sleep(150);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    private synchronized void setAddDaysInCityRequest(DaysAdapter days){
+        addDaysInCityRequest.postValue(days);
+        // постепенная загрузка, без наложения
+        try {
+            Thread.sleep(150);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public LiveData<Boolean> getConnection(){return connection;}
     public LiveData<LinkedList<City>> getCities(){return cities;}
     public LiveData<City> getAddCityHeadRequest(){return addCityHeadRequest;}
@@ -342,7 +334,7 @@ public class CityRepository {
     public LiveData<Boolean> getNames_cities_loading() {
         return names_cities_loading;
     }
-    public LiveData<LinkedList<AutoEnteredCity>> getAuto_cities() {
+    public LiveData<List<AutoEnteredCity>> getAuto_cities() {
         return auto_cities;
     }
 

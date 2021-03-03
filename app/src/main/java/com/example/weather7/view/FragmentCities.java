@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.room.Room;
 import com.example.weather7.api.CitiesApi;
 import com.example.weather7.api.RainMapApi;
 import com.example.weather7.api.WeatherApi;
+import com.example.weather7.model.AutoEnteredCity;
 import com.example.weather7.model.RepositoryRequest;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.utils.ConnectionManager;
@@ -29,7 +31,9 @@ import com.example.weather7.database.AppDatabase;
 import com.example.weather7.view.adapters.DaysAdapter;
 import com.example.weather7.viewmodel.cities.CitiesViewModel;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class FragmentCities extends Fragment{
 
@@ -124,11 +128,26 @@ public class FragmentCities extends Fragment{
                 showFragment(fragment);
             }
         });
-        // подписываемся на обновление состояние загрузки
+        // подписываемся на обновление состояние загрузки городов
         citiesViewModel.getCities_loading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean visible) {
                 citiesViewModel.setProgress_visible(visible);
+            }
+        });
+        // подписываемся на обновление состояние загрузки названий городов
+        citiesViewModel.getNames_cities_loading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean visible) {
+                citiesViewModel.setNames_progress_visible(visible);
+            }
+        });
+        // подписываемся на обновление списка названий городов
+        citiesViewModel.getAuto_cities().observe(getViewLifecycleOwner(), new Observer<List<AutoEnteredCity>>() {
+            @Override
+            public void onChanged(List<AutoEnteredCity> names) {
+                ArrayList<AutoEnteredCity> arr = new ArrayList<>(names);
+                binding.autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, arr));
             }
         });
 

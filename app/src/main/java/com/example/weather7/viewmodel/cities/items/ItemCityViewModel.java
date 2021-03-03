@@ -1,4 +1,4 @@
-package com.example.weather7.viewmodel;
+package com.example.weather7.viewmodel.cities.items;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;
