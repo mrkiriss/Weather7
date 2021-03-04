@@ -67,88 +67,38 @@ public class FragmentCities extends Fragment{
         binding.setViewModel(citiesViewModel);
 
         setupCitiesRecyclerView(binding.citiesRecyclerView);
+
         cities_adapter =
                 (CitiesAdapter) binding.citiesRecyclerView.getAdapter();
 
         // подписываемся на обновление ГОРОДОВ
-        citiesViewModel.getCities().observe(getViewLifecycleOwner(), new Observer<LinkedList<City>>() {
-            @Override
-            public void onChanged(LinkedList<City> cities) {
-                onCitiesChanged(cities);
-            }
-        });
+        citiesViewModel.getCities().observe(getViewLifecycleOwner(), this::onCitiesChanged);
         // подписываемся на обновление запроса на добавление ШАПКИ ГОРОДА
-        citiesViewModel.getAddCityHeadRequest().observe(getViewLifecycleOwner(), new Observer<City>() {
-            @Override
-            public void onChanged(City city) {
-                System.out.println("+++++++++++++++ "+city.getName());
-                onCityAdd(city);
-            }
-        });
+        citiesViewModel.getAddCityHeadRequest().observe(getViewLifecycleOwner(), this::onCityAdd);
         // подписываемся на обновление запроса на УДАЛЕНИЕ ГОРОДА
-        citiesViewModel.getDeleteCityRequest().observe(getViewLifecycleOwner(), new Observer<City>() {
-            @Override
-            public void onChanged(City city) {
-                onCityDelete(city);
-            }
-        });
+        citiesViewModel.getDeleteCityRequest().observe(getViewLifecycleOwner(), this::onCityDelete);
         // подписываемся на обновление запроса на добавление АДАПТЕРА ДНЕЙ ГОРОДА
-        citiesViewModel.getAddDaysInCityRequest().observe(getViewLifecycleOwner(), new Observer<DaysAdapter>() {
-            @Override
-            public void onChanged(DaysAdapter adapter) {
-                setDaysAdapterInCity(adapter);
-            }
-        });
+        citiesViewModel.getAddDaysInCityRequest().observe(getViewLifecycleOwner(), this::setDaysAdapterInCity);
         // подписываемся на обновления состояния сети
-        citiesViewModel.getConnection().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean connection) {
-                if (connection) return;
-                ConnectionManager.showOfferSetting(getContext());
-            }
+        citiesViewModel.getConnection().observe(getViewLifecycleOwner(), connection -> {
+            if (connection) return;
+            ConnectionManager.showOfferSetting(getContext());
         });
         // подписываемся на обновление запроса на добавление КОНТЕЙНЕРА ОШИБКИ
-        citiesViewModel.getError_content().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String content) {
-                Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
-            }
-        });
+        citiesViewModel.getError_content().observe(getViewLifecycleOwner(), content -> Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show());
         // подписываемся на вызов Intent-ов
-        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), new Observer<Intent>() {
-            @Override
-            public void onChanged(Intent intent) {
-                startActivity(intent);
-            }
-        });
+        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), this::startActivity);
         // подписываемся на вызов фрагмента
-        citiesViewModel.getOpenRainMap().observe(getViewLifecycleOwner(), new Observer<FragmentRainMap>() {
-            @Override
-            public void onChanged(FragmentRainMap fragment) {
-                showFragment(fragment);
-            }
-        });
+        citiesViewModel.getOpenRainMap().observe(getViewLifecycleOwner(), this::showFragment);
         // подписываемся на обновление состояние загрузки городов
-        citiesViewModel.getCities_loading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean visible) {
-                citiesViewModel.setProgress_visible(visible);
-            }
-        });
+        citiesViewModel.getCities_loading().observe(getViewLifecycleOwner(), visible -> citiesViewModel.setProgress_visible(visible));
         // подписываемся на обновление состояние загрузки названий городов
-        citiesViewModel.getNames_cities_loading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean visible) {
-                citiesViewModel.setNames_progress_visible(visible);
-            }
-        });
+        citiesViewModel.getNames_cities_loading().observe(getViewLifecycleOwner(), visible -> citiesViewModel.setNames_progress_visible(visible));
         // подписываемся на обновление списка названий городов
-        citiesViewModel.getAuto_cities().observe(getViewLifecycleOwner(), new Observer<List<AutoEnteredCity>>() {
-            @Override
-            public void onChanged(List<AutoEnteredCity> names) {
-                ArrayList<AutoEnteredCity> arr = new ArrayList<>(names);
-                binding.autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, arr));
-            }
+        citiesViewModel.getAuto_cities().observe(getViewLifecycleOwner(), names -> {
+            ArrayList<AutoEnteredCity> arr = new ArrayList<>(names);
+            binding.autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, arr));
+            //binding.autoCompleteTextView.showDropDown();
         });
 
         return binding.getRoot();

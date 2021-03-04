@@ -108,11 +108,11 @@ public class CityRepository {
 
         if (delayMessage==null){
             delayMessage=new DelayMessage();
-            //names_cities_loading=delayMessage.getNames_cities_loading();
         }
 
         Runnable task = () -> {
-            names_cities_loading.postValue(true);
+            delayMessage.addToCountActiveCity(1);
+            if (delayMessage.someoneActive()) names_cities_loading.postValue(true);
             try {
                 System.out.println(part_of_name);
                 List<AutoEnteredCity> result = api_cities.downloadCities(part_of_name);
@@ -123,7 +123,8 @@ public class CityRepository {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            names_cities_loading.postValue(false);
+            delayMessage.addToCountActiveCity(-1);
+            if (!delayMessage.someoneActive()) names_cities_loading.postValue(false);
         };
 
         delayMessage.processMessage(task);
@@ -292,6 +293,14 @@ public class CityRepository {
         i.setAction(Intent.ACTION_VIEW);
         String data = String.format("geo:%s,%s", city.getLat(), city.getLon());
         i.setData(Uri.parse(data));
+
+        return i;
+    }
+    private Intent buildRainMapIntent(City city){
+        Intent i = new Intent();
+        i.putExtra("city_name", city.getName());
+        i.putExtra("lat", city.getLat());
+        i.putExtra("lon", city.getLon());
 
         return i;
     }

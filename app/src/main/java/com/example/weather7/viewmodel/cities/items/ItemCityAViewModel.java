@@ -14,4 +14,8 @@ public class ItemCityAViewModel {
 
     public String getName(){return name;}
     public String getDescription(){return description;}
+    public void setCity(AutoEnteredCity city){
+        description=city.getDescription();
+        name=city.getName();
+    }
 }

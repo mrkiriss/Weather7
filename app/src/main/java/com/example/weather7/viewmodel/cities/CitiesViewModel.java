@@ -17,6 +17,7 @@ import com.example.weather7.view.adapters.DaysAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class CitiesViewModel extends ViewModel {
 
@@ -59,7 +60,7 @@ public class CitiesViewModel extends ViewModel {
         text_city.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                rep.respondToInput(text_city.get());
+                rep.respondToInput(Objects.requireNonNull(text_city.get()));
             }
         });
         // обновляем список городов

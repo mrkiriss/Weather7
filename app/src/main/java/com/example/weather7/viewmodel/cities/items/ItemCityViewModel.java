@@ -79,7 +79,4 @@ public class ItemCityViewModel extends BaseObservable {
     public void openRainMap(){
         request.setValue(new RepositoryRequest(CityRepository.REQUEST_OPEN_RAIN_MAP, city));
     }
-    public void postFavoriteRequest(){
-
-    }
 }

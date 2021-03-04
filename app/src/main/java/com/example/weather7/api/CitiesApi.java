@@ -26,12 +26,13 @@ public class CitiesApi {
     private final String access_token = "&access_token=5d5d04ce5d5d04ce5d5d04ce115d2babc955d5d5d5d04ce3d631fbd900f16c5925896bc";
     private final String name = "&q=";
     private final String count = "&count="; // now only MAX_COUNT_OF_CITIES cities
-    private final int MAX_COUNT_OF_CITIES=10;
+    private final int MAX_COUNT_OF_CITIES=20;
     private final String country_id = "&country_id=1"; // now only RU
     private final String mode = "&need_all=0"; // now only main cities
 
     public ArrayList<AutoEnteredCity> downloadCities(String part_of_name) throws IOException, JSONException {
         ArrayList<AutoEnteredCity> result = new ArrayList<>();
+        ArrayList<String> available_names = new ArrayList<>();;
 
         String request = host+method+version+lang+access_token+name+part_of_name+count+ MAX_COUNT_OF_CITIES +country_id+mode;
         String content = downloadContentByUrl(request);
@@ -43,7 +44,7 @@ public class CitiesApi {
 
         for (int i=0; i<MAX_COUNT_OF_CITIES && i<cities.length();i++){
             String name=cities.getJSONObject(i).getString("title");;
-            if (name.length()>10) continue;
+            if (name.length()>20 || available_names.contains(name)) continue;
             String description="";
 
             // отдельно, так как некоторые города могут идти без региона (Москва...)
@@ -54,6 +55,7 @@ public class CitiesApi {
             }
 
             result.add(new AutoEnteredCity(name, description));
+            available_names.add(name);
         }
 
         return result;

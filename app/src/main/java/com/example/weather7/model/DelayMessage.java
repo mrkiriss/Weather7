@@ -7,13 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DelayMessage {
-    private long MAX_DELAY_TIME=1000;
+    private final long MAX_DELAY_TIME=650;
+    private int countActiveMessage=0;
 
     private MutableLiveData<List<AutoEnteredCity>> result;
     private MutableLiveData<Boolean> names_cities_loading;
 
     private boolean isWaiting;
-    private boolean isDeprecated;
+    private int numberOfDeprecated;
 
     public DelayMessage(){
 
@@ -21,7 +22,7 @@ public class DelayMessage {
 
     public void processMessage(Runnable function){
         if (isWaiting){
-            isDeprecated=true;
+            numberOfDeprecated++;
         }
 
         Runnable task = () -> {
@@ -35,11 +36,10 @@ public class DelayMessage {
             isWaiting=false;
 
             // есть ли аткуальный аналог?
-            if (isDeprecated) {
-                isDeprecated=false;
+            if (numberOfDeprecated>0) {
+                numberOfDeprecated--;
                 return;
             }
-
             // запуск требуемой функции
             function.run();
         };
@@ -52,4 +52,8 @@ public class DelayMessage {
     public MutableLiveData<Boolean> getNames_cities_loading() {
         return names_cities_loading;
     }
+    public boolean someoneActive() {
+        return (countActiveMessage>0?true:false);
+    }
+    public void addToCountActiveCity(int x){countActiveMessage+=x;}
 }
