@@ -1,8 +1,9 @@
 package com.example.weather7.api;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.google.android.gms.maps.model.TileProvider;
+import com.google.android.gms.maps.model.UrlTileProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,12 +12,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.TimeZone;
 
 public class RainMapApi{
 
@@ -26,31 +28,27 @@ public class RainMapApi{
     private String host="https://tilecache.rainviewer.com/";
     //private final String path="v2/radar/nowcast_b9b4c690bcc4";
     private final String size="/512/";
-    private final String z="7/";
-    private final String lat="59.939095/";
-    private final String lon="30.315868/";
+    private final String z="%d/";
+    private final String x="%d/";
+    private final String y="%d/";
     private final String color="2/";
     private final String options="1_0";
     private final String format=".png";
 
-    private final Context context;
-    private final String timezone="Europe/Moscow";
 
-    public RainMapApi(Context context) {
-        this.context=context;
-    }
+    public HashMap<Integer, HashMap<String, TileProvider>> downloadMasksOfRain() throws IOException, JSONException {
 
-    public HashMap<Integer, HashMap<String, Bitmap>> downloadMasksOfRain(String lat, String lon, String timezone) throws IOException, JSONException {
-        HashMap<Integer, HashMap<String, Bitmap>> result = new HashMap<>();
+        HashMap<Integer, HashMap<String, TileProvider>> result = new HashMap<>();
 
         HashMap<Integer, String[]> times_paths = downloadTimesAndPaths();
 
         for (int i=0;i<times_paths.size();i++){
-            String time = convertUnixTimeToFormatString(times_paths.get(i)[0], this.timezone);
-            Bitmap bmp = downloadBitmap(times_paths.get(i)[1]);
+            String time = convertUnixTimeToFormatString(times_paths.get(i)[0]);
+            TileProvider tileProvider = createTile(times_paths.get(i)[1]);
 
-            HashMap<String, Bitmap> single_result = new HashMap<>();
-            single_result.put(time, bmp);
+
+            HashMap<String, TileProvider> single_result=new HashMap<>();
+            single_result.put(time, tileProvider);
 
             result.put(i, single_result);
         }
@@ -72,15 +70,16 @@ public class RainMapApi{
 
         return content;
     }
-    private String convertUnixTimeToFormatString(String stime, String timezone) {
+    private String convertUnixTimeToFormatString(String stime) {
 
         long time = Long.parseLong(stime);
         Date date = new java.util.Date(time*1000L);
 
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("H-m");
+        SimpleDateFormat sdf =new java.text.SimpleDateFormat("HH-mm");
 
-        sdf.setTimeZone(java.util.TimeZone.getTimeZone(timezone));
-        return sdf.format(date);
+
+        sdf.setTimeZone(TimeZone.getDefault());
+        return "  "+ sdf.format(date);
     }
     private HashMap<Integer, String[]> downloadTimesAndPaths() throws IOException, JSONException {
         HashMap<Integer, String[]> result= new HashMap<>();
@@ -108,13 +107,26 @@ public class RainMapApi{
 
         return result;
     }
-    private Bitmap downloadBitmap(String path) throws IOException {
-        String surl = host+path+size+z+lat+lon+color+options+format;
+    private TileProvider createTile(String path) throws IOException {
+        String surl = host+path+size+z+x+y+color+options+format;
 
-        URL url = new URL(surl); //java.net.MalformedURLException
-        Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream()); //java.io.IOException
-        //bmp = Bitmap.createScaledBitmap(bmp, 160, 160, false);
+        TileProvider tileProvider = new UrlTileProvider(512, 512) {
 
-        return bmp;
+            @Override
+            public URL getTileUrl(int x, int y, int zoom) {
+
+                String s = String.format(surl, zoom, x, y);
+
+                try {
+                    return new URL(s);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    Log.println(Log.ASSERT, "rainmap api", "create tile failed");
+                }
+                return null;
+            }
+        };
+
+        return tileProvider;
     }
 }

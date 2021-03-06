@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemCityBinding;
 import com.example.weather7.model.City;
-import com.example.weather7.model.RepositoryRequest;
+import com.example.weather7.repository.CityRepositoryRequest;
 import com.example.weather7.viewmodel.cities.items.ItemCityViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ import java.util.LinkedList;
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
 
     private LinkedList<City> cities;
-    private MutableLiveData<RepositoryRequest> request = new MutableLiveData<>();
+    private MutableLiveData<CityRepositoryRequest> request = new MutableLiveData<>();
 
     public CitiesAdapter(){
         this.cities= new LinkedList<>();
@@ -48,7 +48,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         return cities.size();
     }
 
-    public MutableLiveData<RepositoryRequest> getRequest(){return request;}
+    public MutableLiveData<CityRepositoryRequest> getRequest(){return request;}
     public void setCities(LinkedList<City> cities){
         this.cities=cities;
     }

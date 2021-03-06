@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
-        binding.setViewModel(new MainActivityViewModel());
+        mainViewModel = new MainActivityViewModel();
+        binding.setViewModel(mainViewModel);
         BottomNavigationView navView = binding.navView;
 
         ConnectionManager.setContext(this);

@@ -2,21 +2,17 @@ package com.example.weather7.repository;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.weather7.api.CitiesApi;
-import com.example.weather7.api.RainMapApi;
 import com.example.weather7.model.AutoEnteredCity;
 import com.example.weather7.model.City;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
 import com.example.weather7.model.DelayMessage;
-import com.example.weather7.model.RepositoryRequest;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.adapters.DaysAdapter;
@@ -27,9 +23,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 public class CityRepository {
 
@@ -37,10 +30,9 @@ public class CityRepository {
     public static final String REQUEST_OPEN_CITY_IN_MAP="city_in_map";
     public static final String REQUEST_OPEN_RAIN_MAP="open_rain_map";
 
-    private CityDao dao;
-    private WeatherApi api;
-    private RainMapApi api_rain;
-    private CitiesApi api_cities;
+    private final CityDao dao;
+    private final WeatherApi api;
+    private final CitiesApi api_cities;
 
     private MutableLiveData<LinkedList<City>> cities = new MutableLiveData<>();
     private  MutableLiveData<City> addCityHeadRequest = new MutableLiveData<>();
@@ -58,13 +50,12 @@ public class CityRepository {
     private MutableLiveData<Boolean> connection = new MutableLiveData<>();
     private MutableLiveData<String> error_content = new MutableLiveData<>();
 
-    private final int MIN_INPUT_WORD_LENGTH_FOR_AUTO=4;
+    private final int MIN_INPUT_WORD_LENGTH_FOR_AUTO=3;
     private DelayMessage delayMessage;
 
-    public CityRepository(AppDatabase db, WeatherApi api, RainMapApi api_rain, CitiesApi api_cities){
+    public CityRepository(AppDatabase db, WeatherApi api, CitiesApi api_cities){
         this.dao= db.getCityDao();
         this.api=api;
-        this.api_rain=api_rain;
         this.api_cities=api_cities;
     }
 
@@ -88,7 +79,7 @@ public class CityRepository {
         }
     }
 
-    public void processRequest(RepositoryRequest request){
+    public void processRequest(CityRepositoryRequest request){
 
         switch (request.getMode()){
             case REQUEST_DELETE:
@@ -98,7 +89,7 @@ public class CityRepository {
                 startIntent.setValue(buildCityInMapIntent((City) request.getObject()));
                 break;
             case REQUEST_OPEN_RAIN_MAP:
-
+                startIntent.setValue(buildRainMapIntent((City) request.getObject()));
                 break;
         }
     }
@@ -290,6 +281,7 @@ public class CityRepository {
     }
     private Intent buildCityInMapIntent(City city){
         Intent i = new Intent();
+        i.putExtra("class", "");
         i.setAction(Intent.ACTION_VIEW);
         String data = String.format("geo:%s,%s", city.getLat(), city.getLon());
         i.setData(Uri.parse(data));
@@ -298,6 +290,7 @@ public class CityRepository {
     }
     private Intent buildRainMapIntent(City city){
         Intent i = new Intent();
+        i.putExtra("class", "rain");
         i.putExtra("city_name", city.getName());
         i.putExtra("lat", city.getLat());
         i.putExtra("lon", city.getLon());

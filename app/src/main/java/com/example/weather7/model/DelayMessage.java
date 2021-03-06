@@ -14,7 +14,7 @@ public class DelayMessage {
     private MutableLiveData<Boolean> names_cities_loading;
 
     private boolean isWaiting;
-    private int numberOfDeprecated;
+    private volatile int numberOfDeprecated;
 
     public DelayMessage(){
 

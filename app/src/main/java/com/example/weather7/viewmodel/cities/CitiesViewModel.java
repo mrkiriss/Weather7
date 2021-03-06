@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.AutoEnteredCity;
 import com.example.weather7.model.City;
-import com.example.weather7.model.RepositoryRequest;
+import com.example.weather7.repository.CityRepositoryRequest;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.adapters.DaysAdapter;
@@ -77,7 +77,7 @@ public class CitiesViewModel extends ViewModel {
         rep.firstFillingCities();
     }
 
-    public void processRequest(RepositoryRequest request){
+    public void processRequest(CityRepositoryRequest request){
         rep.processRequest(request);
     }
 

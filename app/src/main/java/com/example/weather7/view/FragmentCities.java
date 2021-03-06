@@ -17,10 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.weather7.api.CitiesApi;
-import com.example.weather7.api.RainMapApi;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.model.AutoEnteredCity;
-import com.example.weather7.model.RepositoryRequest;
+import com.example.weather7.repository.CityRepositoryRequest;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.adapters.CitiesAdapter;
@@ -33,14 +32,13 @@ import com.example.weather7.viewmodel.cities.CitiesViewModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.TimeZone;
 
 public class FragmentCities extends Fragment{
 
     private CitiesViewModel citiesViewModel;
     private FragmentCitiesBinding binding;
     private AppDatabase db;
-    private WeatherApi api;
     private CitiesAdapter cities_adapter;
 
 
@@ -56,14 +54,12 @@ public class FragmentCities extends Fragment{
                 .fallbackToDestructiveMigration()
                 .build();
 
-        // создание экземпляра api дождя
-        RainMapApi rain_api = new RainMapApi(getContext());
         // создание экземпляра Погодного api
-        api = new WeatherApi(getContext());
+        WeatherApi api = new WeatherApi(getContext());
         // создание экземпляра api названий городов для поиска
         CitiesApi citiesApi=new CitiesApi();
         // создание ViewModel
-        citiesViewModel = new CitiesViewModel(new CityRepository(db, api, rain_api, citiesApi));
+        citiesViewModel = new CitiesViewModel(new CityRepository(db, api, citiesApi));
         binding.setViewModel(citiesViewModel);
 
         setupCitiesRecyclerView(binding.citiesRecyclerView);
@@ -87,7 +83,16 @@ public class FragmentCities extends Fragment{
         // подписываемся на обновление запроса на добавление КОНТЕЙНЕРА ОШИБКИ
         citiesViewModel.getError_content().observe(getViewLifecycleOwner(), content -> Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show());
         // подписываемся на вызов Intent-ов
-        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), this::startActivity);
+        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), new Observer<Intent>() {
+            @Override
+            public void onChanged(Intent intent) {
+                switch (intent.getStringExtra("class")){
+                    case "rain":
+                        intent.setClass(getContext(), RainMapActivity.class);
+                }
+                startActivity(intent);
+            }
+        });
         // подписываемся на вызов фрагмента
         citiesViewModel.getOpenRainMap().observe(getViewLifecycleOwner(), this::showFragment);
         // подписываемся на обновление состояние загрузки городов
@@ -129,9 +134,9 @@ public class FragmentCities extends Fragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // подписываемся на обновление запроса от ОПРЕДЕЛЁННОГО ГОРОДА
-        adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<RepositoryRequest>() {
+        adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<CityRepositoryRequest>() {
             @Override
-            public void onChanged(RepositoryRequest req) {
+            public void onChanged(CityRepositoryRequest req) {
                 citiesViewModel.processRequest(req);
             }
         });
@@ -143,7 +148,7 @@ public class FragmentCities extends Fragment{
 
     @Override
     public void onDestroyView() {
-        api=null;
+        db.close();
         super.onDestroyView();
     }
 }

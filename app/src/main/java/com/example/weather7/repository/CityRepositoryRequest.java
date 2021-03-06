@@ -1,10 +1,10 @@
-package com.example.weather7.model;
+package com.example.weather7.repository;
 
-public class RepositoryRequest {
+public class CityRepositoryRequest {
     private String mode;
     private Object object;
 
-    public RepositoryRequest(String mode, Object object){
+    public CityRepositoryRequest(String mode, Object object){
         this.mode=mode;
         this.object=object;
     }

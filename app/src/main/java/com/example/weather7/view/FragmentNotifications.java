@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weather7.R;
 import com.example.weather7.viewmodel.NotificationsViewModel;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 public class FragmentNotifications extends Fragment {
 
@@ -24,13 +25,8 @@ public class FragmentNotifications extends Fragment {
         notificationsViewModel =
                 new ViewModelProvider(this).get(NotificationsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+
         return root;
     }
 }
