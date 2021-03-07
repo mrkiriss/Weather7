@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_cities"
-        android:name="com.example.weather7.view.FragmentCities"
+        android:name="com.example.weather7.view.cities.FragmentCities"
         android:label="@string/title_cities"
         tools:layout="@layout/fragment_cities" />
 

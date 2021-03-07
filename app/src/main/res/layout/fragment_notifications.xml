@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="ViewModel"
-            type="com.example.weather7.viewmodel.cities.CitiesViewModel" />
+            type="com.example.weather7.viewmodel.NotificationsViewModel" />
     </data>
 
     <LinearLayout
@@ -30,7 +30,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/cityName" />
+                android:text="@string/cityName"
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/cityName"
@@ -52,7 +53,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/repeatMode" />
+                android:text="@string/repeatMode"
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/repaetMode"
@@ -75,7 +77,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/selectedTime" />
+                android:text="@string/selectedTime"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/selectedTime"
@@ -85,7 +88,9 @@
                 android:ems="10"
                 android:focusable="auto"
                 android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:inputType="none"
+                android:text="@{ViewModel.selectedTimeContent}"
+                android:onClick="@{(view)->ViewModel.onPickerClick(view)}"/>
 
         </LinearLayout>
 
@@ -103,7 +108,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/selectedDate" />
+                android:text="@string/selectedDate"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/selectedDate"
@@ -113,7 +119,9 @@
                 android:ems="10"
                 android:focusable="auto"
                 android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:inputType="none"
+                android:text="@{ViewModel.selectedDateContent}"
+                android:onClick="@{(view)->ViewModel.onPickerClick(view)}"/>
         </LinearLayout>
 
         <Button
@@ -129,10 +137,11 @@
             android:layout_weight="12" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/clearNotifications"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:text="Button" />
+            android:text="@string/clearNotifications"
+            android:onClick="@{(view)->ViewModel.onPickerClick(view)}"/>
     </LinearLayout>
 </layout>

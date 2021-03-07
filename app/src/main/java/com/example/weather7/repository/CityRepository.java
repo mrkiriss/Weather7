@@ -15,7 +15,7 @@ import com.example.weather7.database.CityDao;
 import com.example.weather7.model.DelayMessage;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.FragmentRainMap;
-import com.example.weather7.view.adapters.DaysAdapter;
+import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import org.json.JSONException;
 

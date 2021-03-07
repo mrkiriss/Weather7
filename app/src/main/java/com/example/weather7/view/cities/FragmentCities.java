@@ -1,4 +1,4 @@
-package com.example.weather7.view;
+package com.example.weather7.view.cities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,17 +22,17 @@ import com.example.weather7.model.AutoEnteredCity;
 import com.example.weather7.repository.CityRepositoryRequest;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.utils.ConnectionManager;
-import com.example.weather7.view.adapters.CitiesAdapter;
+import com.example.weather7.view.FragmentRainMap;
+import com.example.weather7.view.cities.adapters.CitiesAdapter;
 import com.example.weather7.R;
 import com.example.weather7.databinding.FragmentCitiesBinding;
 import com.example.weather7.model.City;
 import com.example.weather7.database.AppDatabase;
-import com.example.weather7.view.adapters.DaysAdapter;
+import com.example.weather7.view.cities.adapters.DaysAdapter;
 import com.example.weather7.viewmodel.cities.CitiesViewModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.TimeZone;
 
 public class FragmentCities extends Fragment{
 

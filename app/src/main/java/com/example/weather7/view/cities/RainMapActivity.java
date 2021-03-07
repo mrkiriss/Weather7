@@ -1,4 +1,4 @@
-package com.example.weather7.view;
+package com.example.weather7.view.cities;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -13,7 +13,7 @@ import com.example.weather7.model.City;
 import com.example.weather7.repository.CityRepositoryRequest;
 import com.example.weather7.repository.CityRepository;
 import com.example.weather7.view.FragmentRainMap;
-import com.example.weather7.view.adapters.DaysAdapter;
+import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import java.util.LinkedList;
 import java.util.List;

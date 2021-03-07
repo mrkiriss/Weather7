@@ -29,4 +29,5 @@
     <string name="selectedDate">Дата: </string>
 
     <string name="scheduleNotification">Запланировать уведомление</string>
+    <string name="clearNotifications">Очистить запланированные уведомления</string>
 </resources>

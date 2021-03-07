@@ -8,7 +8,8 @@ import android.location.Geocoder;
 
 import com.example.weather7.model.City;
 import com.example.weather7.model.WeatherOnDay;
-import com.example.weather7.view.adapters.DaysAdapter;
+import com.example.weather7.utils.ConverterDate;
+import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,15 +55,8 @@ public class WeatherApi{
     }
 
     protected String convertUnixTimeToFormatString(String stime, String time_zone){
-        // перевод секунд в миллисекунды
         long time = Long.valueOf(stime);
-        Date date = new java.util.Date(time*1000L);
-        // формат даты
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM-dd");
-
-        sdf.setTimeZone(TimeZone.getDefault());
-        String result = sdf.format(date);
-        return result;
+        return ConverterDate.convertLongToMD(time);
     }
 
     protected String downloadContentByUrl(String url_request) throws IOException {

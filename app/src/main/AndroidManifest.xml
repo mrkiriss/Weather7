@@ -28,7 +28,7 @@
             android:value="${mapsApiKey}" />
 
         <activity
-            android:name=".view.RainMapActivity"
+            android:name=".view.cities.RainMapActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".view.MainActivity">
             <intent-filter>

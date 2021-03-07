@@ -9,7 +9,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.example.weather7.view.adapters.DaysAdapter;
+import com.example.weather7.view.cities.adapters.DaysAdapter;
 import com.example.weather7.database.Converters;
 
 import java.util.LinkedList;

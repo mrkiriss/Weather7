@@ -2,6 +2,7 @@ package com.example.weather7.api;
 
 import android.util.Log;
 
+import com.example.weather7.utils.ConverterDate;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 
@@ -71,15 +72,9 @@ public class RainMapApi{
         return content;
     }
     private String convertUnixTimeToFormatString(String stime) {
-
         long time = Long.parseLong(stime);
-        Date date = new java.util.Date(time*1000L);
 
-        SimpleDateFormat sdf =new java.text.SimpleDateFormat("HH-mm");
-
-
-        sdf.setTimeZone(TimeZone.getDefault());
-        return "  "+ sdf.format(date);
+        return "  "+ ConverterDate.convertLongToHM(time);
     }
     private HashMap<Integer, String[]> downloadTimesAndPaths() throws IOException, JSONException {
         HashMap<Integer, String[]> result= new HashMap<>();
