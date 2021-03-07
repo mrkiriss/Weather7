@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class WeatherApi{
     private final String url_for_head="https://api.openweathermap.org/data/2.5/weather?q=";
@@ -40,13 +41,13 @@ public class WeatherApi{
         this.context=context;
     }
 
-    public City startCityHeadDownload(String name) throws IOException, JSONException {
+    public City getCityHead(String name) throws IOException, JSONException {
         String head_url_request = this.url_for_head+name+weather_api+metric+lang;
         String content = downloadContentByUrl(head_url_request);
         return parseCityHead(name, content);
     }
 
-    public DaysAdapter startCityDaysDownload(String name, String lat, String lon) throws IOException, JSONException {
+    public DaysAdapter getCityDays(String name, String lat, String lon) throws IOException, JSONException {
         String days_url_request = this.url_for_days+this.lat+lat+this.lon+lon+metric+weather_api+exclude+lang;
         String content = downloadContentByUrl(days_url_request);
         return parseDays(name, content);
@@ -59,7 +60,7 @@ public class WeatherApi{
         // формат даты
         SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM-dd");
 
-        sdf.setTimeZone(java.util.TimeZone.getTimeZone(time_zone));
+        sdf.setTimeZone(TimeZone.getDefault());
         String result = sdf.format(date);
         return result;
     }

@@ -183,7 +183,7 @@ public class CityRepository {
     private City downloadSingleCityFromAPI(String name){
         City city = null;
         try {
-            city = api.startCityHeadDownload(name);
+            city = api.getCityHead(name);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             error_content.postValue("Город "+name+" не найден");
@@ -198,7 +198,7 @@ public class CityRepository {
     private DaysAdapter downloadSingleDaysAdapterFromAPI(String name, String lat, String lon){
         DaysAdapter days = null;
         try {
-            days = api.startCityDaysDownload(name, lat, lon);
+            days = api.getCityDays(name, lat, lon);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             error_content.postValue("Прогноз для города"+name+"не получени");
@@ -318,7 +318,7 @@ public class CityRepository {
         addDaysInCityRequest.postValue(days);
         // постепенная загрузка, без наложения
         try {
-            Thread.sleep(150);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
