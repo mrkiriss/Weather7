@@ -1,4 +1,4 @@
-package com.example.weather7.view.adapters;
+package com.example.weather7.view.cities.adapters;
 
 
 import android.view.LayoutInflater;
@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemCityBinding;
-import com.example.weather7.model.City;
-import com.example.weather7.repository.CityRepositoryRequest;
+import com.example.weather7.model.cities.City;
+import com.example.weather7.repository.cities.CityRepositoryRequest;
 import com.example.weather7.viewmodel.cities.items.ItemCityViewModel;
 
 import org.jetbrains.annotations.NotNull;

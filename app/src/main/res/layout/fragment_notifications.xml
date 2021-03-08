@@ -23,13 +23,14 @@
             android:layout_height="0dp"
             android:layout_margin="2dp"
             android:layout_weight="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="5">
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="@string/cityName"
                 android:textSize="18sp" />
 
@@ -37,7 +38,9 @@
                 android:id="@+id/cityName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_gravity="right"
+                android:layout_weight="3"
+                app:selectedValue="@={ViewModel.selectedCity}" />
         </LinearLayout>
 
         <LinearLayout
@@ -46,13 +49,14 @@
             android:layout_height="0dp"
             android:layout_margin="2dp"
             android:layout_weight="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="5">
 
             <TextView
                 android:id="@+id/textView13"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="@string/repeatMode"
                 android:textSize="18sp" />
 
@@ -60,8 +64,10 @@
                 android:id="@+id/repaetMode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/repeatArray" />
+                android:layout_gravity="right"
+                android:layout_weight="3"
+                android:entries="@array/repeatArray"
+                app:selectedValue="@={ViewModel.selectedRepeatMode}" />
         </LinearLayout>
 
         <LinearLayout
@@ -129,7 +135,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:text="@string/scheduleNotification" />
+            android:text="@string/scheduleNotification"
+            android:onClick="@{()->ViewModel.onScheduleNotification()}"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

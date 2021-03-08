@@ -1,4 +1,4 @@
-package com.example.weather7.model;
+package com.example.weather7.model.cities;
 
 import android.graphics.Bitmap;
 

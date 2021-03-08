@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.weather7.model.City;
+import com.example.weather7.model.cities.City;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.weather7.repository;
+package com.example.weather7.repository.cities;
 
 public class CityRepositoryRequest {
     private String mode;

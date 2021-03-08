@@ -1,16 +1,13 @@
 package com.example.weather7.viewmodel.cities.items;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 
-import com.example.weather7.R;
-import com.example.weather7.model.WeatherOnDay;
+import com.example.weather7.model.cities.WeatherOnDay;
 
 public class ItemDayViewModel  extends BaseObservable {
     private WeatherOnDay day;

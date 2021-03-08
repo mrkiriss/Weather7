@@ -8,9 +8,9 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.weather7.model.City;
-import com.example.weather7.repository.CityRepositoryRequest;
-import com.example.weather7.repository.CityRepository;
+import com.example.weather7.model.cities.City;
+import com.example.weather7.repository.cities.CityRepositoryRequest;
+import com.example.weather7.repository.cities.CityRepository;
 
 public class ItemCityViewModel extends BaseObservable {
 

@@ -1,11 +1,12 @@
 package com.example.weather7.view;
 
-import android.net.IpSecManager;
+import android.app.AlarmManager;
+import android.content.Context;
 import android.os.Bundle;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.MainActivityBinding;
-import com.example.weather7.model.City;
+import com.example.weather7.model.cities.City;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,16 +20,22 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentNotifications.AlarmManagerGetter {
 
     private MainActivityViewModel mainViewModel;
     private MainActivityBinding binding;
+
+    AlarmManager alarmManager;
 
     private LinkedList<City> main_cities = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        alarmManager  = (AlarmManager)getSystemService(
+                Context.ALARM_SERVICE);
+
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
         mainViewModel = new MainActivityViewModel();
         binding.setViewModel(mainViewModel);
@@ -43,5 +50,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+    }
+
+    @Override
+    public AlarmManager getAlarmManager() {
+        return alarmManager;
     }
 }

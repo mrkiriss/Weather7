@@ -1,4 +1,4 @@
-package com.example.weather7.view.adapters;
+package com.example.weather7.view.cities.adapters;
 
 
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemDayBinding;
-import com.example.weather7.model.WeatherOnDay;
+import com.example.weather7.model.cities.WeatherOnDay;
 import com.example.weather7.viewmodel.cities.items.ItemDayViewModel;
 
 import java.util.LinkedList;

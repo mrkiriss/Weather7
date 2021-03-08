@@ -6,9 +6,9 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 
-import com.example.weather7.model.City;
-import com.example.weather7.model.WeatherOnDay;
-import com.example.weather7.utils.ConverterDate;
+import com.example.weather7.model.cities.City;
+import com.example.weather7.model.cities.WeatherOnDay;
+import com.example.weather7.utils.DateConverter;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import org.json.JSONArray;
@@ -20,16 +20,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 
 public class WeatherApi{
     private final String url_for_head="https://api.openweathermap.org/data/2.5/weather?q=";
     private final String url_for_days="https://api.openweathermap.org/data/2.5/onecall?";
-    private final String weather_api="&appid=beb7c390d2db9cfa4d3b327035507589";
+    private final String apiKey ="&appid=beb7c390d2db9cfa4d3b327035507589";
     private final String metric="&units=metric";
     private final String exclude="&exclude=minutely,hourly,alerts";
     private final String lon="&lon=";
@@ -43,20 +40,27 @@ public class WeatherApi{
     }
 
     public City getCityHead(String name) throws IOException, JSONException {
-        String head_url_request = this.url_for_head+name+weather_api+metric+lang;
+        String head_url_request = this.url_for_head+name+ apiKey +metric+lang;
         String content = downloadContentByUrl(head_url_request);
         return parseCityHead(name, content);
     }
 
     public DaysAdapter getCityDays(String name, String lat, String lon) throws IOException, JSONException {
-        String days_url_request = this.url_for_days+this.lat+lat+this.lon+lon+metric+weather_api+exclude+lang;
+        String days_url_request = this.url_for_days+this.lat+lat+this.lon+lon+metric+ apiKey +exclude+lang;
         String content = downloadContentByUrl(days_url_request);
         return parseDays(name, content);
     }
 
+    public String getNotificationContent(String name) throws IOException, JSONException  {
+        String notificationContent_url_request = this.url_for_head+name+ apiKey +metric+lang;
+        String content = downloadContentByUrl(notificationContent_url_request);
+        return parseNotificationContent(content);
+
+    }
+
     protected String convertUnixTimeToFormatString(String stime, String time_zone){
         long time = Long.valueOf(stime);
-        return ConverterDate.convertLongToMD(time);
+        return DateConverter.convertLongToMD(time);
     }
 
     protected String downloadContentByUrl(String url_request) throws IOException {
@@ -159,5 +163,12 @@ public class WeatherApi{
 
         return new DaysAdapter(result, name);
     }
+    private String parseNotificationContent(String content) throws JSONException {
 
+        JSONObject obj=new JSONObject(content);
+        String description=obj.getJSONArray("weather").getJSONObject(0).getString("description");
+        String temp=toStr(Math.round(obj.getJSONObject("main").getDouble("temp")));
+
+        return description+"  "+temp+"°C";
+    }
 }

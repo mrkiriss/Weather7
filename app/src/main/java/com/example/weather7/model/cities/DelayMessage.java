@@ -1,9 +1,10 @@
-package com.example.weather7.model;
+package com.example.weather7.model.cities;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.LinkedList;
+import com.example.weather7.model.cities.AutoEnteredCity;
+
 import java.util.List;
 
 public class DelayMessage {

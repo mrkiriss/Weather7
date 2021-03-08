@@ -1,4 +1,4 @@
-package com.example.weather7.repository;
+package com.example.weather7.repository.cities;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

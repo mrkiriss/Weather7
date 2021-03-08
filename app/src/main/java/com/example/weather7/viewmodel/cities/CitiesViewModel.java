@@ -8,10 +8,10 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.weather7.model.AutoEnteredCity;
-import com.example.weather7.model.City;
-import com.example.weather7.repository.CityRepositoryRequest;
-import com.example.weather7.repository.CityRepository;
+import com.example.weather7.model.cities.AutoEnteredCity;
+import com.example.weather7.model.cities.City;
+import com.example.weather7.repository.cities.CityRepositoryRequest;
+import com.example.weather7.repository.cities.CityRepository;
 import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 

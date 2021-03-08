@@ -1,4 +1,4 @@
-package com.example.weather7.model;
+package com.example.weather7.model.cities;
 
 public class AutoEnteredCity {
     private final String name;

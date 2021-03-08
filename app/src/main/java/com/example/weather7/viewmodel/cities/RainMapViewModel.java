@@ -1,17 +1,14 @@
 
 package com.example.weather7.viewmodel.cities;
 
-import android.os.Bundle;
-
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.weather7.repository.RainMapRepository;
+import com.example.weather7.repository.cities.RainMapRepository;
 import com.google.android.gms.maps.model.TileProvider;
 
 import java.util.HashMap;

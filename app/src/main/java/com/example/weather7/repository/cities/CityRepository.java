@@ -1,4 +1,4 @@
-package com.example.weather7.repository;
+package com.example.weather7.repository.cities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.weather7.api.CitiesApi;
-import com.example.weather7.model.AutoEnteredCity;
-import com.example.weather7.model.City;
+import com.example.weather7.model.cities.AutoEnteredCity;
+import com.example.weather7.model.cities.City;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
-import com.example.weather7.model.DelayMessage;
+import com.example.weather7.model.cities.DelayMessage;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.cities.adapters.DaysAdapter;

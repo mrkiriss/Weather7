@@ -1,8 +1,6 @@
 package com.example.weather7.api;
 
-import android.widget.LinearLayout;
-
-import com.example.weather7.model.AutoEnteredCity;
+import com.example.weather7.model.cities.AutoEnteredCity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,8 +12,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class CitiesApi {
 

@@ -2,7 +2,7 @@ package com.example.weather7.api;
 
 import android.util.Log;
 
-import com.example.weather7.utils.ConverterDate;
+import com.example.weather7.utils.DateConverter;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 
@@ -16,10 +16,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 public class RainMapApi{
 
@@ -74,7 +71,7 @@ public class RainMapApi{
     private String convertUnixTimeToFormatString(String stime) {
         long time = Long.parseLong(stime);
 
-        return "  "+ ConverterDate.convertLongToHM(time);
+        return "  "+ DateConverter.convertLongToHM(time);
     }
     private HashMap<Integer, String[]> downloadTimesAndPaths() throws IOException, JSONException {
         HashMap<Integer, String[]> result= new HashMap<>();
