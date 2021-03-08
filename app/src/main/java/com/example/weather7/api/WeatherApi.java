@@ -51,7 +51,8 @@ public class WeatherApi{
         return parseDays(name, content);
     }
 
-    public String getNotificationContent(String name) throws IOException, JSONException  {
+    // [0]-temp+"°C" [1]-"Ощущается как "+feels_like+"°C: "+description
+    public String[] getNotificationContent(String name) throws IOException, JSONException  {
         String notificationContent_url_request = this.url_for_head+name+ apiKey +metric+lang;
         String content = downloadContentByUrl(notificationContent_url_request);
         return parseNotificationContent(content);
@@ -163,12 +164,17 @@ public class WeatherApi{
 
         return new DaysAdapter(result, name);
     }
-    private String parseNotificationContent(String content) throws JSONException {
-
+    private String[] parseNotificationContent(String content) throws JSONException {
+        String[] result = new String[2];
         JSONObject obj=new JSONObject(content);
-        String description=obj.getJSONArray("weather").getJSONObject(0).getString("description");
-        String temp=toStr(Math.round(obj.getJSONObject("main").getDouble("temp")));
 
-        return description+"  "+temp+"°C";
+        String temp =toStr(Math.round(obj.getJSONObject("main").getDouble("temp")));
+        result[0]=": "+temp+"°C";
+
+        String description=obj.getJSONArray("weather").getJSONObject(0).getString("description");
+        String feels_like = toStr(Math.round(obj.getJSONObject("main").getDouble("feels_like")));
+        result[1]= "Ощущается как "+feels_like+"°C: "+description;
+
+        return result;
     }
 }

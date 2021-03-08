@@ -23,7 +23,7 @@ public class AlarmRequest {
      // Context
     private int requestCode = PENDING_INTENT_REQUEST_CODE_BASE;
      // Intent
-    private final int flag= PendingIntent.FLAG_CANCEL_CURRENT;
+    public final static int PENDING_INTENT_FLAG= PendingIntent.FLAG_CANCEL_CURRENT;
 
     // intent data
     private Intent intent;
@@ -45,17 +45,18 @@ public class AlarmRequest {
         switch (repeatMode){
             case "Ежедневно":
                 interval=INTERVAL_DAY;
-                triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
+                //triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
                 break;
             case "Без повторений":
                 interval=INTERVAL_NONE;
-                triggerTime= DateConverter.parseHMForTime(time);
+                //triggerTime= DateConverter.parseHMForTime(time);
                 break;
             case "В определённый день":
                 interval=INTERVAL_SPECIFIC_DATE;
-                triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
+                //triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
                 break;
         }
+        triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
     }
 
     public int getAlarmType() {
@@ -69,9 +70,6 @@ public class AlarmRequest {
     }
     public int getRequestCode() {
         return requestCode;
-    }
-    public int getFlag() {
-        return flag;
     }
     public Intent getIntent() {
         return intent;

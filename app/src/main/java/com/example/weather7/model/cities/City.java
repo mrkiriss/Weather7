@@ -9,8 +9,8 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.example.weather7.database.ConvertersCities;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
-import com.example.weather7.database.Converters;
 
 import java.util.LinkedList;
 
@@ -23,11 +23,11 @@ public class City{
     private String lat;
     private String lon;
     private String current_temp;
-    @TypeConverters({Converters.BitmapConverter.class})
+    @TypeConverters({ConvertersCities.BitmapConverter.class})
     private Bitmap current_icon;
     private String current_description;
     @ColumnInfo(name="days_adapter")
-    @TypeConverters({Converters.DayAdapterConverter.class})
+    @TypeConverters({ConvertersCities.DayAdapterConverter.class})
     private DaysAdapter daysAdapter;
 
     private long upload_time;

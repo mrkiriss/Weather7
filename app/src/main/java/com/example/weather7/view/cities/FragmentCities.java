@@ -19,10 +19,9 @@ import androidx.room.Room;
 import com.example.weather7.api.CitiesApi;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.model.cities.AutoEnteredCity;
-import com.example.weather7.repository.cities.CityRepositoryRequest;
+import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.repository.cities.CityRepository;
 import com.example.weather7.utils.ConnectionManager;
-import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.cities.adapters.CitiesAdapter;
 import com.example.weather7.R;
 import com.example.weather7.databinding.FragmentCitiesBinding;
@@ -93,8 +92,6 @@ public class FragmentCities extends Fragment{
                 startActivity(intent);
             }
         });
-        // подписываемся на вызов фрагмента
-        citiesViewModel.getOpenRainMap().observe(getViewLifecycleOwner(), this::showFragment);
         // подписываемся на обновление состояние загрузки городов
         citiesViewModel.getCities_loading().observe(getViewLifecycleOwner(), visible -> citiesViewModel.setProgress_visible(visible));
         // подписываемся на обновление состояние загрузки названий городов
@@ -134,16 +131,12 @@ public class FragmentCities extends Fragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // подписываемся на обновление запроса от ОПРЕДЕЛЁННОГО ГОРОДА
-        adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<CityRepositoryRequest>() {
+        adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<RepositoryRequest>() {
             @Override
-            public void onChanged(CityRepositoryRequest req) {
+            public void onChanged(RepositoryRequest req) {
                 citiesViewModel.processRequest(req);
             }
         });
-    }
-
-    private void showFragment(FragmentRainMap fragment){
-
     }
 
     @Override

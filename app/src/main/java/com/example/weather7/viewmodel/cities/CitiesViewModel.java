@@ -10,9 +10,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.cities.AutoEnteredCity;
 import com.example.weather7.model.cities.City;
-import com.example.weather7.repository.cities.CityRepositoryRequest;
+import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.repository.cities.CityRepository;
-import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import java.util.LinkedList;
@@ -35,7 +34,6 @@ public class CitiesViewModel extends ViewModel {
     private LiveData<City> deleteCityRequest;
     private LiveData<DaysAdapter> addDaysInCityRequest;
     private LiveData<Intent> startIntent;
-    private LiveData<FragmentRainMap> openRainMap;
     private LiveData<String> error_content;
 
 
@@ -49,7 +47,6 @@ public class CitiesViewModel extends ViewModel {
         this.error_content=rep.getError_content();
         this.deleteCityRequest=rep.getDeleteCityRequest();
         this.startIntent=rep.getStartIntent();
-        this.openRainMap=rep.getOpenRainMap();
         this.cities_loading= rep.getCities_loading();
         this.auto_cities=rep.getAuto_cities();
         this.names_cities_loading=rep.getNames_cities_loading();
@@ -77,7 +74,7 @@ public class CitiesViewModel extends ViewModel {
         rep.firstFillingCities();
     }
 
-    public void processRequest(CityRepositoryRequest request){
+    public void processRequest(RepositoryRequest request){
         rep.processRequest(request);
     }
 
@@ -90,7 +87,6 @@ public class CitiesViewModel extends ViewModel {
     public  LiveData<String> getError_content(){return error_content;}
     public ObservableField<String> getText_city(){return text_city;}
     public LiveData<Intent> getStartIntent(){return startIntent;}
-    public LiveData<FragmentRainMap> getOpenRainMap(){return  openRainMap;}
     public LiveData<Boolean> getCities_loading(){return cities_loading;}
     public ObservableBoolean getProgress_visible(){return progress_visible;}
     public ObservableBoolean getNames_progress_visible(){return names_progress_visible;}

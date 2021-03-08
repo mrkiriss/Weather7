@@ -13,8 +13,8 @@ import com.example.weather7.api.WeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
 import com.example.weather7.model.cities.DelayMessage;
+import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.ConnectionManager;
-import com.example.weather7.view.FragmentRainMap;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import org.json.JSONException;
@@ -39,7 +39,6 @@ public class CityRepository {
     private MutableLiveData<City> deleteCityRequest = new MutableLiveData<>();
     private MutableLiveData<DaysAdapter> addDaysInCityRequest = new MutableLiveData<>();
     private MutableLiveData<Intent> startIntent = new MutableLiveData<>();
-    private MutableLiveData<FragmentRainMap> openRainMap = new MutableLiveData<>();
     private MutableLiveData<List<AutoEnteredCity>> auto_cities = new MutableLiveData<>();
 
     private static int firs_filling_status=0;
@@ -79,7 +78,7 @@ public class CityRepository {
         }
     }
 
-    public void processRequest(CityRepositoryRequest request){
+    public void processRequest(RepositoryRequest request){
 
         switch (request.getMode()){
             case REQUEST_DELETE:
@@ -331,7 +330,6 @@ public class CityRepository {
     public LiveData<DaysAdapter> getAddDaysInCityRequest(){return addDaysInCityRequest;}
     public LiveData<String> getError_content(){return error_content;}
     public LiveData<Intent> getStartIntent(){return startIntent;}
-    public LiveData<FragmentRainMap> getOpenRainMap(){return openRainMap;}
     public LiveData<Boolean> getCities_loading(){return cities_loading;}
     public LiveData<Boolean> getNames_cities_loading() {
         return names_cities_loading;

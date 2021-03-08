@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
-public class Converters {
+public class ConvertersCities {
 
     public static class BitmapConverter {
 

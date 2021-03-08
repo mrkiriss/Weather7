@@ -1,6 +1,5 @@
-package com.example.weather7.viewmodel;
+package com.example.weather7.viewmodel.notifications;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,19 +9,21 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
 import androidx.databinding.ObservableField;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.weather7.R;
 import com.example.weather7.model.notifications.AlarmRequest;
+import com.example.weather7.model.notifications.Notification;
 import com.example.weather7.repository.NotificationRepository;
+import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.DateConverter;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
 
 public class NotificationsViewModel extends ViewModel {
+
+    public static final String REPEAT_MODE_NONREPEATING="Без повторений";
 
     private NotificationRepository rep;
 
@@ -34,6 +35,10 @@ public class NotificationsViewModel extends ViewModel {
     private MutableLiveData<ArrayList<String>> contentOfCitiesSpinner;
     private MutableLiveData<Integer> categoryOfStartingPicker;
     private MutableLiveData<AlarmRequest> startAlarmCreation;
+
+    private LiveData<String> toastContent;
+    private LiveData<Notification> addNotificationDataRequest;
+    private LiveData<Notification> deleteNotificationDataRequest;
 
     public NotificationsViewModel(NotificationRepository rep){
         this.rep=rep;
@@ -47,20 +52,43 @@ public class NotificationsViewModel extends ViewModel {
         this.categoryOfStartingPicker=new MutableLiveData<>();
         this.startAlarmCreation=new MutableLiveData<>();
 
+        this.toastContent=rep.getToastContent();
+        this.addNotificationDataRequest=rep.getAddNotificationDataRequest();
+        this.deleteNotificationDataRequest=rep.getDeleteNotificationDataRequest();
+
         resetFieldValues();
+        rep.firstFillingCities();
         contentOfCitiesSpinner.setValue(rep.getNamesOfCities());
     }
 
     public void onPickerClick(View view){
         categoryOfStartingPicker.setValue(view.getId());
     }
-    public void onScheduleNotification(){
-        resetFieldValues();
 
-        AlarmRequest alarmRequest = new AlarmRequest(String.valueOf(rep.getCountOfAlarmTasks()+1));
-        alarmRequest.setCityNameInIntent(selectedCity.get());
-        alarmRequest.setIntervalAndTriggerTime(Objects.requireNonNull(selectedRepeatMode.get()), selectedDateContent.get(), selectedTimeContent.get());
+    public void onScheduleNotification(){
+        if(selectedCity.get()==null || rep.someoneAdderActive()) return;
+
+        // получение актуальных данных
+        String cityName = selectedCity.get();
+        String repeatMode = selectedRepeatMode.get();
+        String date = selectedDateContent.get();
+        if (selectedRepeatMode.equals(REPEAT_MODE_NONREPEATING)) date = DateConverter.getCurrentDate();
+        String time = selectedTimeContent.get();
+
+        //resetFieldValues();
+
+        // отправка запроса на создание уведомления
+        AlarmRequest alarmRequest = new AlarmRequest(rep.getCountOfAlarmTasks());
+        alarmRequest.setCityNameInIntent(cityName);
+        alarmRequest.setIntervalAndTriggerTime(repeatMode, date, time);
         startAlarmCreation.setValue(alarmRequest);
+
+        // создание макета запроса в базе данных, отображение на экране
+        rep.addNotificationToViewAndBase(cityName, repeatMode, date, time);
+    }
+
+    public void processRequest(RepositoryRequest req){
+        rep.onRepositoryRequest(req);
     }
 
     private void resetFieldValues(){
@@ -120,5 +148,14 @@ public class NotificationsViewModel extends ViewModel {
     public void setSelectedRepeatMode(ObservableField<String> selectedRepeatMode) {
         this.selectedRepeatMode = selectedRepeatMode;
     }
+    public LiveData<String> getToastContent() {
+        return toastContent;
+    }
+    public LiveData<Notification> getAddNotificationDataRequest() {
+        return addNotificationDataRequest;
+    }
+    public LiveData<Notification> getDeleteNotificationDataRequest(){return deleteNotificationDataRequest;}
+
+
 
 }

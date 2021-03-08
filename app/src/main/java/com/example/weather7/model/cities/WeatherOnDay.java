@@ -3,7 +3,7 @@ package com.example.weather7.model.cities;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.example.weather7.database.Converters;
+import com.example.weather7.database.ConvertersCities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +65,7 @@ public class WeatherOnDay {
             obj.put("date", date);
             obj.put("temp", tempToJson());
             obj.put("wind_speed", wind_speed);
-            obj.put("icon", Converters.BitmapConverter.bitmapToString(icon));
+            obj.put("icon", ConvertersCities.BitmapConverter.bitmapToString(icon));
             obj.put("pressure", pressure);
             obj.put("humidity", humidity);
             obj.put("clouds", clouds);
@@ -82,7 +82,7 @@ public class WeatherOnDay {
             String date = day.getString("date");
             String[] temp = day.getString("temp").split(",");
             String wind_speed =day.getString("wind_speed");
-            Bitmap icon= Converters.BitmapConverter.StringToBitmap(day.getString("icon"));
+            Bitmap icon= ConvertersCities.BitmapConverter.StringToBitmap(day.getString("icon"));
             String pressure= day.getString("pressure");
             String humidity= day.getString("humidity");
             String clouds= day.getString("clouds");

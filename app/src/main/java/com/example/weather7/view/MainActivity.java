@@ -8,6 +8,7 @@ import com.example.weather7.R;
 import com.example.weather7.databinding.MainActivityBinding;
 import com.example.weather7.model.cities.City;
 import com.example.weather7.utils.ConnectionManager;
+import com.example.weather7.view.notifications.FragmentNotifications;
 import com.example.weather7.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

@@ -9,7 +9,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.weather7.model.cities.City;
-import com.example.weather7.repository.cities.CityRepositoryRequest;
+import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.repository.cities.CityRepository;
 
 public class ItemCityViewModel extends BaseObservable {
@@ -21,7 +21,7 @@ public class ItemCityViewModel extends BaseObservable {
     private String description;
     public ObservableBoolean expandable;
 
-    private MutableLiveData<CityRepositoryRequest> request;
+    private MutableLiveData<RepositoryRequest> request;
 
 
     public String getName_city_and_temp() {
@@ -40,7 +40,7 @@ public class ItemCityViewModel extends BaseObservable {
         iv.setImageBitmap(bitmap);
     }
 
-    public ItemCityViewModel(City city, MutableLiveData<CityRepositoryRequest> request){
+    public ItemCityViewModel(City city, MutableLiveData<RepositoryRequest> request){
 
         // значения для шапки
         this.city=city;
@@ -71,12 +71,12 @@ public class ItemCityViewModel extends BaseObservable {
     }
 
     public void openCityInMap(){
-        request.setValue(new CityRepositoryRequest(CityRepository.REQUEST_OPEN_CITY_IN_MAP, city));
+        request.setValue(new RepositoryRequest(CityRepository.REQUEST_OPEN_CITY_IN_MAP, city));
     }
-    public void markWillBeDelete(){
-        request.setValue(new CityRepositoryRequest(CityRepository.REQUEST_DELETE, city));
+    public void onDeleteClick(){
+        request.setValue(new RepositoryRequest(CityRepository.REQUEST_DELETE, city));
     }
     public void openRainMap(){
-        request.setValue(new CityRepositoryRequest(CityRepository.REQUEST_OPEN_RAIN_MAP, city));
+        request.setValue(new RepositoryRequest(CityRepository.REQUEST_OPEN_RAIN_MAP, city));
     }
 }
