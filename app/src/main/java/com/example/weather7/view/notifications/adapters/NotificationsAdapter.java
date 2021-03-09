@@ -20,15 +20,16 @@ import com.example.weather7.viewmodel.notifications.items.ItemNotificationViewMo
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder> {
 
-    private LinkedList<Notification> notifications;
+    private ArrayList<Notification> notifications;
     private MutableLiveData<RepositoryRequest> request;
 
     public NotificationsAdapter(){
-        this.notifications= new LinkedList<>();
+        this.notifications= new ArrayList<>();
         this.request=new MutableLiveData<>();
     }
 
@@ -53,8 +54,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     public MutableLiveData<RepositoryRequest> getRequest(){return request;}
-    public void setCities(LinkedList<Notification> notifications){
+    public void setNotifications(ArrayList<Notification> notifications){
         this.notifications=notifications;
+        notifyDataSetChanged();
     }
 
     public int addNotification(Notification notification){

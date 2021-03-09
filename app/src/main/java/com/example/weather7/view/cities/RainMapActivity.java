@@ -87,9 +87,6 @@ public class RainMapActivity extends AppCompatActivity implements OnMapReadyCall
             }
         });
 
-
-
-
     }
 
     private void setupSeekBar(HashMap<Integer, HashMap<String, TileProvider>> data){

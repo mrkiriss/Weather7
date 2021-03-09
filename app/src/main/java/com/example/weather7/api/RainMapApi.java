@@ -41,14 +41,17 @@ public class RainMapApi{
         HashMap<Integer, String[]> times_paths = downloadTimesAndPaths();
 
         for (int i=0;i<times_paths.size();i++){
+
             String time = convertUnixTimeToFormatString(times_paths.get(i)[0]);
             TileProvider tileProvider = createTile(times_paths.get(i)[1]);
-
 
             HashMap<String, TileProvider> single_result=new HashMap<>();
             single_result.put(time, tileProvider);
 
             result.put(i, single_result);
+        }
+        for (Integer i: result.keySet()){
+            System.out.println(result.get(i).toString());
         }
         return result;
     }
@@ -70,8 +73,7 @@ public class RainMapApi{
     }
     private String convertUnixTimeToFormatString(String stime) {
         long time = Long.parseLong(stime);
-
-        return "  "+ DateConverter.convertLongToHM(time);
+        return "  "+ DateConverter.convertLongToHM(time*1000L);
     }
     private HashMap<Integer, String[]> downloadTimesAndPaths() throws IOException, JSONException {
         HashMap<Integer, String[]> result= new HashMap<>();
@@ -99,7 +101,7 @@ public class RainMapApi{
 
         return result;
     }
-    private TileProvider createTile(String path) throws IOException {
+    private TileProvider createTile(String path) {
         String surl = host+path+size+z+x+y+color+options+format;
 
         TileProvider tileProvider = new UrlTileProvider(512, 512) {

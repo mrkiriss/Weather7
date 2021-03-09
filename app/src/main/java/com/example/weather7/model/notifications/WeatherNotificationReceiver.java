@@ -18,6 +18,8 @@ import com.example.weather7.api.WeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.NotificationDao;
 import com.example.weather7.view.MainActivity;
+import com.example.weather7.view.notifications.adapters.NotificationsAdapter;
+import com.example.weather7.viewmodel.notifications.NotificationsViewModel;
 
 import org.json.JSONException;
 
@@ -39,12 +41,14 @@ public class WeatherNotificationReceiver extends BroadcastReceiver {
         cityName = intent.getStringExtra("cityName");
         actionID = intent.getAction();
 
-        notificationDao = Room.databaseBuilder(context,
-                AppDatabase.class, "database")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().getNotificationDao();
-        deleteNotificationFromBase(actionID);
+        if (!intent.getStringExtra("mode").equals("Ежедневно")) {
+            notificationDao = Room.databaseBuilder(context,
+                    AppDatabase.class, "database")
+                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    .build().getNotificationDao();
+            deleteNotificationFromBase(actionID);
+        }
 
         String[] content = getNotificationContent(cityName, context);
 
@@ -66,7 +70,6 @@ public class WeatherNotificationReceiver extends BroadcastReceiver {
                 .setVibrate(new long[]{500, 500, 500, 500});
 
         notificationManager.notify(Integer.parseInt(intent.getAction()), builder.build());
-
     }
 
     private String[] getNotificationContent(String cityName, Context context){
@@ -91,5 +94,6 @@ public class WeatherNotificationReceiver extends BroadcastReceiver {
     }
     private void deleteNotificationFromBase(String actionID){
         notificationDao.deleteByActionID(actionID);
+        NotificationsViewModel.onNotificationsChanged.notifyPropertyChanged(0);
     }
 }

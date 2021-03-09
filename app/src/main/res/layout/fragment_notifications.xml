@@ -30,6 +30,7 @@
                 android:id="@+id/textView12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:layout_weight="2"
                 android:text="@string/cityName"
                 android:textSize="18sp" />
@@ -38,7 +39,7 @@
                 android:id="@+id/cityName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="right|top"
                 android:layout_weight="3"
                 app:selectedValue="@={ViewModel.selectedCity}" />
         </LinearLayout>
@@ -56,6 +57,7 @@
                 android:id="@+id/textView13"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:layout_weight="2"
                 android:text="@string/repeatMode"
                 android:textSize="18sp" />
@@ -64,7 +66,7 @@
                 android:id="@+id/repaetMode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="right|top"
                 android:layout_weight="3"
                 android:entries="@array/repeatArray"
                 app:selectedValue="@={ViewModel.selectedRepeatMode}" />
@@ -108,7 +110,7 @@
             android:layout_weight="3"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:visibility="@{ViewModel.selectedRepeatMode.equals(ViewModel.REPEAT_MODE_NONREPEATING)? View.GONE:View.VISIBLE}">
+            android:visibility="@{!ViewModel.selectedRepeatMode.equals(ViewModel.REPEAT_MODE_CONCRETE_DATE)? View.GONE:View.VISIBLE}">
 
             <TextView
                 android:id="@+id/textView16"

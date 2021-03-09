@@ -25,8 +25,8 @@ public class ItemNotificationViewModel extends BaseObservable {
         this.cityName= notification.getCityName();
         this.repeatMode= notification.getRepeatMode()+" для: ";
         this.timeAndDate= "Время: "+notification.getTime()+"   Дата: "+notification.getDate();
-        if (notification.getRepeatMode().equals("Без повторений")) this.timeAndDate= "Время: "+notification.getTime();
-        this.actionID= "\""+notification.getActionID()+"\"";
+        if (notification.getRepeatMode().equals("Ежедневно")) this.timeAndDate= "Время: "+notification.getTime();
+        this.actionID= notification.getActionID();
     }
 
     public void onDeleteClick(){

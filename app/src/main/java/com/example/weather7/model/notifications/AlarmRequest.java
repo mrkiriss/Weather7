@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import com.example.weather7.utils.DateConverter;
 
+import java.util.Date;
+
 public class AlarmRequest {
 
     public static final int PENDING_INTENT_REQUEST_CODE_BASE=1;
@@ -41,7 +43,11 @@ public class AlarmRequest {
     public void setCityNameInIntent(String cityName){
         intent.putExtra("cityName", cityName);
     }
-    public void setIntervalAndTriggerTime(String repeatMode, String date, String time){
+    public String setIntervalAndTriggerTime(String repeatMode, String date, String time){
+        intent.putExtra("mode", repeatMode);
+
+        long addition = 0;
+
         switch (repeatMode){
             case "Ежедневно":
                 interval=INTERVAL_DAY;
@@ -49,14 +55,25 @@ public class AlarmRequest {
                 break;
             case "Без повторений":
                 interval=INTERVAL_NONE;
-                //triggerTime= DateConverter.parseHMForTime(time);
+                long triggerTime= DateConverter.parseHMForTime(time);
+
+                // если время уже прошло, перенести на след. день
+                if (isPast(triggerTime)) addition=24 * 60 * 60 * 1000;
+
                 break;
             case "В определённый день":
                 interval=INTERVAL_SPECIFIC_DATE;
                 //triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
                 break;
         }
-        triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
+        triggerTime= DateConverter.parseDMYHMForTime(date+" "+time) + addition;
+
+        return DateConverter.convertLongToDMY(triggerTime);
+    }
+
+    private boolean isPast(long time){
+        long inaccuracy=5000;
+        return (time + inaccuracy<new Date().getTime());
     }
 
     public int getAlarmType() {

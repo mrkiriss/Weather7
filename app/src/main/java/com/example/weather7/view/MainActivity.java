@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity implements FragmentNotificat
     }
     private void addFragments(){
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragmentHome, "fragmentHome")
-                .add(R.id.container, fragmentCities, "fragmentCities")
-                .add(R.id.container, fragmentNotifications, "fragmentNotifications")
+                .add(R.id.nav_host_fragment, fragmentHome, "fragmentHome")
+                .add(R.id.nav_host_fragment, fragmentCities, "fragmentCities")
+                .add(R.id.nav_host_fragment, fragmentNotifications, "fragmentNotifications")
                 .hide(fragmentCities)
                 .hide(fragmentNotifications)
                 .commit();

@@ -16,6 +16,7 @@ import com.example.weather7.model.cities.DelayMessage;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
+import com.example.weather7.viewmodel.notifications.NotificationsViewModel;
 
 import org.json.JSONException;
 
@@ -171,8 +172,12 @@ public class CityRepository {
             // удаляем поток из индикатора
             firs_filling_status--;
             checkLoading();
+
             // запрос на вставку/обновление базы данных
             insertOrUpdateCityInBase(city);
+
+            // уведомляем фрагмент с уведомлениями, о добавлении города, для пересоздания spinner городов
+            NotificationsViewModel.onCitiesSpinnerChanged.notifyPropertyChanged(0);
         };
 
         Thread thr = new Thread(task);
@@ -308,7 +313,7 @@ public class CityRepository {
         addCityHeadRequest.postValue(city);
         // постепенная загрузка, без наложения
         try {
-            Thread.sleep(150);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -317,7 +322,7 @@ public class CityRepository {
         addDaysInCityRequest.postValue(days);
         // постепенная загрузка, без наложения
         try {
-            Thread.sleep(100);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

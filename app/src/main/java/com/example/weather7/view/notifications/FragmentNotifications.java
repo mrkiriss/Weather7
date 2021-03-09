@@ -37,6 +37,7 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class FragmentNotifications extends Fragment {
 
@@ -84,11 +85,16 @@ public class FragmentNotifications extends Fragment {
         notificationsViewModel.getAddNotificationDataRequest().observe(getViewLifecycleOwner(), this::addNotificationData);
         // подписываемся на удаление макета уведомления в пользовательский интерфейс
         notificationsViewModel.getDeleteNotificationDataRequest().observe(getViewLifecycleOwner(), this::deleteNotificationData);
+        // подписываемся на установку списка с уведомлениями в адаптер
+        notificationsViewModel.getSetArrayOfNotifications().observe(getViewLifecycleOwner(), this::setArrayOfNotifications);
 
 
         return binding.getRoot();
     }
 
+    private void setArrayOfNotifications(ArrayList<Notification> notifications){
+        notificationsAdapter.setNotifications(notifications);
+    }
     private void addNotificationData(Notification notification){
         int index = notificationsAdapter.addNotification(notification);
         notificationsAdapter.notifyItemInserted(index);

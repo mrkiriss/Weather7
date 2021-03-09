@@ -2,12 +2,14 @@ package com.example.weather7.repository;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.weather7.database.CityDao;
 import com.example.weather7.database.NotificationDao;
 import com.example.weather7.model.notifications.Notification;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NotificationRepository {
 
@@ -40,10 +42,12 @@ public class NotificationRepository {
         return result;
     }
 
-    public void firstFillingCities(){
+    public void fillingNotifications(){
         ArrayList<Notification> content = new ArrayList<>(notificationDao.getNotifications());
         for (Notification notification: content){
-            addNotificationToView(notification);
+            Runnable task = () -> addNotificationToView(notification);
+            Thread thread = new Thread(task);
+            thread.start();
         }
     }
 
@@ -60,7 +64,6 @@ public class NotificationRepository {
         return (numberOfActiveAddingNotificationTasks>0);
     }
 
-
     public void addNotificationToViewAndBase(String cityName, String repeatMode,String  date, String time){
         Runnable task = () -> {
             numberOfActiveAddingNotificationTasks++;
@@ -68,7 +71,6 @@ public class NotificationRepository {
             Notification notification = new Notification(cityName, repeatMode, date, time, getCountOfAlarmTasks());
             addNotificationToView(notification);
             addNotificationToBase(notification);
-            toastContent.postValue("Уведомление успешно запланировано");
 
             numberOfActiveAddingNotificationTasks--;
         };
@@ -88,11 +90,11 @@ public class NotificationRepository {
         notificationDao.deleteByActionID(notification.getActionID());
     }
 
-    private void addNotificationToView(Notification notification){
+    private synchronized void addNotificationToView(Notification notification){
         addNotificationDataRequest.postValue(notification);
 
         try {
-            Thread.sleep(150);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

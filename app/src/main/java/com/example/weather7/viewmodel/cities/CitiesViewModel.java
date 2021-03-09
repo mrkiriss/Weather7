@@ -27,7 +27,6 @@ public class CitiesViewModel extends ViewModel {
     private LiveData<Boolean> cities_loading;
     private LiveData<Boolean> names_cities_loading;
     private LiveData<List<AutoEnteredCity>> auto_cities;
-    private CityRepository rep;
     private LiveData<Boolean> connection;
     private LiveData<LinkedList<City>> cities;
     private LiveData<City> addCityHeadRequest;
@@ -36,6 +35,7 @@ public class CitiesViewModel extends ViewModel {
     private LiveData<Intent> startIntent;
     private LiveData<String> error_content;
 
+    private CityRepository rep;
 
     public CitiesViewModel(CityRepository rep) {
         this.rep = rep;
@@ -54,12 +54,7 @@ public class CitiesViewModel extends ViewModel {
         progress_visible.set(false);
         names_progress_visible.set(false);
         // реагирование на ввод пользователя
-        text_city.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                rep.respondToInput(Objects.requireNonNull(text_city.get()));
-            }
-        });
+        initTextCityCallback();
         // обновляем список городов
         rep.firstFillingCities();
 
@@ -76,6 +71,15 @@ public class CitiesViewModel extends ViewModel {
 
     public void processRequest(RepositoryRequest request){
         rep.processRequest(request);
+    }
+
+    private void initTextCityCallback(){
+        text_city.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                rep.respondToInput(Objects.requireNonNull(text_city.get()));
+            }
+        });
     }
 
     public LiveData<LinkedList<City>> getCities(){return cities;}

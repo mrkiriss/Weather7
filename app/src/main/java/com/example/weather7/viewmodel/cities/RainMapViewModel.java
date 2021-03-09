@@ -36,6 +36,12 @@ public class RainMapViewModel extends ViewModel {
         this.error=rep.getError();
 
         // подписываемся на изменение выбранного времени
+        initOnChangeProgressSeekbar();
+
+        rep.downloadMapDataAsync();
+    }
+
+    private void initOnChangeProgressSeekbar(){
         progress_seekbar.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -50,8 +56,6 @@ public class RainMapViewModel extends ViewModel {
                 selectedProvider.setValue(requiredProvider);
             }
         });
-
-        rep.downloadMapDataAsync();
     }
 
     public LiveData<HashMap<Integer, HashMap<String, TileProvider>>> getMapData(){return mapData;}
