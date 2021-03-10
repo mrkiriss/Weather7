@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal"
+            android:background="@color/blu_gray_400"
             android:weightSum="8">
 
             <LinearLayout
@@ -58,7 +59,7 @@
                         android:layout_margin="2dp"
                         android:layout_weight="1"
                         android:text="@{ViewModel.repeatMode}"
-                        android:textColor="#A19B9B" />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/textView17"
@@ -67,7 +68,7 @@
                         android:layout_margin="2dp"
                         android:layout_weight="1"
                         android:text="@{ViewModel.cityName}"
-                        android:textColor="#A19B9B" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
             </LinearLayout>
 

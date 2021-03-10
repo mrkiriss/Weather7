@@ -1,5 +1,6 @@
 package com.example.weather7.view.cities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -89,7 +90,7 @@ public class FragmentCities extends Fragment{
                     case "rain":
                         intent.setClass(getContext(), RainMapActivity.class);
                 }
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             }
         });
         // подписываемся на обновление состояние загрузки городов

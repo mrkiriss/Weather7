@@ -8,6 +8,7 @@
             name="ViewModel"
             type="com.example.weather7.viewmodel.cities.items.ItemCityViewModel" />
     </data>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -19,12 +20,12 @@
         android:paddingTop="6dp"
         android:paddingRight="12dp"
         android:paddingBottom="6dp"
-        card_view:cardCornerRadius="2dp"
-        >
+        card_view:cardCornerRadius="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/blu_gray_400"
             android:orientation="vertical"
             android:weightSum="12">
 
@@ -96,20 +97,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:onClick="@{() -> ViewModel.openRainMap()}"
+                    android:background="@color/blu_gray_200"
 
+                    android:onClick="@{() -> ViewModel.openRainMap()}"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_pointer__1_" />
 
                 <ImageButton
                     android:id="@+id/imageButton3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
                     android:layout_marginRight="8dp"
                     android:layout_weight="1"
-                    android:scaleType="fitCenter"
+                    android:background="@color/blu_gray_200"
                     android:onClick="@{()->ViewModel.openCityInMap()}"
+                    android:scaleType="fitCenter"
                     card_view:srcCompat="@drawable/ic_map" />
 
             </LinearLayout>

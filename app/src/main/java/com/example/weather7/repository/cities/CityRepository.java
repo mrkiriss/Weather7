@@ -177,7 +177,7 @@ public class CityRepository {
             insertOrUpdateCityInBase(city);
 
             // уведомляем фрагмент с уведомлениями, о добавлении города, для пересоздания spinner городов
-            NotificationsViewModel.onCitiesSpinnerChanged.notifyPropertyChanged(0);
+            NotificationsViewModel.onCitiesSpinnerChanged.notifyPropertyChanged(1);
         };
 
         Thread thr = new Thread(task);
@@ -274,9 +274,15 @@ public class CityRepository {
         current_cities_names.remove(city.getName());
 
         // удаляем из базы
-        Runnable task = () -> dao.delete(city);
+        Runnable task = () -> {
+            dao.delete(city);
+
+            // уведомляем фрагмент с уведомлениями, о добавлении города, для пересоздания spinner городов
+            NotificationsViewModel.onCitiesSpinnerChanged.notifyPropertyChanged(-1);
+        };
         Thread thr = new Thread(task);
         thr.start();
+
     }
     private boolean checkConnection(){
         Boolean connection = ConnectionManager.isOnline();

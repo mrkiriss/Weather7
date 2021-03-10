@@ -5,7 +5,7 @@
     <string name="title_cities">Города</string>
     <string name="title_notifications">Уведомления</string>
 
-    <string name="button_find">Поиск</string>
+    <string name="city_name_hint">Название города</string>
 
     <string name="wind_speed">Скорость ветра: </string>
     <string name="pressure">Давление: </string>

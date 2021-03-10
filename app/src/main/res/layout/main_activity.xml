@@ -7,18 +7,31 @@
             type="com.example.weather7.viewmodel.MainActivityViewModel" />
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize">
+        android:layout_height="match_parent">
+
+        <me.ibrahimsn.particle.ParticleView
+            android:id="@+id/particleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:particleCount="60"
+            app:particleMinRadius="3"
+            app:particleMaxRadius="10"
+            app:particlesBackgroundColor="#23262a"
+            app:particleColor="@android:color/holo_green_dark"
+            app:particleLineColor="@android:color/holo_green_dark"
+            app:particleLinesEnabled="true" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:scrollbarStyle="outsideOverlay"
+            android:background="@color/blu_gray_200"
 
+            android:scrollbarStyle="outsideOverlay"
             app:hideOnScroll="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

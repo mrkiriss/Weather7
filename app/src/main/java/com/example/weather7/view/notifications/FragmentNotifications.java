@@ -72,6 +72,7 @@ public class FragmentNotifications extends Fragment {
 
         setupNotificationsRecyclerView(binding.notificationsRecycleView);
         createDateAndTimePickers();
+        setupRepeatModeSpinner();
 
         // подписываемся на изменение списка имён для spinner
         notificationsViewModel.getContentOfCitiesSpinner().observe(getViewLifecycleOwner(), this::setContentOfCitiesSpinner);
@@ -172,9 +173,13 @@ public class FragmentNotifications extends Fragment {
         }
     }
     private void setContentOfCitiesSpinner(ArrayList<String> content){
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, content);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.my_list_item, content);
 
         binding.cityName.setAdapter(adapter);
+    }
+    private void setupRepeatModeSpinner(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),R.layout.my_list_item, getResources().getStringArray(R.array.repeatArray));
+        binding.repaetMode.setAdapter(adapter);
     }
 
     private void setupNotificationsRecyclerView(RecyclerView recyclerView) {
