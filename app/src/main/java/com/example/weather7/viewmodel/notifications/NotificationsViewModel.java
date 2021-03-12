@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.notifications.AlarmRequest;
 import com.example.weather7.model.notifications.Notification;
-import com.example.weather7.repository.NotificationRepository;
+import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.DateConverter;
 

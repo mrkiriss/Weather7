@@ -38,9 +38,7 @@ public class FragmentCities extends Fragment{
 
     private CitiesViewModel citiesViewModel;
     private FragmentCitiesBinding binding;
-    private AppDatabase db;
     private CitiesAdapter cities_adapter;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +46,7 @@ public class FragmentCities extends Fragment{
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cities, container, false);
 
         // создание экземпляра ДБ
-        db = Room.databaseBuilder(getContext(),
+        AppDatabase db = Room.databaseBuilder(getContext(),
                 AppDatabase.class, "database")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
@@ -83,15 +81,12 @@ public class FragmentCities extends Fragment{
         // подписываемся на обновление запроса на добавление КОНТЕЙНЕРА ОШИБКИ
         citiesViewModel.getError_content().observe(getViewLifecycleOwner(), content -> Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show());
         // подписываемся на вызов Intent-ов
-        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), new Observer<Intent>() {
-            @Override
-            public void onChanged(Intent intent) {
-                switch (intent.getStringExtra("class")){
-                    case "rain":
-                        intent.setClass(getContext(), RainMapActivity.class);
-                }
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+        citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), intent -> {
+            switch (intent.getStringExtra("class")){
+                case "rain":
+                    intent.setClass(getContext(), RainMapActivity.class);
             }
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
         });
         // подписываемся на обновление состояние загрузки городов
         citiesViewModel.getCities_loading().observe(getViewLifecycleOwner(), visible -> citiesViewModel.setProgress_visible(visible));
@@ -132,17 +127,11 @@ public class FragmentCities extends Fragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // подписываемся на обновление запроса от ОПРЕДЕЛЁННОГО ГОРОДА
-        adapter.getRequest().observe(getViewLifecycleOwner(), new Observer<RepositoryRequest>() {
-            @Override
-            public void onChanged(RepositoryRequest req) {
-                citiesViewModel.processRequest(req);
-            }
-        });
+        adapter.getRequest().observe(getViewLifecycleOwner(), req -> citiesViewModel.processRequest(req));
     }
 
     @Override
     public void onDestroyView() {
-        db.close();
         super.onDestroyView();
     }
 }

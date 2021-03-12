@@ -26,9 +26,8 @@ import com.example.weather7.databinding.FragmentNotificationsBinding;
 import com.example.weather7.model.notifications.Notification;
 import com.example.weather7.model.notifications.WeatherNotificationReceiver;
 import com.example.weather7.model.notifications.AlarmRequest;
-import com.example.weather7.repository.NotificationRepository;
+import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.repository.RepositoryRequest;
-import com.example.weather7.view.cities.adapters.CitiesAdapter;
 import com.example.weather7.view.notifications.adapters.NotificationsAdapter;
 import com.example.weather7.viewmodel.notifications.NotificationsViewModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -37,7 +36,6 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class FragmentNotifications extends Fragment {
 

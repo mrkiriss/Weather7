@@ -23,7 +23,7 @@ import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class WeatherApi{
+public class WeatherApi implements IWeatherApi{
     private final String url_for_head="https://api.openweathermap.org/data/2.5/weather?q=";
     private final String url_for_days="https://api.openweathermap.org/data/2.5/onecall?";
     private final String apiKey ="&appid=beb7c390d2db9cfa4d3b327035507589";
@@ -39,18 +39,21 @@ public class WeatherApi{
         this.context=context;
     }
 
+    @Override
     public City getCityHead(String name) throws IOException, JSONException {
         String head_url_request = this.url_for_head+name+ apiKey +metric+lang;
         String content = downloadContentByUrl(head_url_request);
         return parseCityHead(name, content);
     }
 
+    @Override
     public DaysAdapter getCityDays(String name, String lat, String lon) throws IOException, JSONException {
         String days_url_request = this.url_for_days+this.lat+lat+this.lon+lon+metric+ apiKey +exclude+lang;
         String content = downloadContentByUrl(days_url_request);
         return parseDays(name, content);
     }
 
+    @Override
     // [0]-temp+"°C" [1]-"Ощущается как "+feels_like+"°C: "+description
     public String[] getNotificationContent(String name) throws IOException, JSONException  {
         String notificationContent_url_request = this.url_for_head+name+ apiKey +metric+lang;
@@ -59,7 +62,7 @@ public class WeatherApi{
 
     }
 
-    protected String convertUnixTimeToFormatString(String stime, String time_zone){
+    protected String convertUnixTimeToFormatString(String stime){
         long time = Long.valueOf(stime);
         return DateConverter.convertLongToMD(time);
     }
@@ -143,7 +146,7 @@ public class WeatherApi{
         for (int i=0;i<days.length();i++){
             JSONObject day = days.getJSONObject(i);
 
-            date = convertUnixTimeToFormatString(day.getString("dt"), timezone);
+            date = convertUnixTimeToFormatString(day.getString("dt"));
 
             JSONObject temp_data = day.getJSONObject("temp");
             JSONObject temp_feels_data = day.getJSONObject("feels_like");

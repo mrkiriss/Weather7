@@ -18,7 +18,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 
-public class RainMapApi{
+public class RainMapApi implements IRainMapApi {
 
     private final String url_for_paths="https://api.rainviewer.com/public/weather-maps.json";
     private final int number_of_old_photos=3;
@@ -33,7 +33,7 @@ public class RainMapApi{
     private final String options="1_0";
     private final String format=".png";
 
-
+    @Override
     public HashMap<Integer, HashMap<String, TileProvider>> downloadMasksOfRain() throws IOException, JSONException {
 
         HashMap<Integer, HashMap<String, TileProvider>> result = new HashMap<>();

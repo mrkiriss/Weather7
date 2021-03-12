@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:alpha="0.9"
-        tools:context=".view.FragmentHome">
+        tools:context=".view.cities.FragmentCities">
 
         <LinearLayout
             android:id="@+id/linear"

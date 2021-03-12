@@ -4,9 +4,8 @@ import androidx.databinding.BaseObservable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.weather7.model.notifications.Notification;
-import com.example.weather7.repository.NotificationRepository;
+import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.repository.RepositoryRequest;
-import com.example.weather7.repository.cities.CityRepository;
 
 public class ItemNotificationViewModel extends BaseObservable {
 

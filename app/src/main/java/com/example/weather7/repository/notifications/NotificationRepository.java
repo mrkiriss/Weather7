@@ -1,4 +1,4 @@
-package com.example.weather7.repository;
+package com.example.weather7.repository.notifications;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import com.example.weather7.database.CityDao;
 import com.example.weather7.database.NotificationDao;
 import com.example.weather7.model.notifications.Notification;
+import com.example.weather7.repository.RepositoryRequest;
 
 import java.util.ArrayList;
 import java.util.Date;

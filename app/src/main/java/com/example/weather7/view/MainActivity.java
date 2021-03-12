@@ -9,6 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.MainActivityBinding;
@@ -27,10 +32,13 @@ public class MainActivity extends AppCompatActivity implements FragmentNotificat
 
     AlarmManager alarmManager;
 
-    private FragmentHome fragmentHome;
+    private FragmentLocation fragmentLocation;
     private FragmentCities fragmentCities;
     private FragmentNotifications fragmentNotifications;
     private Fragment activeFragment;
+
+    private NavController navController;
+    private NavOptions options;
 
     private ParticleView particleView;
 
@@ -42,8 +50,16 @@ public class MainActivity extends AppCompatActivity implements FragmentNotificat
         mainViewModel = new MainActivityViewModel();
         binding.setViewModel(mainViewModel);
 
-        createFragments();
-        addFragments();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        options = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setEnterAnim(android.R.anim.fade_in)
+                .setExitAnim(android.R.anim.fade_out)
+                .setPopEnterAnim(android.R.anim.fade_in)
+                .setPopExitAnim(android.R.anim.fade_out)
+                .setPopUpTo(navController.getGraph().getStartDestination(), false)
+                .build();
+
         setBottomNavigationListener();
 
         alarmManager  = (AlarmManager)getSystemService(
@@ -52,58 +68,23 @@ public class MainActivity extends AppCompatActivity implements FragmentNotificat
 
         particleView = findViewById(R.id.particleView);
     }
-
-    private void createFragments(){
-        fragmentHome = new FragmentHome();
-        fragmentCities = new FragmentCities();
-        fragmentNotifications = new FragmentNotifications();
-        activeFragment=fragmentHome;
-    }
-    private void addFragments(){
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.nav_host_fragment, fragmentHome, "fragmentHome")
-                .add(R.id.nav_host_fragment, fragmentCities, "fragmentCities")
-                .add(R.id.nav_host_fragment, fragmentNotifications, "fragmentNotifications")
-                .hide(fragmentCities)
-                .hide(fragmentNotifications)
-                .commit();
-    }
     private void setBottomNavigationListener(){
-        binding.navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
-                    case R.id.navigation_home:
-                        if (activeFragment==fragmentHome) return false;
-
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .hide(activeFragment)
-                                .show(fragmentHome).commit();
-                        activeFragment=fragmentHome;
-                        break;
-                    case R.id.navigation_cities:
-                        if (activeFragment==fragmentCities) return false;
-
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .hide(activeFragment)
-                                .show(fragmentCities).commit();
-                        activeFragment=fragmentCities;
-                        break;
-                    case R.id.navigation_notifications:
-                        if (activeFragment==fragmentNotifications) return false;
-
-                        getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .hide(activeFragment)
-                                .show(fragmentNotifications).commit();
-                        activeFragment=fragmentNotifications;
-                        break;
-                }
-                return true;
+        binding.navView.setOnNavigationItemSelectedListener(item -> {
+            switch(item.getItemId()){
+                case R.id.navigation_location:
+                    navController.navigate(R.id.navigation_location, null, options);
+                    break;
+                case R.id.navigation_cities:
+                    navController.navigate(R.id.navigation_cities, null, options);
+                    break;
+                case R.id.navigation_notifications:
+                    navController.navigate(R.id.navigation_notifications, null, options);
+                    break;
             }
+            return true;
         });
+
+        binding.navView.setOnNavigationItemReselectedListener(item -> {});
     }
 
     @Override
