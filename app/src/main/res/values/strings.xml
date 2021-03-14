@@ -30,4 +30,6 @@
 
     <string name="scheduleNotification">Запланировать уведомление</string>
     <string name="clearNotifications">Очистить запланированные уведомления</string>
+    <string name="text_rain_map">Карта осадков</string>
+    <string name="text_open_city_on_map">На карту</string>
 </resources>

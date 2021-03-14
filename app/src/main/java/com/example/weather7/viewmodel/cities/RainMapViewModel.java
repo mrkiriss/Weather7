@@ -33,12 +33,12 @@ public class RainMapViewModel extends ViewModel {
         // подписываемся на обновление данных модели
         this.mapData=rep.getMapData();
         this.loading=rep.getLoading();
-        this.error=rep.getError();
+        this.error=rep.getToastContent();
 
         // подписываемся на изменение выбранного времени
         initOnChangeProgressSeekbar();
 
-        rep.downloadMapDataAsync();
+        rep.downloadMapData();
     }
 
     private void initOnChangeProgressSeekbar(){

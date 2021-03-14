@@ -13,7 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class CitiesApi {
+public class CitiesNamesApi implements ICitiesNamesApi{
 
     private final String host = "https://api.vk.com/method/";
     private final String method = "database.getCities?";
@@ -21,11 +21,12 @@ public class CitiesApi {
     private final String lang="&lang=ru";
     private final String access_token = "&access_token=5d5d04ce5d5d04ce5d5d04ce115d2babc955d5d5d5d04ce3d631fbd900f16c5925896bc";
     private final String name = "&q=";
-    private final String count = "&count="; // now only MAX_COUNT_OF_CITIES cities
+    private final String count = "&count=";
     private final int MAX_COUNT_OF_CITIES=20;
-    private final String country_id = "&country_id=1"; // now only RU
-    private final String mode = "&need_all=0"; // now only main cities
+    private final String country_id = "&country_id=1";
+    private final String mode = "&need_all=0";
 
+    @Override
     public ArrayList<AutoEnteredCity> downloadCities(String part_of_name) throws IOException, JSONException {
         ArrayList<AutoEnteredCity> result = new ArrayList<>();
         ArrayList<String> available_names = new ArrayList<>();;
@@ -72,5 +73,4 @@ public class CitiesApi {
 
         return content;
     }
-
 }

@@ -8,7 +8,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.weather7.model.cities.City;
+import com.example.weather7.model.base.City;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.repository.cities.CityRepository;
 

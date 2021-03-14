@@ -1,7 +1,6 @@
 package com.example.weather7.view.cities;
 
 import android.app.ActivityOptions;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,59 +11,53 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
-import com.example.weather7.api.CitiesApi;
-import com.example.weather7.api.WeatherApi;
+import com.example.weather7.di.App;
 import com.example.weather7.model.cities.AutoEnteredCity;
-import com.example.weather7.repository.RepositoryRequest;
-import com.example.weather7.repository.cities.CityRepository;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.cities.adapters.CitiesAdapter;
 import com.example.weather7.R;
 import com.example.weather7.databinding.FragmentCitiesBinding;
-import com.example.weather7.model.cities.City;
-import com.example.weather7.database.AppDatabase;
+import com.example.weather7.model.base.City;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 import com.example.weather7.viewmodel.cities.CitiesViewModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.inject.Inject;
+
 public class FragmentCities extends Fragment{
 
-    private CitiesViewModel citiesViewModel;
+    @Inject
+    CitiesViewModel citiesViewModel;
+    @Inject
+    ConnectionManager connectionManager;
+    @Inject
+    CitiesAdapter cities_adapter;
+    @Inject
+    LinearLayoutManager citiesAdapterManager;
+
     private FragmentCitiesBinding binding;
-    private CitiesAdapter cities_adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        App.getInstance().getComponentManager().getFCitiesComponent().inject(this);
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cities, container, false);
-
-        // создание экземпляра ДБ
-        AppDatabase db = Room.databaseBuilder(getContext(),
-                AppDatabase.class, "database")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build();
-
-        // создание экземпляра Погодного api
-        WeatherApi api = new WeatherApi(getContext());
-        // создание экземпляра api названий городов для поиска
-        CitiesApi citiesApi=new CitiesApi();
-        // создание ViewModel
-        citiesViewModel = new CitiesViewModel(new CityRepository(db, api, citiesApi));
         binding.setViewModel(citiesViewModel);
 
         setupCitiesRecyclerView(binding.citiesRecyclerView);
 
-        cities_adapter =
-                (CitiesAdapter) binding.citiesRecyclerView.getAdapter();
+        initObservers();
 
+        return binding.getRoot();
+    }
+
+    private void initObservers(){
         // подписываемся на обновление ГОРОДОВ
         citiesViewModel.getCities().observe(getViewLifecycleOwner(), this::onCitiesChanged);
         // подписываемся на обновление запроса на добавление ШАПКИ ГОРОДА
@@ -76,7 +69,7 @@ public class FragmentCities extends Fragment{
         // подписываемся на обновления состояния сети
         citiesViewModel.getConnection().observe(getViewLifecycleOwner(), connection -> {
             if (connection) return;
-            ConnectionManager.showOfferSetting(getContext());
+            connectionManager.showOfferSetting(getContext());
         });
         // подписываемся на обновление запроса на добавление КОНТЕЙНЕРА ОШИБКИ
         citiesViewModel.getError_content().observe(getViewLifecycleOwner(), content -> Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show());
@@ -98,10 +91,7 @@ public class FragmentCities extends Fragment{
             binding.autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, arr));
             //binding.autoCompleteTextView.showDropDown();
         });
-
-        return binding.getRoot();
     }
-
     private void onCityAdd(City city){
         int index = cities_adapter.addCity(city);
         cities_adapter.notifyItemChanged(index);
@@ -122,16 +112,16 @@ public class FragmentCities extends Fragment{
     }
 
     private void setupCitiesRecyclerView(RecyclerView recyclerView) {
-        CitiesAdapter adapter = new CitiesAdapter();
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(cities_adapter);
+        recyclerView.setLayoutManager(citiesAdapterManager);
 
         // подписываемся на обновление запроса от ОПРЕДЕЛЁННОГО ГОРОДА
-        adapter.getRequest().observe(getViewLifecycleOwner(), req -> citiesViewModel.processRequest(req));
+        cities_adapter.getRequest().observe(getViewLifecycleOwner(), req -> citiesViewModel.processRequest(req));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //App.getInstance().getComponentManager().clearFCitiesComponent();
     }
 }

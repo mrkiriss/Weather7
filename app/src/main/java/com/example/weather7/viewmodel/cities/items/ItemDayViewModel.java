@@ -7,7 +7,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableBoolean;
 
-import com.example.weather7.model.cities.WeatherOnDay;
+import com.example.weather7.model.base.WeatherOnDay;
 
 public class ItemDayViewModel  extends BaseObservable {
     private WeatherOnDay day;

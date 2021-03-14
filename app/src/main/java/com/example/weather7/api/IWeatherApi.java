@@ -1,6 +1,6 @@
 package com.example.weather7.api;
 
-import com.example.weather7.model.cities.City;
+import com.example.weather7.model.base.City;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import org.json.JSONException;

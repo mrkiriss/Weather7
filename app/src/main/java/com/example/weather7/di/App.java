@@ -6,7 +6,7 @@ public class App extends Application {
     private static App instance;
     private ComponentManager componentManager;
 
-    public static App getApp(){
+    public static App getInstance(){
         return instance;
     }
 
@@ -18,6 +18,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+
         componentManager=new ComponentManager();
+        componentManager.initAppComponent(instance);
     }
 }

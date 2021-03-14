@@ -16,9 +16,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.notifications.AlarmRequest;
+import com.example.weather7.model.notifications.AlarmRequestFactory;
 import com.example.weather7.model.notifications.Notification;
 import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.repository.RepositoryRequest;
+import com.example.weather7.utils.AlarmManager;
 import com.example.weather7.utils.DateConverter;
 
 import java.util.ArrayList;
@@ -28,9 +30,8 @@ public class NotificationsViewModel extends ViewModel {
     public static final String REPEAT_MODE_NONREPEATING="Без повторений";
     public static final String REPEAT_MODE_CONCRETE_DATE="В определённый день";
     public static ObservableBoolean onNotificationsChanged = new ObservableBoolean(true);
-    public static ObservableBoolean onCitiesSpinnerChanged = new ObservableBoolean(true);
 
-    private NotificationRepository rep;
+    private final NotificationRepository rep;
 
     private ObservableField<String> selectedCity;
     private ObservableField<String> selectedRepeatMode;
@@ -39,7 +40,6 @@ public class NotificationsViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<String>> contentOfCitiesSpinner;
     private MutableLiveData<Integer> categoryOfStartingPicker;
-    private MutableLiveData<AlarmRequest> startAlarmCreation;
     private MutableLiveData<ArrayList<Notification>> setArrayOfNotifications;
 
     private LiveData<String> toastContent;
@@ -56,7 +56,6 @@ public class NotificationsViewModel extends ViewModel {
 
         this.contentOfCitiesSpinner=new MutableLiveData<>();
         this.categoryOfStartingPicker=new MutableLiveData<>();
-        this.startAlarmCreation=new MutableLiveData<>();
         this.setArrayOfNotifications=new MutableLiveData<>();
 
         this.toastContent=rep.getToastContent();
@@ -64,7 +63,6 @@ public class NotificationsViewModel extends ViewModel {
         this.deleteNotificationDataRequest=rep.getDeleteNotificationDataRequest();
 
         initOnChangeNotifications();
-        initOnChangeCitiesSpinner();
 
         resetFieldValues();
         fillCitiesSpinner();
@@ -85,16 +83,8 @@ public class NotificationsViewModel extends ViewModel {
         if (selectedRepeatMode.equals(REPEAT_MODE_NONREPEATING)) date = DateConverter.getCurrentDate();
         String time = selectedTimeContent.get();
 
-        //resetFieldValues();
-
         // отправка запроса на создание уведомления
-        AlarmRequest alarmRequest = new AlarmRequest(rep.getCountOfAlarmTasks());
-        alarmRequest.setCityNameInIntent(cityName);
-        String recycledData = alarmRequest.setIntervalAndTriggerTime(repeatMode, date, time);
-        startAlarmCreation.setValue(alarmRequest);
-
-        // создание макета запроса в базе данных, отображение на экране
-        rep.addNotificationToViewAndBase(cityName, repeatMode, recycledData, time);
+        rep.createAlarmTask(cityName, repeatMode, date, time);
     }
 
     public void processRequest(RepositoryRequest req){
@@ -117,16 +107,6 @@ public class NotificationsViewModel extends ViewModel {
                 setArrayOfNotifications.setValue(new ArrayList<>());
 
                 rep.fillingNotifications();
-            }
-        });
-    }
-    private void initOnChangeCitiesSpinner(){
-        onCitiesSpinnerChanged.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!onCitiesSpinnerChanged.get()) return;
-
-                fillCitiesSpinner();
             }
         });
     }
@@ -167,9 +147,6 @@ public class NotificationsViewModel extends ViewModel {
     }
     public MutableLiveData<Integer> getCategoryOfStartingPicker() {
         return categoryOfStartingPicker;
-    }
-    public MutableLiveData<AlarmRequest> getStartAlarmCreation() {
-        return startAlarmCreation;
     }
     public ObservableField<String> getSelectedCity() {
         return selectedCity;

@@ -16,25 +16,25 @@ public class RainMapRepository {
     private final RainMapApi rainMapApi;
 
     private MutableLiveData<Boolean> loading;
-    private MutableLiveData<String> error;
+    private MutableLiveData<String> toastContent;
     private MutableLiveData<HashMap<Integer, HashMap<String, TileProvider>>> mapData;
 
     public RainMapRepository(RainMapApi rainMapApi){
         this.rainMapApi=rainMapApi;
 
         loading = new MutableLiveData<>();
-        error = new MutableLiveData<>();
+        toastContent = new MutableLiveData<>();
         mapData = new MutableLiveData<>();
     }
 
-    public void downloadMapDataAsync(){
+    public void downloadMapData(){
         Runnable task = () -> {
             loading.postValue(true);
             try {
                 mapData.postValue(rainMapApi.downloadMasksOfRain());
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                error.postValue("Не удалось загрузить карту дождя");
+                toastContent.postValue("Не удалось загрузить карту дождя");
             }
             loading.postValue(false);
         };
@@ -44,5 +44,5 @@ public class RainMapRepository {
 
     public LiveData<Boolean> getLoading(){return loading;}
     public LiveData<HashMap<Integer, HashMap<String, TileProvider>>> getMapData(){return mapData;}
-    public LiveData<String> getError(){return error;}
+    public LiveData<String> getToastContent(){return toastContent;}
 }

@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weather7.model.cities.AutoEnteredCity;
-import com.example.weather7.model.cities.City;
+import com.example.weather7.model.base.City;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.repository.cities.CityRepository;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
@@ -20,9 +20,9 @@ import java.util.Objects;
 
 public class CitiesViewModel extends ViewModel {
 
-    private ObservableField<String> text_city = new ObservableField<>();
-    private ObservableBoolean progress_visible=new ObservableBoolean();
-    private ObservableBoolean names_progress_visible=new ObservableBoolean();
+    private ObservableField<String> text_city;
+    private ObservableBoolean progress_visible;
+    private ObservableBoolean names_progress_visible;
 
     private LiveData<Boolean> cities_loading;
     private LiveData<Boolean> names_cities_loading;
@@ -39,6 +39,11 @@ public class CitiesViewModel extends ViewModel {
 
     public CitiesViewModel(CityRepository rep) {
         this.rep = rep;
+
+        this.text_city = new ObservableField<>();
+        this.progress_visible=new ObservableBoolean();
+        this.names_progress_visible=new ObservableBoolean();
+
         // получаем ссылки на объекты модели которые могут быть ей обновлены
         this.connection=rep.getConnection();
         this.cities=rep.getCities();
@@ -56,7 +61,7 @@ public class CitiesViewModel extends ViewModel {
         // реагирование на ввод пользователя
         initTextCityCallback();
         // обновляем список городов
-        rep.firstFillingCities();
+        rep.fillingCities();
 
     }
 
@@ -66,7 +71,7 @@ public class CitiesViewModel extends ViewModel {
     }
 
     public void refreshCities(){
-        rep.firstFillingCities();
+        rep.fillingCities();
     }
 
     public void processRequest(RepositoryRequest request){

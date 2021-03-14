@@ -67,24 +67,18 @@ public class RainMapActivity extends AppCompatActivity implements OnMapReadyCall
         // подписываемся на обновление состояния загрузки
         rainMapViewModel.getLoading().observe(this, loading -> rainMapViewModel.setProgress_loading(loading));
         // подписываемся на обновление основного пакета данных карты
-        rainMapViewModel.getMapData().observe(this, new Observer<HashMap<Integer, HashMap<String, TileProvider>>>() {
-            @Override
-            public void onChanged(HashMap<Integer, HashMap<String, TileProvider>> data) {
-                // создаём seekbar по полученному временному промежутку
-                setupSeekBar(data);
-                // устанавливаем начальное значение
-                rainMapViewModel.setProgress_seekbar(0);
+        rainMapViewModel.getMapData().observe(this, data -> {
+            // создаём seekbar по полученному временному промежутку
+            setupSeekBar(data);
+            // устанавливаем начальное значение
+            rainMapViewModel.setProgress_seekbar(0);
 
-            }
         });
         // подписываемся на обновление за TileProvider
-        rainMapViewModel.getSelectedProvider().observe(this, new Observer<TileProvider>() {
-            @Override
-            public void onChanged(TileProvider tileProvider) {
-                if (map==null) return;
-                if (rainOverlay!=null) rainOverlay.remove();
-                rainOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider).transparency(0.4f));
-            }
+        rainMapViewModel.getSelectedProvider().observe(this, tileProvider -> {
+            if (map==null) return;
+            if (rainOverlay!=null) rainOverlay.remove();
+            rainOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider).transparency(0.4f));
         });
 
     }

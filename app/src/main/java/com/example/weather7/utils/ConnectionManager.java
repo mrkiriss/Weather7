@@ -12,16 +12,24 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
 public class ConnectionManager {
-    private static long delay_start_time;
-    private static Context context;
-    public static boolean isOnline() {
+    private long delay_start_time ;
+    private Context context;
+
+    @Inject
+    public ConnectionManager(Context context){
+        this.context=context;
+    }
+
+    public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return (netInfo != null && netInfo.isConnected());
     }
-    public static void showOfferSetting(Context context) {
+    public void showOfferSetting(Context context) {
         Date date = new Date();
         // проверить время последнего откладывания
         long current_time = date.getTime();
@@ -51,9 +59,5 @@ public class ConnectionManager {
             }
         });
         dialog.show();
-    }
-
-    public static void setContext(Context context) {
-        ConnectionManager.context=context;
     }
 }

@@ -39,7 +39,6 @@ public class DateConverter {
     public static String getCurrentTime(){
         return convertLongToHM(new Date().getTime());
     }
-
     public static String getCurrentDate(){
         return convertLongToDMY(new Date().getTime());
     }
@@ -56,7 +55,6 @@ public class DateConverter {
         }
         return time;
     }
-
     public static long parseHMForTime(String data){
         return parseDMYHMForTime(getCurrentDate()+" "+data);
     }

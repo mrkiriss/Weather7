@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemCityBinding;
-import com.example.weather7.model.cities.City;
+import com.example.weather7.model.base.City;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.viewmodel.cities.items.ItemCityViewModel;
 
@@ -53,14 +53,19 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         this.cities=cities;
     }
     public int addCity(City city){
-        this.cities.add(city);
+        int index = findIndexCityByName(city.getName());
+        if (index==-1) this.cities.add(city);
         return this.cities.size()-1;
     }
     public int deleteCity(City this_city){
+        int index = findIndexCityByName(this_city.getName());
+        if (index!=-1) cities.remove(index);
+        return index;
+    }
+    private int findIndexCityByName(String name){
         for (int i=0;i<cities.size();i++){
             City city = cities.get(i);
-            if (city.getName().equals(this_city.getName())){
-                cities.remove(city);
+            if (city.getName().equals(name)){
                 return i;
             }
         }

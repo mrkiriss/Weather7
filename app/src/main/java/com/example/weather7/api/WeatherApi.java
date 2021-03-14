@@ -1,14 +1,16 @@
 package com.example.weather7.api;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
+import android.location.Location;
 
-import com.example.weather7.model.cities.City;
-import com.example.weather7.model.cities.WeatherOnDay;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
+import com.example.weather7.model.base.City;
+import com.example.weather7.model.base.WeatherOnDay;
 import com.example.weather7.utils.DateConverter;
+import com.example.weather7.utils.GeolocationManager;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
 
 import org.json.JSONArray;
@@ -21,7 +23,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
-import java.util.List;
 
 public class WeatherApi implements IWeatherApi{
     private final String url_for_head="https://api.openweathermap.org/data/2.5/weather?q=";
@@ -33,10 +34,21 @@ public class WeatherApi implements IWeatherApi{
     private final String lat="&lat=";
     private final String lang = "&lang=ru";
 
-    private final Context context;
+    private GeolocationManager geolocationManager;
 
-    public WeatherApi(Context context) {
-        this.context=context;
+    public WeatherApi(GeolocationManager geolocationManager) {
+        this.geolocationManager=geolocationManager;
+
+        /*geolocationManager.getDeviceCoordinate();
+        LiveData<Location> location = geolocationManager.getLastLocation();
+        location.observeForever(location1 -> {
+            if (location1 ==null){
+                System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            }else{
+                System.out.println("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESDSS");
+                System.out.println(location1.getLatitude()+ "--" + location1.getLongitude());
+            }
+        });*/
     }
 
     @Override
@@ -117,16 +129,7 @@ public class WeatherApi implements IWeatherApi{
         return new City(name, timezone, lat, lon, result_temp, description, icon);
     }
     private String[] getCoordinate(String location) throws IOException {
-        String[] coordinates = new String[2];
-
-        Geocoder geo = new Geocoder(context);
-        List<Address> adr = null;
-        adr = geo.getFromLocationName(location, 1);
-        if (adr.size()>0){
-            coordinates[0]=String.valueOf(adr.get(0).getLatitude());
-            coordinates[1]=String.valueOf(adr.get(0).getLongitude());
-        }
-        return coordinates;
+        return geolocationManager.getCoordinateByLocationName(location);
     }
     private DaysAdapter parseDays(String name, String content) throws JSONException, IOException {
         LinkedList<WeatherOnDay> result = new LinkedList<>();

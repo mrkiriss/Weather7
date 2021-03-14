@@ -2,8 +2,10 @@ package com.example.weather7.model.notifications;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 
+import com.example.weather7.services.WeatherNotificationReceiver;
 import com.example.weather7.utils.DateConverter;
 
 import java.util.Date;
@@ -16,54 +18,61 @@ public class AlarmRequest {
     public static final long INTERVAL_SPECIFIC_DATE=1;
 
     // alarm data
-    private final int alarmType = AlarmManager.RTC;
     private long triggerTime;
     private long interval;
-     // PendingIntent
+    private PendingIntent pendingIntent;
 
     // pending data
-     // Context
-    private int requestCode = PENDING_INTENT_REQUEST_CODE_BASE;
-     // Intent
-    public final static int PENDING_INTENT_FLAG= PendingIntent.FLAG_CANCEL_CURRENT;
-
-    // intent data
+    private Context context;
+    public final int requestCode = PENDING_INTENT_REQUEST_CODE_BASE;
     private Intent intent;
-    private String actionID;
+    public static final int PENDING_INTENT_FLAG= PendingIntent.FLAG_CANCEL_CURRENT;
 
-    public AlarmRequest(String actionID){
-        this.intent=new Intent();
+    //View data
+    private String recycledData;
 
-        this.actionID=actionID;
-        this.intent.setAction(actionID);
-
+    public AlarmRequest(Context context, String actionID, String cityName, String repeatMode, String date, String time){
         this.interval=INTERVAL_NONE;
+        this.context=context;
+
+        this.intent=createIntent(actionID, cityName, repeatMode);
+        this.recycledData=fillIntervalAndTriggerTime(repeatMode, date, time);
+        this.pendingIntent=createPendingIntent();
+    }
+    public AlarmRequest(Context context, String actionID){
+        this.pendingIntent=createCancelPendingIntent(context, actionID);
     }
 
-    public void setCityNameInIntent(String cityName){
+    private Intent createIntent(String actionID, String cityName, String repeatMode){
+        Intent intent = new Intent();
+        intent.setClass(context, WeatherNotificationReceiver.class);
+        intent.setAction(actionID);
         intent.putExtra("cityName", cityName);
-    }
-    public String setIntervalAndTriggerTime(String repeatMode, String date, String time){
         intent.putExtra("mode", repeatMode);
+        return intent;
+    }
+    private PendingIntent createPendingIntent(){
+        PendingIntent pendingIntent= PendingIntent.getBroadcast(context,
+                requestCode, intent, PENDING_INTENT_FLAG);
+
+        return pendingIntent;
+    }
+    private String fillIntervalAndTriggerTime(String repeatMode, String date, String time){
 
         long addition = 0;
 
         switch (repeatMode){
             case "Ежедневно":
                 interval=INTERVAL_DAY;
-                //triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
                 break;
             case "Без повторений":
                 interval=INTERVAL_NONE;
                 long triggerTime= DateConverter.parseHMForTime(time);
-
                 // если время уже прошло, перенести на след. день
                 if (isPast(triggerTime)) addition=24 * 60 * 60 * 1000;
-
                 break;
             case "В определённый день":
                 interval=INTERVAL_SPECIFIC_DATE;
-                //triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
                 break;
         }
         triggerTime= DateConverter.parseDMYHMForTime(date+" "+time) + addition;
@@ -71,13 +80,23 @@ public class AlarmRequest {
         return DateConverter.convertLongToDMY(triggerTime);
     }
 
+    private PendingIntent createCancelPendingIntent(Context context, String actionID){
+        Intent intent = new Intent(context, WeatherNotificationReceiver.class);
+        intent.setAction(actionID);
+        return PendingIntent.getBroadcast(context,
+                AlarmRequest.PENDING_INTENT_REQUEST_CODE_BASE, intent, AlarmRequest.PENDING_INTENT_FLAG);
+    }
+
     private boolean isPast(long time){
-        long inaccuracy=5000;
+        long inaccuracy=1000;
         return (time + inaccuracy<new Date().getTime());
     }
 
-    public int getAlarmType() {
-        return alarmType;
+    public String getRecycledData(){
+        return recycledData;
+    }
+    public PendingIntent getPendingIntent(){
+        return  pendingIntent;
     }
     public long getTriggerTime() {
         return triggerTime;
@@ -85,10 +104,6 @@ public class AlarmRequest {
     public long getInterval() {
         return interval;
     }
-    public int getRequestCode() {
-        return requestCode;
-    }
-    public Intent getIntent() {
-        return intent;
-    }
+
+
 }

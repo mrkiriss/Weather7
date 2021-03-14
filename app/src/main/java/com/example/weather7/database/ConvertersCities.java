@@ -7,7 +7,7 @@ import android.util.Base64;
 import androidx.room.TypeConverter;
 
 import com.example.weather7.view.cities.adapters.DaysAdapter;
-import com.example.weather7.model.cities.WeatherOnDay;
+import com.example.weather7.model.base.WeatherOnDay;
 
 import org.json.JSONException;
 import org.json.JSONObject;

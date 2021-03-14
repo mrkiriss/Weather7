@@ -6,17 +6,16 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.weather7.api.CitiesApi;
+import com.example.weather7.api.ICitiesNamesApi;
+import com.example.weather7.api.IWeatherApi;
 import com.example.weather7.model.cities.AutoEnteredCity;
-import com.example.weather7.model.cities.City;
-import com.example.weather7.api.WeatherApi;
+import com.example.weather7.model.base.City;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
 import com.example.weather7.model.cities.DelayMessage;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
-import com.example.weather7.viewmodel.notifications.NotificationsViewModel;
 
 import org.json.JSONException;
 
@@ -32,34 +31,49 @@ public class CityRepository {
     public static final String REQUEST_OPEN_RAIN_MAP="open_rain_map";
 
     private final CityDao dao;
-    private final WeatherApi api;
-    private final CitiesApi api_cities;
+    private final IWeatherApi api;
+    private final ICitiesNamesApi api_cities;
+    private final ConnectionManager connectionManager;
 
-    private MutableLiveData<LinkedList<City>> cities = new MutableLiveData<>();
-    private  MutableLiveData<City> addCityHeadRequest = new MutableLiveData<>();
-    private MutableLiveData<City> deleteCityRequest = new MutableLiveData<>();
-    private MutableLiveData<DaysAdapter> addDaysInCityRequest = new MutableLiveData<>();
-    private MutableLiveData<Intent> startIntent = new MutableLiveData<>();
-    private MutableLiveData<List<AutoEnteredCity>> auto_cities = new MutableLiveData<>();
+    private final MutableLiveData<LinkedList<City>> cities;
+    private final MutableLiveData<City> addCityHeadRequest;
+    private final MutableLiveData<City> deleteCityRequest;
+    private final MutableLiveData<DaysAdapter> addDaysInCityRequest;
+    private final MutableLiveData<Intent> startIntent;
+    private final MutableLiveData<List<AutoEnteredCity>> auto_cities;
 
-    private static int firs_filling_status=0;
-    private LinkedList<String> current_cities_names = new LinkedList<>();
+    private static int firs_filling_status;
+    private final LinkedList<String> current_cities_names;
 
-    private MutableLiveData<Boolean> cities_loading=new MutableLiveData<>();
-    private MutableLiveData<Boolean> names_cities_loading=new MutableLiveData<>();
-    private MutableLiveData<Boolean> connection = new MutableLiveData<>();
-    private MutableLiveData<String> error_content = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> cities_loading;
+    private final MutableLiveData<Boolean> names_cities_loading;
+    private final MutableLiveData<Boolean> connection;
+    private final MutableLiveData<String> error_content;
 
     private final int MIN_INPUT_WORD_LENGTH_FOR_AUTO=3;
     private DelayMessage delayMessage;
 
-    public CityRepository(AppDatabase db, WeatherApi api, CitiesApi api_cities){
+    public CityRepository(AppDatabase db, IWeatherApi api, ICitiesNamesApi api_cities, ConnectionManager connectionManager){
         this.dao= db.getCityDao();
         this.api=api;
         this.api_cities=api_cities;
+        this.connectionManager=connectionManager;
+
+        cities= new MutableLiveData<>();
+        addCityHeadRequest= new MutableLiveData<>();
+        deleteCityRequest= new MutableLiveData<>();
+        addDaysInCityRequest= new MutableLiveData<>();
+        startIntent= new MutableLiveData<>();
+        auto_cities= new MutableLiveData<>();
+        firs_filling_status=0;
+        current_cities_names = new LinkedList<>();
+        cities_loading= new MutableLiveData<>();
+        names_cities_loading= new MutableLiveData<>();
+        connection= new MutableLiveData<>();
+        error_content= new MutableLiveData<>();
     }
 
-    public void firstFillingCities(){
+    public void fillingCities(){
 
         // выход, если оббновление уже запущено
         if (firs_filling_status>0) return;
@@ -175,9 +189,6 @@ public class CityRepository {
 
             // запрос на вставку/обновление базы данных
             insertOrUpdateCityInBase(city);
-
-            // уведомляем фрагмент с уведомлениями, о добавлении города, для пересоздания spinner городов
-            NotificationsViewModel.onCitiesSpinnerChanged.notifyPropertyChanged(1);
         };
 
         Thread thr = new Thread(task);
@@ -276,16 +287,13 @@ public class CityRepository {
         // удаляем из базы
         Runnable task = () -> {
             dao.delete(city);
-
-            // уведомляем фрагмент с уведомлениями, о добавлении города, для пересоздания spinner городов
-            NotificationsViewModel.onCitiesSpinnerChanged.notifyPropertyChanged(-1);
         };
         Thread thr = new Thread(task);
         thr.start();
 
     }
     private boolean checkConnection(){
-        Boolean connection = ConnectionManager.isOnline();
+        Boolean connection = connectionManager.isOnline();
         this.connection.setValue(connection);
         return connection;
     }

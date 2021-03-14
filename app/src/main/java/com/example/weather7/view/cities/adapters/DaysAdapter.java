@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.ItemDayBinding;
-import com.example.weather7.model.cities.WeatherOnDay;
+import com.example.weather7.model.base.WeatherOnDay;
 import com.example.weather7.viewmodel.cities.items.ItemDayViewModel;
 
 import java.util.LinkedList;

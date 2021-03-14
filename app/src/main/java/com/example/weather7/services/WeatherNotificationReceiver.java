@@ -1,4 +1,4 @@
-package com.example.weather7.model.notifications;
+package com.example.weather7.services;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -17,6 +18,7 @@ import com.example.weather7.R;
 import com.example.weather7.api.WeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.NotificationDao;
+import com.example.weather7.utils.GeolocationManager;
 import com.example.weather7.view.MainActivity;
 import com.example.weather7.view.notifications.adapters.NotificationsAdapter;
 import com.example.weather7.viewmodel.notifications.NotificationsViewModel;
@@ -73,7 +75,7 @@ public class WeatherNotificationReceiver extends BroadcastReceiver {
     }
 
     private String[] getNotificationContent(String cityName, Context context){
-        WeatherApi weatherApi = new WeatherApi(context);
+        WeatherApi weatherApi = new WeatherApi(new GeolocationManager(new Geocoder(context)));
         Runnable task = () -> {
             try {
                 notificationContent = weatherApi.getNotificationContent(cityName);
