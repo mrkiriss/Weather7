@@ -20,7 +20,6 @@ import com.example.weather7.view.cities.adapters.DaysAdapter;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class CityRepository {
         // выход, если оббновление уже запущено
         if (firs_filling_status>0) return;
 
-        clear();
+        clearCitiesList();
 
         LinkedList<String> cities_names = getNamesFromBase();
         if (checkConnection()){
@@ -201,12 +200,9 @@ public class CityRepository {
             city = api.getCityHead(name);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            error_content.postValue("Город "+name+" не найден");
+            error_content.postValue("Информация о "+name+" не найдена");
             return city;
         }
-        // заполняем время загрузки
-        Date date = new Date();
-        city.setUpload_time(date.getTime());
 
         return city;
     }
@@ -216,7 +212,7 @@ public class CityRepository {
             days = api.getCityDays(name, lat, lon);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            error_content.postValue("Прогноз для города"+name+"не получени");
+            error_content.postValue("Недельный прогноз для "+name+"не получен");
         }
         return days;
     }
@@ -293,7 +289,7 @@ public class CityRepository {
 
     }
     private boolean checkConnection(){
-        Boolean connection = connectionManager.isOnline();
+        Boolean connection = connectionManager.networkEnable();
         this.connection.setValue(connection);
         return connection;
     }
@@ -318,7 +314,7 @@ public class CityRepository {
     private void checkLoading(){
         cities_loading.postValue(firs_filling_status > 0);
     }
-    private void clear(){
+    private void clearCitiesList(){
         cities.setValue(new LinkedList<>());
         current_cities_names.clear();
     }

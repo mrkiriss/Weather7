@@ -30,7 +30,7 @@ public class City{
     @TypeConverters({ConvertersCities.DayAdapterConverter.class})
     private DaysAdapter daysAdapter;
 
-    private long upload_time;
+    private boolean isLocationCity;
 
     // создаёт только данные для шапки
     @Ignore
@@ -58,8 +58,8 @@ public class City{
     public Bitmap getCurrent_icon(){return current_icon;}
     public DaysAdapter getDaysAdapter(){return daysAdapter;}
     public String getCurrent_description(){return current_description;}
-    public long getUpload_time(){return upload_time;}
     public String getTimezone(){return timezone;}
+    public boolean getIsLocationCity(){return isLocationCity;}
 
     public void setName(String name){this.name= name;}
     public void setCurrent_temp(String current_temp){this.current_temp= current_temp;}
@@ -68,7 +68,7 @@ public class City{
     public void setCurrent_icon(Bitmap current_icon){this.current_icon= current_icon;}
     public void setDaysAdapter(DaysAdapter daysAdapter){ this.daysAdapter=daysAdapter;}
     public void setCurrent_description(String current_description){this.current_description= current_description;}
-    public void setUpload_time(long upload_time){this.upload_time=upload_time;}
     public void setTimezone(String timezone){this.timezone=timezone;}
+    public void setIsLocationCity(boolean isLocationCity){this.isLocationCity=isLocationCity;}
 
 }

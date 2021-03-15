@@ -45,7 +45,7 @@ public class FragmentCities extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        App.getInstance().getComponentManager().getFCitiesComponent().inject(this);
+        App.getInstance().getComponentManager().getFCitiesSubcomponent().inject(this);
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cities, container, false);
         binding.setViewModel(citiesViewModel);
@@ -72,7 +72,9 @@ public class FragmentCities extends Fragment{
             connectionManager.showOfferSetting(getContext());
         });
         // подписываемся на обновление запроса на добавление КОНТЕЙНЕРА ОШИБКИ
-        citiesViewModel.getError_content().observe(getViewLifecycleOwner(), content -> Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show());
+        citiesViewModel.getError_content().observe(getViewLifecycleOwner(), content -> {
+            Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+        });
         // подписываемся на вызов Intent-ов
         citiesViewModel.getStartIntent().observe(getViewLifecycleOwner(), intent -> {
             switch (intent.getStringExtra("class")){
@@ -92,6 +94,7 @@ public class FragmentCities extends Fragment{
             //binding.autoCompleteTextView.showDropDown();
         });
     }
+
     private void onCityAdd(City city){
         int index = cities_adapter.addCity(city);
         cities_adapter.notifyItemChanged(index);
@@ -102,7 +105,6 @@ public class FragmentCities extends Fragment{
     }
 
     private void setDaysAdapterInCity(DaysAdapter adapter){
-        System.out.println("Дни пришли для "+adapter.getCity_name());
         cities_adapter.setDaysAdapterInCity(adapter);
     }
 
@@ -122,6 +124,6 @@ public class FragmentCities extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //App.getInstance().getComponentManager().clearFCitiesComponent();
+        App.getInstance().getComponentManager().clearFCitiesSubcomponent();
     }
 }

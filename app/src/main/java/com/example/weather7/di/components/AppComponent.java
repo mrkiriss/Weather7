@@ -8,6 +8,8 @@ import com.example.weather7.di.modules.base.UtilsModule;
 import com.example.weather7.di.modules.cities.CitiesRecyclerViewModule;
 import com.example.weather7.di.modules.cities.CitiesVMModule;
 import com.example.weather7.di.modules.cities.CityRepositoryModule;
+import com.example.weather7.di.modules.location.LocationRepositoryModule;
+import com.example.weather7.di.modules.location.LocationVMModule;
 import com.example.weather7.di.modules.notifications.NotificationRepositoryModule;
 import com.example.weather7.di.modules.notifications.NotificationsVMModule;
 
@@ -23,6 +25,9 @@ public interface AppComponent {
                                             CityRepositoryModule cityRepositoryModule,
                                             CitiesRecyclerViewModule citiesRecyclerViewModule);
 
-    FNotificationsComponent getFNotificationsComponent(NotificationRepositoryModule notificationRepositoryModule,
-                                                       NotificationsVMModule notificationsVMModule);
+    FNotificationsSubcomponent getFNotificationsComponent(NotificationRepositoryModule notificationRepositoryModule,
+                                                          NotificationsVMModule notificationsVMModule);
+
+    FLocationSubcomponent getFLocationComponent(LocationRepositoryModule locationRepositoryModule,
+                                                LocationVMModule locationVMModule);
 }

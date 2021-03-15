@@ -47,7 +47,7 @@ public class FragmentNotifications extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        App.getInstance().getComponentManager().getFNotificationsComponent().inject(this);
+        App.getInstance().getComponentManager().getFNotificationsSubcomponent().inject(this);
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notifications, container, false);
         binding.setViewModel(notificationsViewModel);
@@ -156,6 +156,6 @@ public class FragmentNotifications extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         // как фича: разрешить пользователю настраивать пересоздание экранов
-        App.getInstance().getComponentManager().clearFNotificationsComponent();
+        App.getInstance().getComponentManager().clearFNotificationsSubcomponent();
     }
 }

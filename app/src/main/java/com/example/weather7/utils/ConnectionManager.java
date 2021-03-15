@@ -18,14 +18,19 @@ public class ConnectionManager {
     private long delay_start_time ;
     private Context context;
 
+    private ConnectivityManager cm;
+    private NetworkInfo netInfo;
+
     @Inject
     public ConnectionManager(Context context){
         this.context=context;
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    public boolean networkEnable() {
+        if (cm ==null) {
+            cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        }
+        netInfo = cm.getActiveNetworkInfo();
 
         return (netInfo != null && netInfo.isConnected());
     }
@@ -42,7 +47,7 @@ public class ConnectionManager {
         check.setText("Не показывать следующие 30 минут");
         dialog.setView(check);
 
-        dialog.setMessage("Отсутствует подключение к сети Интернет.\nФункционал приложения ограничен");
+        dialog.setMessage("Отсутствует подключение к сети Интернет.\n\nФункционал приложения ограничен");
         dialog.setNeutralButton("Продолжить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -55,7 +60,7 @@ public class ConnectionManager {
         dialog.setPositiveButton("Настроить подключение", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                context.startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));
             }
         });
         dialog.show();

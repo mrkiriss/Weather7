@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Weather7</string>
     <string name="title_activity_main2">MainActivity</string>
-    <string name="title_home">Домашняя</string>
+    <string name="title_home">Местоположение</string>
     <string name="title_cities">Города</string>
     <string name="title_notifications">Уведомления</string>
 
@@ -32,4 +32,5 @@
     <string name="clearNotifications">Очистить запланированные уведомления</string>
     <string name="text_rain_map">Карта осадков</string>
     <string name="text_open_city_on_map">На карту</string>
+    <string name="refresh_location">Обновить местоположение</string>
 </resources>

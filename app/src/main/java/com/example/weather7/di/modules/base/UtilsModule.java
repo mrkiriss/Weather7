@@ -8,6 +8,8 @@ import com.example.weather7.utils.AlarmManager;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.utils.GeolocationManager;
 
+import java.util.Locale;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -33,7 +35,14 @@ public class UtilsModule {
 
     @Singleton
     @Provides
-    public GeolocationManager provideGeolocationManager(Context context){
-        return new GeolocationManager(new Geocoder(context));
+    public GeolocationManager provideGeolocationManager(Geocoder geocoder, Context context){
+        return new GeolocationManager(geocoder, context);
+    }
+
+    @Provides
+    public Geocoder provideGeocoder(Context context){
+        Locale aLocale = new Locale.Builder().setLanguage("ru").setScript("Latn").setRegion("RS").build();
+        Geocoder geocoder =  new Geocoder(context, aLocale);
+        return geocoder;
     }
 }

@@ -3,26 +3,27 @@ package com.example.weather7.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateConverter {
     public static String convertLongToDMY(Long time){
         Date date = new Date(time);
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy", Locale.US);
         sdf.setTimeZone(TimeZone.getDefault());
 
         return sdf.format(date);
     }
     public static String convertLongToHM(Long time){
         Date date = new Date(time);
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH-mm");
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH-mm", Locale.US);
         sdf.setTimeZone(TimeZone.getDefault());
 
         return sdf.format(date);
     }
     public static String convertLongToMD(Long time){
         Date date = new Date(time);
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM-dd");
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM-dd", Locale.US);
         sdf.setTimeZone(TimeZone.getDefault());
 
         return sdf.format(date);
@@ -44,7 +45,7 @@ public class DateConverter {
     }
 
     public static long parseDMYHMForTime(String data){
-        SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy HH-mm");
+        SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy HH-mm", Locale.US);
         f.setTimeZone(TimeZone.getDefault());
         long time=0;
         try {

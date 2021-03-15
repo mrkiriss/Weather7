@@ -9,7 +9,7 @@ import dagger.Subcomponent;
 
 @Subcomponent(modules = {NotificationRepositoryModule.class, NotificationsVMModule.class})
 @FNotificationsScope
-public interface FNotificationsComponent {
+public interface FNotificationsSubcomponent {
 
     void inject(FragmentNotifications fragmentNotifications);
 }

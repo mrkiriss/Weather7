@@ -5,11 +5,14 @@ import android.content.Context;
 import com.example.weather7.di.components.AppComponent;
 import com.example.weather7.di.components.DaggerAppComponent;
 import com.example.weather7.di.components.FCitiesSubcomponent;
-import com.example.weather7.di.components.FNotificationsComponent;
+import com.example.weather7.di.components.FLocationSubcomponent;
+import com.example.weather7.di.components.FNotificationsSubcomponent;
 import com.example.weather7.di.modules.base.AppContextModule;
 import com.example.weather7.di.modules.cities.CitiesRecyclerViewModule;
 import com.example.weather7.di.modules.cities.CitiesVMModule;
 import com.example.weather7.di.modules.cities.CityRepositoryModule;
+import com.example.weather7.di.modules.location.LocationRepositoryModule;
+import com.example.weather7.di.modules.location.LocationVMModule;
 import com.example.weather7.di.modules.notifications.NotificationRepositoryModule;
 import com.example.weather7.di.modules.notifications.NotificationsVMModule;
 
@@ -18,7 +21,8 @@ public class ComponentManager {
     private AppComponent appComponent;
 
     private FCitiesSubcomponent fCitiesSubcomponent;
-    private FNotificationsComponent fNotificationsComponent;
+    private FNotificationsSubcomponent fNotificationsSubcomponent;
+    private FLocationSubcomponent fLocationSubcomponent;
 
     public void initAppComponent(Context context){
         appComponent= DaggerAppComponent.builder()
@@ -30,25 +34,36 @@ public class ComponentManager {
         return appComponent;
     }
 
-    public FCitiesSubcomponent getFCitiesComponent(){
+    public FCitiesSubcomponent getFCitiesSubcomponent(){
         if (fCitiesSubcomponent ==null){
             fCitiesSubcomponent =appComponent.getFCitiesComponent(new CitiesVMModule(), new CityRepositoryModule(), new CitiesRecyclerViewModule());
         }
         return fCitiesSubcomponent;
     }
-    public void clearFCitiesComponent(){
+    public void clearFCitiesSubcomponent(){
         fCitiesSubcomponent=null;
     }
 
-    public FNotificationsComponent getFNotificationsComponent(){
-        if (fNotificationsComponent==null){
-            fNotificationsComponent=appComponent.getFNotificationsComponent(new NotificationRepositoryModule(),
+    public FNotificationsSubcomponent getFNotificationsSubcomponent(){
+        if (fNotificationsSubcomponent ==null){
+            fNotificationsSubcomponent =appComponent.getFNotificationsComponent(new NotificationRepositoryModule(),
                     new NotificationsVMModule());
         }
-        return fNotificationsComponent;
+        return fNotificationsSubcomponent;
     }
-    public void clearFNotificationsComponent(){
-        fNotificationsComponent=null;
+    public void clearFNotificationsSubcomponent(){
+        fNotificationsSubcomponent =null;
+    }
+
+    public FLocationSubcomponent getFLocationSubcomponent(){
+        if (fLocationSubcomponent ==null){
+            fLocationSubcomponent =appComponent.getFLocationComponent(new LocationRepositoryModule(),
+                    new LocationVMModule());
+        }
+        return fLocationSubcomponent;
+    }
+    public void clearFLocationSubcomponent(){
+        fLocationSubcomponent =null;
     }
 
 }

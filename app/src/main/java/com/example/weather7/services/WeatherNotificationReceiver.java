@@ -75,7 +75,7 @@ public class WeatherNotificationReceiver extends BroadcastReceiver {
     }
 
     private String[] getNotificationContent(String cityName, Context context){
-        WeatherApi weatherApi = new WeatherApi(new GeolocationManager(new Geocoder(context)));
+        WeatherApi weatherApi = new WeatherApi(new GeolocationManager(new Geocoder(context), context));
         Runnable task = () -> {
             try {
                 notificationContent = weatherApi.getNotificationContent(cityName);

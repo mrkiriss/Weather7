@@ -60,19 +60,22 @@ public class AlarmRequest {
     private String fillIntervalAndTriggerTime(String repeatMode, String date, String time){
 
         long addition = 0;
-
+        long beforeTriggerTime;
         switch (repeatMode){
             case "Ежедневно":
                 interval=INTERVAL_DAY;
                 break;
             case "Без повторений":
                 interval=INTERVAL_NONE;
-                long triggerTime= DateConverter.parseHMForTime(time);
+                beforeTriggerTime= DateConverter.parseHMForTime(time);
                 // если время уже прошло, перенести на след. день
-                if (isPast(triggerTime)) addition=24 * 60 * 60 * 1000;
+                if (isPast(beforeTriggerTime)) addition=24 * 60 * 60 * 1000;
                 break;
             case "В определённый день":
                 interval=INTERVAL_SPECIFIC_DATE;
+                // если время уже прошло, перенести на след. день
+                beforeTriggerTime= DateConverter.parseHMForTime(time);
+                if (isPast(beforeTriggerTime)) addition=24 * 60 * 60 * 1000;
                 break;
         }
         triggerTime= DateConverter.parseDMYHMForTime(date+" "+time) + addition;

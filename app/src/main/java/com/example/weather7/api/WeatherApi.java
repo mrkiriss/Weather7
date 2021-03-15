@@ -3,6 +3,7 @@ package com.example.weather7.api;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -38,23 +39,20 @@ public class WeatherApi implements IWeatherApi{
 
     public WeatherApi(GeolocationManager geolocationManager) {
         this.geolocationManager=geolocationManager;
-
-        /*geolocationManager.getDeviceCoordinate();
-        LiveData<Location> location = geolocationManager.getLastLocation();
-        location.observeForever(location1 -> {
-            if (location1 ==null){
-                System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-            }else{
-                System.out.println("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESDSS");
-                System.out.println(location1.getLatitude()+ "--" + location1.getLongitude());
-            }
-        });*/
     }
 
     @Override
     public City getCityHead(String name) throws IOException, JSONException {
         String head_url_request = this.url_for_head+name+ apiKey +metric+lang;
         String content = downloadContentByUrl(head_url_request);
+        return parseCityHead(name, content);
+    }
+
+    @Override
+    public City getLocationCityContent(Location location) throws IOException, JSONException {
+        String head_url_request = this.url_for_head+this.lat+location.getLatitude()+this.lon+location.getLongitude()+ apiKey +metric+lang;
+        String content = downloadContentByUrl(head_url_request);
+        String name = geolocationManager.getCityNameByLocation(location);
         return parseCityHead(name, content);
     }
 
@@ -75,8 +73,8 @@ public class WeatherApi implements IWeatherApi{
     }
 
     protected String convertUnixTimeToFormatString(String stime){
-        long time = Long.valueOf(stime);
-        return DateConverter.convertLongToMD(time);
+        long time = Long.parseLong(stime);
+        return DateConverter.convertLongToMD(time*1000L);
     }
 
     protected String downloadContentByUrl(String url_request) throws IOException {
@@ -108,7 +106,12 @@ public class WeatherApi implements IWeatherApi{
     private City parseCityHead(String name, String content) throws JSONException, IOException {
         JSONObject obj = new JSONObject(content);
 
-        String[] coordinates = getCoordinate(name);
+        String[] coordinates=new String[2];
+        try {
+            coordinates = getCoordinate(name);
+        }catch (IOException e){
+            Log.println(Log.ERROR, "weatherApi", "coordinate from geocoder didn't get");
+        }
         String lat;
         String lon;
         if (coordinates[0]==null || coordinates[1]==null) {
@@ -143,7 +146,6 @@ public class WeatherApi implements IWeatherApi{
         String clouds;
 
         JSONObject obj = new JSONObject(content);
-        String timezone = obj.getString("timezone");
         JSONArray days = obj.getJSONArray("daily");
 
         for (int i=0;i<days.length();i++){
