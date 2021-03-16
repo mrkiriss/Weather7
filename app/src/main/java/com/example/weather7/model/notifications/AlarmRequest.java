@@ -31,6 +31,8 @@ public class AlarmRequest {
     //View data
     private String recycledData;
 
+    private long DAY = 24*60*60*1000;
+
     public AlarmRequest(Context context, String actionID, String cityName, String repeatMode, String date, String time){
         this.interval=INTERVAL_NONE;
         this.context=context;
@@ -59,27 +61,33 @@ public class AlarmRequest {
     }
     private String fillIntervalAndTriggerTime(String repeatMode, String date, String time){
 
-        long addition = 0;
-        long beforeTriggerTime;
+        long inputTriggerTime;
         switch (repeatMode){
             case "Ежедневно":
                 interval=INTERVAL_DAY;
+                triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
                 break;
             case "Без повторений":
                 interval=INTERVAL_NONE;
-                beforeTriggerTime= DateConverter.parseHMForTime(time);
+                inputTriggerTime= DateConverter.parseHMForTime(time);
                 // если время уже прошло, перенести на след. день
-                if (isPast(beforeTriggerTime)) addition=24 * 60 * 60 * 1000;
+                long addition = (isPast(inputTriggerTime)? DAY:0);
+                triggerTime= DateConverter.parseHMForTime(time)+addition;
                 break;
             case "В определённый день":
                 interval=INTERVAL_SPECIFIC_DATE;
                 // если время уже прошло, перенести на след. день
-                beforeTriggerTime= DateConverter.parseHMForTime(time);
-                if (isPast(beforeTriggerTime)) addition=24 * 60 * 60 * 1000;
+                inputTriggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
+                if (isPast(inputTriggerTime)){
+                    triggerTime= DateConverter.parseHMForTime(time);
+                    if (isPast(triggerTime)) triggerTime+=DAY;
+                }else{
+                    triggerTime= DateConverter.parseDMYHMForTime(date+" "+time);
+                }
                 break;
         }
-        triggerTime= DateConverter.parseDMYHMForTime(date+" "+time) + addition;
 
+        // данные для пользовательского экрана/бд
         return DateConverter.convertLongToDMY(triggerTime);
     }
 

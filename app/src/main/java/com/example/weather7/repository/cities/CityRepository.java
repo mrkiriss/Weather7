@@ -41,7 +41,7 @@ public class CityRepository {
     private final MutableLiveData<Intent> startIntent;
     private final MutableLiveData<List<AutoEnteredCity>> auto_cities;
 
-    private static int firs_filling_status;
+    private int firs_filling_status;
     private final LinkedList<String> current_cities_names;
 
     private final MutableLiveData<Boolean> cities_loading;
@@ -173,14 +173,13 @@ public class CityRepository {
             current_cities_names.add(name);
             // получаем дни
             DaysAdapter days = downloadSingleDaysAdapterFromAPI(name, city.getLat(), city.getLon());;
-            if (days==null){
-                firs_filling_status--;
-                checkLoading();
-                return;
-            }
+
 
             // отправляем дни
-            setAddDaysInCityRequest(days);
+            if (days!=null) {
+                setAddDaysInCityRequest(days);
+                city.setDaysAdapter(days);
+            }
 
             // удаляем поток из индикатора
             firs_filling_status--;
@@ -247,16 +246,11 @@ public class CityRepository {
             current_cities_names.add(name);
 
             // получаем дни
-            DaysAdapter days =downloadSingleDaysAdapterFromBase(name);
-
-            if (days==null){
-                firs_filling_status--;
-                checkLoading();
-                return;
-            }
+            //DaysAdapter days = city.getDaysAdapter(); //downloadSingleDaysAdapterFromBase(name);
 
             // отправляем дни
-            setAddDaysInCityRequest(days);
+           //
+            // if (days!=null) setAddDaysInCityRequest(days);
 
             // удаляем поток из индикатора
             firs_filling_status--;
