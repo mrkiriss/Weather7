@@ -46,7 +46,6 @@ public class ConnectionManager {
         dialog.setTitle("Требуется соединеие");
         CheckBox check = new CheckBox(dialog.getContext());
         check.setText("Не показывать следующие 30 минут");
-        check.setGravity(Gravity.RIGHT);
         dialog.setView(check);
 
         dialog.setMessage("Отсутствует подключение к сети Интернет.\n\nФункционал приложения ограничен");

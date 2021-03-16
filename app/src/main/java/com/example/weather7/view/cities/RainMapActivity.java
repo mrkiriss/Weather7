@@ -1,6 +1,7 @@
 package com.example.weather7.view.cities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -96,6 +97,7 @@ public class RainMapActivity extends AppCompatActivity implements OnMapReadyCall
 
             text_time.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
             text_time.setTextSize(18);
+            text_time.setTextColor(Color.BLACK);
 
             binding.timeContainer.addView(text_time, i);
         }
