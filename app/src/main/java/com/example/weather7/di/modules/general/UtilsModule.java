@@ -1,11 +1,13 @@
-package com.example.weather7.di.modules.base;
+package com.example.weather7.di.modules.general;
 
 import android.content.Context;
 import android.location.Geocoder;
 
-import com.example.weather7.model.notifications.AlarmRequestFactory;
+import com.example.weather7.model.factories.AlarmRequestFactory;
+import com.example.weather7.model.factories.ThreadFactory;
 import com.example.weather7.utils.AlarmManager;
 import com.example.weather7.utils.ConnectionManager;
+import com.example.weather7.utils.DelayMessageManager;
 import com.example.weather7.utils.GeolocationManager;
 
 import java.util.Locale;
@@ -44,5 +46,10 @@ public class UtilsModule {
         Locale aLocale = new Locale.Builder().setLanguage("ru").setScript("Latn").setRegion("RS").build();
         Geocoder geocoder =  new Geocoder(context, aLocale);
         return geocoder;
+    }
+
+    @Provides
+    public DelayMessageManager provideDelayMessageManager(ThreadFactory threadFactory){
+        return new DelayMessageManager(threadFactory);
     }
 }

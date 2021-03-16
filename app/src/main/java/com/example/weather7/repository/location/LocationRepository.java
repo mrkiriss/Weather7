@@ -1,6 +1,5 @@
 package com.example.weather7.repository.location;
 
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.util.Log;
 
@@ -11,7 +10,7 @@ import com.example.weather7.api.IWeatherApi;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
 import com.example.weather7.model.base.City;
-import com.example.weather7.model.base.ThreadFactory;
+import com.example.weather7.model.factories.ThreadFactory;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.utils.GeolocationManager;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
@@ -32,6 +31,7 @@ public class LocationRepository {
     private MutableLiveData<String> toastContent;
     private MutableLiveData<City> addCityRequest;
     private MutableLiveData<DaysAdapter> addDaysAdapterRequest;
+    private MutableLiveData<Boolean> loadingProgressRequest;
 
     private int activeFillContentBaseThreadCount;
     private int activeFillContentApiThreadCount;
@@ -48,14 +48,18 @@ public class LocationRepository {
         this.toastContent=new MutableLiveData<>();
         this.addCityRequest=new MutableLiveData<>();
         this.addDaysAdapterRequest=new MutableLiveData<>();
+        this.loadingProgressRequest=new MutableLiveData<>();
     }
 
     public void fillCityContent(Location location){
+        Log.println(Log.INFO, "locationRep", "заполнение местоположения началось");
         if (location==null || !checkConnection()){
             if (activeFillContentBaseThreadCount>0) return;
+            Log.println(Log.INFO, "locationRep", "заполнение местоположения через BD");
             downloadCityContentFromBase();
         }else{
             if (activeFillContentApiThreadCount>0) return;
+            Log.println(Log.INFO, "locationRep", "заполнение местоположения через API");
             downloadCityContentFromApi(location);
         }
     }
@@ -63,6 +67,8 @@ public class LocationRepository {
     //api
     private void downloadCityContentFromApi(Location location){
         Runnable task = () -> {
+            loadingProgressRequest.postValue(true);
+
             activeFillContentApiThreadCount++;
 
             City city = downloadSingleCityHeadFromAPI(location);
@@ -78,6 +84,8 @@ public class LocationRepository {
             updateLocationCityDataInBase(city);
 
             activeFillContentApiThreadCount--;
+
+            loadingProgressRequest.postValue(false);
         };
 
         threadFactory.newThread(task).start();
@@ -108,6 +116,8 @@ public class LocationRepository {
     // database
     private void downloadCityContentFromBase(){
         Runnable task = () -> {
+            loadingProgressRequest.postValue(true);
+
             activeFillContentBaseThreadCount++;
             City city = downloadLocationCityFromBase();
             if (city==null){
@@ -117,6 +127,8 @@ public class LocationRepository {
             addCityRequest.postValue(city);
             addDaysAdapterRequest.postValue(city.getDaysAdapter());
             activeFillContentBaseThreadCount--;
+
+            loadingProgressRequest.postValue(false);
         };
 
         threadFactory.newThread(task).start();
@@ -153,5 +165,6 @@ public class LocationRepository {
     public LiveData<DaysAdapter> getAddDaysAdapterRequest() {
         return addDaysAdapterRequest;
     }
+    public LiveData<Boolean> getLoadingProgressRequest(){return loadingProgressRequest;}
 
 }

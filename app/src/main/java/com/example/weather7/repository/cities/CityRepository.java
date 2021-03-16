@@ -8,11 +8,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.weather7.api.ICitiesNamesApi;
 import com.example.weather7.api.IWeatherApi;
+import com.example.weather7.model.factories.ThreadFactory;
 import com.example.weather7.model.cities.AutoEnteredCity;
 import com.example.weather7.model.base.City;
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
-import com.example.weather7.model.cities.DelayMessage;
+import com.example.weather7.utils.DelayMessageManager;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.view.cities.adapters.DaysAdapter;
@@ -33,6 +34,8 @@ public class CityRepository {
     private final IWeatherApi api;
     private final ICitiesNamesApi api_cities;
     private final ConnectionManager connectionManager;
+    private final DelayMessageManager delayMessageManager;
+    private final ThreadFactory threadFactory;
 
     private final MutableLiveData<LinkedList<City>> cities;
     private final MutableLiveData<City> addCityHeadRequest;
@@ -50,13 +53,16 @@ public class CityRepository {
     private final MutableLiveData<String> error_content;
 
     private final int MIN_INPUT_WORD_LENGTH_FOR_AUTO=3;
-    private DelayMessage delayMessage;
 
-    public CityRepository(AppDatabase db, IWeatherApi api, ICitiesNamesApi api_cities, ConnectionManager connectionManager){
+    public CityRepository(AppDatabase db, IWeatherApi api,
+                          ICitiesNamesApi api_cities, ConnectionManager connectionManager,
+                          DelayMessageManager delayMessageManager, ThreadFactory threadFactory){
         this.dao= db.getCityDao();
         this.api=api;
         this.api_cities=api_cities;
         this.connectionManager=connectionManager;
+        this.delayMessageManager=delayMessageManager;
+        this.threadFactory=threadFactory;
 
         cities= new MutableLiveData<>();
         addCityHeadRequest= new MutableLiveData<>();
@@ -110,13 +116,9 @@ public class CityRepository {
     public void respondToInput(String part_of_name){
         if (part_of_name.length()<MIN_INPUT_WORD_LENGTH_FOR_AUTO) return;
 
-        if (delayMessage==null){
-            delayMessage=new DelayMessage();
-        }
-
         Runnable task = () -> {
-            delayMessage.addToCountActiveCity(1);
-            if (delayMessage.someoneActive()) names_cities_loading.postValue(true);
+            delayMessageManager.addToCountActiveCity(1);
+            if (delayMessageManager.someoneActive()) names_cities_loading.postValue(true);
             try {
                 System.out.println(part_of_name);
                 List<AutoEnteredCity> result = api_cities.downloadCities(part_of_name);
@@ -127,11 +129,11 @@ public class CityRepository {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            delayMessage.addToCountActiveCity(-1);
-            if (!delayMessage.someoneActive()) names_cities_loading.postValue(false);
+            delayMessageManager.addToCountActiveCity(-1);
+            if (!delayMessageManager.someoneActive()) names_cities_loading.postValue(false);
         };
 
-        delayMessage.processMessage(task);
+        delayMessageManager.processMessage(task);
     }
 
     // api
@@ -174,7 +176,6 @@ public class CityRepository {
             // получаем дни
             DaysAdapter days = downloadSingleDaysAdapterFromAPI(name, city.getLat(), city.getLon());;
 
-
             // отправляем дни
             if (days!=null) {
                 setAddDaysInCityRequest(days);
@@ -189,8 +190,7 @@ public class CityRepository {
             insertOrUpdateCityInBase(city);
         };
 
-        Thread thr = new Thread(task);
-        thr.start();
+        threadFactory.newThread(task).start();
     }
 
     private City downloadSingleCityFromAPI(String name){
@@ -249,7 +249,6 @@ public class CityRepository {
             //DaysAdapter days = city.getDaysAdapter(); //downloadSingleDaysAdapterFromBase(name);
 
             // отправляем дни
-           //
             // if (days!=null) setAddDaysInCityRequest(days);
 
             // удаляем поток из индикатора
@@ -257,8 +256,7 @@ public class CityRepository {
             checkLoading();
         };
 
-        Thread thr = new Thread(task);
-        thr.start();
+        threadFactory.newThread(task).start();
     }
     private City downloadSingleCityFromBase(String name){
         return dao.getCityByName(name);
@@ -278,9 +276,7 @@ public class CityRepository {
         Runnable task = () -> {
             dao.delete(city);
         };
-        Thread thr = new Thread(task);
-        thr.start();
-
+        threadFactory.newThread(task).start();
     }
     private boolean checkConnection(){
         Boolean connection = connectionManager.networkEnable();

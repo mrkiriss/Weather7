@@ -1,6 +1,6 @@
-package com.example.weather7.model.notifications;
+package com.example.weather7.model.factories;
 
-import javax.inject.Inject;
+import com.example.weather7.model.notifications.Notification;
 
 public class NotificationFactory {
     public Notification create(String cityName, String repeatMode, String date, String time, String actionID){

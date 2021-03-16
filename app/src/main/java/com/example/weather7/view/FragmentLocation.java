@@ -33,6 +33,7 @@ import com.example.weather7.viewmodel.LocationViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -115,6 +116,8 @@ public class FragmentLocation extends Fragment {
         });
         // подписываемся на запрос на обновление координат и, в связи с этим, всего контента экрана
         locationViewModel.getRefreshContentRequest().observe(getViewLifecycleOwner(), integer -> getLocation());
+        // подписываемся на обновление состояниея загрузки
+        locationViewModel.getLoadingProgressRequest().observe(getViewLifecycleOwner(), aBoolean -> locationViewModel.setLoading_progress(aBoolean));
 
     }
     @SuppressLint("MissingPermission")

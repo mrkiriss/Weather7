@@ -87,6 +87,9 @@ public class AlarmRequest {
                 break;
         }
 
+        System.out.println("++++++++++++++++++++++++++++++");
+        System.out.println(triggerTime);
+        System.out.println(DateConverter.convertLongToDMY(triggerTime)+"//"+DateConverter.convertLongToHM(triggerTime));
         // данные для пользовательского экрана/бд
         return DateConverter.convertLongToDMY(triggerTime);
     }

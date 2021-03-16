@@ -1,4 +1,4 @@
-package com.example.weather7.di.modules.base;
+package com.example.weather7.di.modules.general;
 
 import android.content.Context;
 

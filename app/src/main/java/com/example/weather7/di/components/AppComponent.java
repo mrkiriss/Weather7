@@ -1,10 +1,10 @@
 package com.example.weather7.di.components;
 
-import com.example.weather7.di.modules.base.ApisModule;
-import com.example.weather7.di.modules.base.AppContextModule;
-import com.example.weather7.di.modules.base.AppDatabaseModule;
-import com.example.weather7.di.modules.base.FactoriesModule;
-import com.example.weather7.di.modules.base.UtilsModule;
+import com.example.weather7.di.modules.general.ApisModule;
+import com.example.weather7.di.modules.general.AppContextModule;
+import com.example.weather7.di.modules.general.AppDatabaseModule;
+import com.example.weather7.di.modules.general.FactoriesModule;
+import com.example.weather7.di.modules.general.UtilsModule;
 import com.example.weather7.di.modules.cities.CitiesRecyclerViewModule;
 import com.example.weather7.di.modules.cities.CitiesVMModule;
 import com.example.weather7.di.modules.cities.CityRepositoryModule;
@@ -12,6 +12,7 @@ import com.example.weather7.di.modules.location.LocationRepositoryModule;
 import com.example.weather7.di.modules.location.LocationVMModule;
 import com.example.weather7.di.modules.notifications.NotificationRepositoryModule;
 import com.example.weather7.di.modules.notifications.NotificationsVMModule;
+import com.example.weather7.model.notifications.Notification;
 
 import javax.inject.Singleton;
 
@@ -21,13 +22,15 @@ import dagger.Component;
 @Singleton
 public interface AppComponent {
 
-    FCitiesSubcomponent getFCitiesComponent(CitiesVMModule citiesVMModule,
-                                            CityRepositoryModule cityRepositoryModule,
-                                            CitiesRecyclerViewModule citiesRecyclerViewModule);
+    FCitiesSubcomponent getFCitiesSubcomponent(CitiesVMModule citiesVMModule,
+                                               CityRepositoryModule cityRepositoryModule,
+                                               CitiesRecyclerViewModule citiesRecyclerViewModule);
 
-    FNotificationsSubcomponent getFNotificationsComponent(NotificationRepositoryModule notificationRepositoryModule,
-                                                          NotificationsVMModule notificationsVMModule);
+    FNotificationsSubcomponent getFNotificationsSubcomponent(NotificationRepositoryModule notificationRepositoryModule,
+                                                             NotificationsVMModule notificationsVMModule);
 
-    FLocationSubcomponent getFLocationComponent(LocationRepositoryModule locationRepositoryModule,
-                                                LocationVMModule locationVMModule);
+    FLocationSubcomponent getFLocationSubcomponent(LocationRepositoryModule locationRepositoryModule,
+                                                   LocationVMModule locationVMModule);
+
+    WeatherNotificationReciverSubcomponent getNotificationReciverSubcomponent();
 }

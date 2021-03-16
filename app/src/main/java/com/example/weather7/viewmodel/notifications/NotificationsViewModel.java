@@ -15,12 +15,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.weather7.model.notifications.AlarmRequest;
-import com.example.weather7.model.notifications.AlarmRequestFactory;
 import com.example.weather7.model.notifications.Notification;
 import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.repository.RepositoryRequest;
-import com.example.weather7.utils.AlarmManager;
 import com.example.weather7.utils.DateConverter;
 
 import java.util.ArrayList;

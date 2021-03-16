@@ -19,20 +19,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="7">
+            android:weightSum="14">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
+                android:layout_weight="4"
                 android:orientation="horizontal"
                 android:weightSum="5">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
+                    android:layout_weight="4"
                     android:orientation="vertical"
                     android:weightSum="5">
 
@@ -78,11 +79,19 @@
 
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/progressBarCities"
+                style="@android:style/Widget.ProgressBar.Inverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="@{ViewModel.loading_progress? View.VISIBLE:View.GONE}" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/daysRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5" />
+                android:layout_weight="9" />
 
         </LinearLayout>
 

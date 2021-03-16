@@ -5,6 +5,7 @@ import android.location.Location;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,11 +25,13 @@ public class LocationViewModel extends ViewModel {
     private ObservableField<String> description;
     private ObservableField<String> temperature;
     private ObservableField<Bitmap> icon;
+    private ObservableBoolean loading_progress;
 
     private LiveData<Boolean> networkConnection;
     private LiveData<String> toastContent;
     private LiveData<City> addCityRequest;
     private LiveData<DaysAdapter> addDaysAdapterRequest;
+    private LiveData<Boolean> loadingProgressRequest;
 
     private MutableLiveData<Integer> refreshContentRequest;
 
@@ -39,11 +42,13 @@ public class LocationViewModel extends ViewModel {
         this.description=new ObservableField<>();
         this.temperature=new ObservableField<>();
         this.icon=new ObservableField<>();
+        this.loading_progress=new ObservableBoolean(false);
 
         this.networkConnection=rep.getNetworkConnection();
         this.toastContent=rep.getToastContent();
         this.addCityRequest=rep.getAddCityRequest();
         this.addDaysAdapterRequest=rep.getAddDaysAdapterRequest();
+        this.loadingProgressRequest=rep.getLoadingProgressRequest();
 
         this.refreshContentRequest=new MutableLiveData<>(0);
     }
@@ -86,7 +91,14 @@ public class LocationViewModel extends ViewModel {
     public MutableLiveData<Integer> getRefreshContentRequest() {
         return refreshContentRequest;
     }
+    public ObservableBoolean getLoading_progress() {
+        return loading_progress;
+    }
+    public LiveData<Boolean> getLoadingProgressRequest(){return loadingProgressRequest;}
 
+    public void setLoading_progress(Boolean loading_progress) {
+        this.loading_progress.set(loading_progress);
+    }
     public void setCityName(String cityName) {
         this.cityName.set(cityName);
     }

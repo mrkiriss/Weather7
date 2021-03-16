@@ -7,6 +7,8 @@ import com.example.weather7.model.notifications.Notification;
 import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.repository.RepositoryRequest;
 
+import javax.inject.Inject;
+
 public class ItemNotificationViewModel extends BaseObservable {
 
     private Notification notification;
@@ -17,6 +19,7 @@ public class ItemNotificationViewModel extends BaseObservable {
 
     private MutableLiveData<RepositoryRequest> request;
 
+    @Inject
     public ItemNotificationViewModel(Notification notification, MutableLiveData<RepositoryRequest> request){
         this.notification = notification;
         this.request=request;

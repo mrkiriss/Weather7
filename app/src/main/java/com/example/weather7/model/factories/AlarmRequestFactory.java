@@ -1,8 +1,8 @@
-package com.example.weather7.model.notifications;
+package com.example.weather7.model.factories;
 
 import android.content.Context;
 
-import com.example.weather7.utils.AlarmManager;
+import com.example.weather7.model.notifications.AlarmRequest;
 
 public class AlarmRequestFactory {
 

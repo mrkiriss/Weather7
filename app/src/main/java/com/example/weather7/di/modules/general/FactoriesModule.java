@@ -1,10 +1,8 @@
-package com.example.weather7.di.modules.base;
+package com.example.weather7.di.modules.general;
 
-import android.content.Context;
-
-import com.example.weather7.model.base.ThreadFactory;
-import com.example.weather7.model.notifications.AlarmRequestFactory;
-import com.example.weather7.model.notifications.NotificationFactory;
+import com.example.weather7.model.factories.AlarmRequestFactory;
+import com.example.weather7.model.factories.NotificationFactory;
+import com.example.weather7.model.factories.ThreadFactory;
 
 import javax.inject.Singleton;
 

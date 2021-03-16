@@ -2,19 +2,17 @@ package com.example.weather7.repository.notifications;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.example.weather7.database.AppDatabase;
 import com.example.weather7.database.CityDao;
 import com.example.weather7.database.NotificationDao;
-import com.example.weather7.model.base.ThreadFactory;
+import com.example.weather7.model.factories.NotificationFactory;
+import com.example.weather7.model.factories.ThreadFactory;
 import com.example.weather7.model.notifications.Notification;
-import com.example.weather7.model.notifications.NotificationFactory;
 import com.example.weather7.repository.RepositoryRequest;
 import com.example.weather7.utils.AlarmManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class NotificationRepository {
 

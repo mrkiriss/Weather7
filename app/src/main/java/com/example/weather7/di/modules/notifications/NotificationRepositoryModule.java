@@ -1,8 +1,8 @@
 package com.example.weather7.di.modules.notifications;
 
 import com.example.weather7.database.AppDatabase;
-import com.example.weather7.model.base.ThreadFactory;
-import com.example.weather7.model.notifications.NotificationFactory;
+import com.example.weather7.model.factories.NotificationFactory;
+import com.example.weather7.model.factories.ThreadFactory;
 import com.example.weather7.repository.notifications.NotificationRepository;
 import com.example.weather7.utils.AlarmManager;
 

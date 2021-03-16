@@ -7,7 +7,8 @@ import com.example.weather7.di.components.DaggerAppComponent;
 import com.example.weather7.di.components.FCitiesSubcomponent;
 import com.example.weather7.di.components.FLocationSubcomponent;
 import com.example.weather7.di.components.FNotificationsSubcomponent;
-import com.example.weather7.di.modules.base.AppContextModule;
+import com.example.weather7.di.components.WeatherNotificationReciverSubcomponent;
+import com.example.weather7.di.modules.general.AppContextModule;
 import com.example.weather7.di.modules.cities.CitiesRecyclerViewModule;
 import com.example.weather7.di.modules.cities.CitiesVMModule;
 import com.example.weather7.di.modules.cities.CityRepositoryModule;
@@ -36,7 +37,7 @@ public class ComponentManager {
 
     public FCitiesSubcomponent getFCitiesSubcomponent(){
         if (fCitiesSubcomponent ==null){
-            fCitiesSubcomponent =appComponent.getFCitiesComponent(new CitiesVMModule(), new CityRepositoryModule(), new CitiesRecyclerViewModule());
+            fCitiesSubcomponent =appComponent.getFCitiesSubcomponent(new CitiesVMModule(), new CityRepositoryModule(), new CitiesRecyclerViewModule());
         }
         return fCitiesSubcomponent;
     }
@@ -46,7 +47,7 @@ public class ComponentManager {
 
     public FNotificationsSubcomponent getFNotificationsSubcomponent(){
         if (fNotificationsSubcomponent ==null){
-            fNotificationsSubcomponent =appComponent.getFNotificationsComponent(new NotificationRepositoryModule(),
+            fNotificationsSubcomponent =appComponent.getFNotificationsSubcomponent(new NotificationRepositoryModule(),
                     new NotificationsVMModule());
         }
         return fNotificationsSubcomponent;
@@ -57,13 +58,17 @@ public class ComponentManager {
 
     public FLocationSubcomponent getFLocationSubcomponent(){
         if (fLocationSubcomponent ==null){
-            fLocationSubcomponent =appComponent.getFLocationComponent(new LocationRepositoryModule(),
+            fLocationSubcomponent =appComponent.getFLocationSubcomponent(new LocationRepositoryModule(),
                     new LocationVMModule());
         }
         return fLocationSubcomponent;
     }
     public void clearFLocationSubcomponent(){
         fLocationSubcomponent =null;
+    }
+
+    public WeatherNotificationReciverSubcomponent getWeatherNotificationReciverSubcomponent(){
+        return appComponent.getNotificationReciverSubcomponent();
     }
 
 }

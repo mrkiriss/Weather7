@@ -1,13 +1,14 @@
-package com.example.weather7.model.cities;
+package com.example.weather7.utils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.weather7.model.factories.ThreadFactory;
 import com.example.weather7.model.cities.AutoEnteredCity;
 
 import java.util.List;
 
-public class DelayMessage {
+public class DelayMessageManager {
     private final long MAX_DELAY_TIME=650;
     private int countActiveMessage=0;
 
@@ -17,9 +18,9 @@ public class DelayMessage {
     private boolean isWaiting;
     private volatile int numberOfDeprecated;
 
-    public DelayMessage(){
+    private ThreadFactory threadFactory;
 
-    }
+    public DelayMessageManager(ThreadFactory threadFactory){this.threadFactory=threadFactory;}
 
     public void processMessage(Runnable function){
         if (isWaiting){
@@ -45,8 +46,7 @@ public class DelayMessage {
             function.run();
         };
 
-        Thread thr = new Thread(task);
-        thr.start();
+        threadFactory.newThread(task).start();
     }
 
     private LiveData<List<AutoEnteredCity>> getResult(){return result;}

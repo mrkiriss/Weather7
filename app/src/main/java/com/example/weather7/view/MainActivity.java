@@ -12,6 +12,8 @@ import com.example.weather7.R;
 import com.example.weather7.databinding.MainActivityBinding;
 import com.example.weather7.viewmodel.MainActivityViewModel;
 
+import java.io.File;
+
 import me.ibrahimsn.particle.ParticleView;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setBottomNavigationListener() {
+
         binding.navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_location:
