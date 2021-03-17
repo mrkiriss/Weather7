@@ -27,6 +27,8 @@ Weather7 - мобильное приложение, с помощью котор
 4. Откройте проект через меню Android Studio ![Oops! Something went wrong](https://github.com/mrkiriss/Weather7/blob/main/screens/manual/open_project.png)
 5. Создайте эмулятор или подключите собственное устройство ![Oops! Something went wrong](https://github.com/mrkiriss/Weather7/blob/main/screens/manual/create_emulator.png)
 6. Запустите проект
+7. P.s. Apk файл проекта можно скачать [тут](https://drive.google.com/file/d/1wiSF6CiQdeOltt2OQQha2g1hIjlUpeqq/view?usp=sharing)
+8. P.p.s. Видео презентации функционала можно скачать [тут](https://drive.google.com/file/d/1WePnSnSNyPkATTPH8J-KrL_FukXcdgtr/view?usp=sharing)
 
 # Требования для корректной работы приложения
 - minSdkVersion 21
