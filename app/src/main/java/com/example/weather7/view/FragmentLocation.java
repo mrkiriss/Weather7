@@ -1,10 +1,7 @@
 package com.example.weather7.view;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,30 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.weather7.R;
 import com.example.weather7.databinding.FragmentLocationBinding;
 import com.example.weather7.di.App;
-import com.example.weather7.model.base.City;
-import com.example.weather7.repository.location.LocationRepository;
 import com.example.weather7.utils.ConnectionManager;
 import com.example.weather7.utils.GeolocationManager;
-import com.example.weather7.view.cities.adapters.DaysAdapter;
 import com.example.weather7.viewmodel.LocationViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -115,7 +101,10 @@ public class FragmentLocation extends Fragment {
             Log.println(Log.INFO, "fragmentLocation", "location days adapter was set");
         });
         // подписываемся на запрос на обновление координат и, в связи с этим, всего контента экрана
-        locationViewModel.getRefreshContentRequest().observe(getViewLifecycleOwner(), integer -> getLocation());
+        locationViewModel.getRefreshContentRequest().observe(getViewLifecycleOwner(), integer -> {
+            if (integer==0) return;
+            getLocation();
+        });
         // подписываемся на обновление состояниея загрузки
         locationViewModel.getLoadingProgressRequest().observe(getViewLifecycleOwner(), aBoolean -> locationViewModel.setLoading_progress(aBoolean));
 
@@ -123,8 +112,12 @@ public class FragmentLocation extends Fragment {
     @SuppressLint("MissingPermission")
     private void setGetLastLocationListener() {
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
-            if (location != null) {
-                mLocation.postValue(location);
+            mLocation.postValue(location);
+            if (location == null) {
+                if (geolocationManager.geolocationEnable()) {
+                    Toast.makeText(getContext(), "Единовременный переход в GoogleMaps", Toast.LENGTH_SHORT).show();
+                    geolocationManager.openGoogleMaps(getActivity());
+                }
             }
         });
     }

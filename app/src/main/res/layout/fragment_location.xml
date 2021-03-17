@@ -102,10 +102,10 @@
             android:layout_gravity="bottom|end"
             android:background="@color/background"
             android:contentDescription="@string/refresh_location"
+            android:onClick="@{()->ViewModel.refreshContent()}"
             app:backgroundTint="@color/light_green_400"
             app:fabSize="auto"
-            app:srcCompat="@drawable/ic_refresh"
-            android:onClick="@{()->ViewModel.refreshContent()}"/>
+            app:srcCompat="@drawable/ic_refresh" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

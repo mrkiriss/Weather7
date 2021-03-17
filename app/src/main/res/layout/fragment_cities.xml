@@ -71,6 +71,7 @@
                 android:onClick="@{()->ViewModel.refreshCities()}"
                 android:padding="7dp"
                 android:scaleType="fitCenter"
+                android:clickable="@{ViewModel.progress_visible? false:true}"
                 app:srcCompat="@drawable/ic_refresh"
                 app:tint="#FF377039" />
 

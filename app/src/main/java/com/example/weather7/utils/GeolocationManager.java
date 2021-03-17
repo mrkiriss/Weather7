@@ -61,7 +61,6 @@ public class GeolocationManager{
         }
         return coordinates;
     }
-
     public String getCityNameByLocation(Location location) throws IOException {
         if (location==null) return "";
 
@@ -88,6 +87,17 @@ public class GeolocationManager{
         }
         return true;
     }
+    public void openGoogleMaps(Activity activity) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        activity.startActivity(mapIntent);
+    }
+
 
     public void showOfferSetting(Context context){
         if (date==null){
