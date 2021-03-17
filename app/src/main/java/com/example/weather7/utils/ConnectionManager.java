@@ -49,21 +49,13 @@ public class ConnectionManager {
         dialog.setView(check);
 
         dialog.setMessage("Отсутствует подключение к сети Интернет.\n\nФункционал приложения ограничен");
-        dialog.setNeutralButton("Продолжить", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (check.isChecked()){
-                    delay_start_time=date.getTime();
+        dialog.setNeutralButton("Продолжить", (dialog12, which) -> {
+            if (check.isChecked()){
+                delay_start_time=date.getTime();
 
-                }
             }
         });
-        dialog.setPositiveButton("Настроить подключение", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                context.startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));
-            }
-        });
+        dialog.setPositiveButton("Настроить подключение", (dialog1, which) -> context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
         dialog.show();
     }
 }

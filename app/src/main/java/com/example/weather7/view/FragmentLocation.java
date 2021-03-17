@@ -146,4 +146,10 @@ public class FragmentLocation extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        App.getInstance().getComponentManager().clearFLocationSubcomponent();
+    }
 }
