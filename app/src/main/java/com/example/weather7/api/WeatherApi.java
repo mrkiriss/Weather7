@@ -28,7 +28,7 @@ import java.util.LinkedList;
 public class WeatherApi implements IWeatherApi{
     private final String url_for_head="https://api.openweathermap.org/data/2.5/weather?q=";
     private final String url_for_days="https://api.openweathermap.org/data/2.5/onecall?";
-    private final String apiKey ="&appid=beb7c390d2db9cfa4d3b327035507589";
+    private final String apiKey ="&appid=some_apiKey";
     private final String metric="&units=metric";
     private final String exclude="&exclude=minutely,hourly,alerts";
     private final String lon="&lon=";
